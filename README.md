@@ -2,7 +2,7 @@
 ![Literally me](./portrait_jeremyglebe.jpg)
 
 
-email: jeremyglebe@gmail.com
+Email: jeremyglebe@gmail.com
 
 
-website: N/A
+Website: N/A
