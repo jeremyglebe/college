@@ -13,15 +13,15 @@ cpp***
 */
 
 /**
-* [INSTRUCTIONS FOR USE]
-* Commands should be typed in the order they are to be executed. They can be
-* entered all at once or in steps. Multiple images may be read, edited, and saved
-* before exiting.
-* Example user input:
-* read bob grayscale save read cat vertical save exit
-* This line of commands, entered all at once, would read an image called "bob.txt"
-* and grayscale it, saving it as "bob_edit.txt". It would then load an image "cat.txt",
-* vertically flip it, save "cat_edit.txt", and exit the program.
+[INSTRUCTIONS FOR USE]
+Commands should be typed in the order they are to be executed. They can be
+entered all at once or in steps. Multiple images may be read, edited, and saved
+before exiting.
+Example user input:
+read bob grayscale save read cat vertical save exit
+This line of commands, entered all at once, would read an image called "bob.txt"
+and grayscale it, saving it as "bob_edit.txt". It would then load an image "cat.txt",
+vertically flip it, save "cat_edit.txt", and exit the program.
 */
 
 #include<iostream>
