@@ -1,3 +1,5 @@
+```cpp
+
 /**
 * @ProgramName: Image Editor - ADT Program 1
 * @Author: Jeremy Glebe
@@ -283,3 +285,5 @@ void grayScale(rgb** &arrImg, int width, int height) {
 	else
 		cout << "Error: No image has been read in.\n\n";
 }
+
+```
