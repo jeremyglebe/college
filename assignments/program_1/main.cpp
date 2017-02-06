@@ -161,7 +161,7 @@ void saveImage(rgb** arrImg, string userFile, int width, int height, ofstream &o
 /**
 * @FunctionName: flipVert
 * @Description:
-*     Creates a temporary 2D array that is vertically flipped and sets the referenced array equal to it.
+*     Vertically flips a 2D array of rgb values
 * @Params:
 *    rgb** &arrImg - 2D array holding rgb values
 *    int width - width of image
@@ -171,35 +171,20 @@ void saveImage(rgb** arrImg, string userFile, int width, int height, ofstream &o
 */
 void flipVert(rgb** &arrImg, int width, int height) {
 
-	// A temporary 2D array for changing values.
-	rgb **temp;
 	if (arrImg) {
-		temp = new rgb*[height];
-		for (int i = 0;i < height;i++) {
-			temp[i] = new rgb[width];
-		}
 
-		// Set temp's values to a vertical flip of arrImg
-		for (int i = 0;i < height / 2;i++) {
-			for (int j = 0;j < width;j++) {
-				temp[i][j] = arrImg[height - 1 - i][j];
-				temp[height - 1 - i][j] = arrImg[i][j];
+		for (int i = 0; i < height / 2; i++) {
+			for (int j = 0; j < width; j++) {
+				// Initiate two temporary rgb values for the top and bottom pixels
+				rgb tempUp, tempDown;
+				tempUp = arrImg[i][j];
+				tempDown = arrImg[height - 1 - i][j];
+
+				// Assign the original rgb values to their opposite
+				arrImg[i][j] = tempDown;
+				arrImg[height - 1 - i][j] = tempUp;
 			}
 		}
-		if (height % 2 != 0) //if there are an odd number of rows
-			for (int c = 0; c < width; c++) // for every column
-
-				// set temp's middle row equal to arrImg's
-				temp[(height / 2)][c] = arrImg[(height / 2)][c];
-
-		// Copy the values of temp to arrImg
-		for (int i = 0;i < height;i++) {
-			for (int j = 0;j < width;j++) {
-				arrImg[i][j] = temp[i][j];
-			}
-			delete temp[i];
-		}
-		delete temp;
 		cout << "Image flipped vertically.\n\n";
 	}
 	else
@@ -209,7 +194,7 @@ void flipVert(rgb** &arrImg, int width, int height) {
 /**
 * @FunctionName: flipHorz
 * @Description:
-*     Creates a temporary 2D array that is horizontally flipped and sets the referenced array equal to it.
+*     Horizontally flips a 2D array of rgb values
 * @Params:
 *    rgb** &arrImg - 2D array holding rgb values
 *    int width - width of image
@@ -219,35 +204,22 @@ void flipVert(rgb** &arrImg, int width, int height) {
 */
 void flipHorz(rgb** &arrImg, int width, int height) {
 
-	// A temporary 2D array for changing values.
-	rgb **temp;
+
 	if (arrImg) {
-		temp = new rgb*[height];
-		for (int i = 0;i < height;i++) {
-			temp[i] = new rgb[width];
-		}
 
-		// Set temp's values to a horizontal flip of arrImg
-		for (int i = 0;i < height;i++) {
-			for (int j = 0;j < width / 2;j++) {
-				temp[i][j] = arrImg[i][width - 1 - j];
-				temp[i][width - 1 - j] = arrImg[i][j];
+		for (int i = 0; i < height; i++) {
+			for (int j = 0; j < width / 2; j++) {
+				// Initiate two temporary rgb values for the left and right pixels
+				rgb tempLeft, tempRight;
+				tempLeft = arrImg[i][j];
+				tempRight = arrImg[i][width - 1 - j];
+
+				// Assign the original rgb values to their opposite
+				arrImg[i][j] = tempRight;
+				arrImg[i][width - 1 - j] = tempLeft;
 			}
 		}
-		if (width % 2 != 0) //if there are an odd number of columns
-			for (int r = 0; r < height; r++) // for every row
 
-				// set temp's middle column equal to arrImg's
-				temp[r][(width / 2)] = arrImg[r][(width / 2)];
-
-		// Copy the values of temp to arrImg
-		for (int i = 0;i < height;i++) {
-			for (int j = 0;j < width;j++) {
-				arrImg[i][j] = temp[i][j];
-			}
-			delete temp[i];
-		}
-		delete temp;
 		cout << "Image flipped horizontally.\n\n";
 	}
 	else
