@@ -1,3 +1,13 @@
+/**
+* @ProgramName: Image Class Editor - ADT Program 2
+* @Author: Jeremy Glebe
+* @Description:
+*     Uses a class to store and manipulate .txt image data.
+* @Course: 1063 Data Structures
+* @Semester: Spring 2017
+* @Date: 02 15 2016
+*/
+
 #include<iostream>
 #include<fstream>
 #include<math.h>
