@@ -1,4 +1,3 @@
-```
 /**
 * @Homework: Homework-3
 * @Author: Jeremy Glebe
@@ -37,4 +36,3 @@ void Print() {
 	}
 	cout << endl;
 }
-```
