@@ -18,13 +18,8 @@ using namespace std;
 /**
 * @FunctionName: sorted
 * @Description:
-*     Sorts an array of integers in ascending or descending order
-* @Params:
-*    int* a           - 1D array of integers
-*    int size         - size of array
-*    string direction - "asc" = ascending / "desc" = descending
-* @Returns:
-*    void
+*     This was written in class and is unmodified so I'm shrinking its 
+*     comment block to save paper
 */
 void sorted(int *a, int size, string direction = "desc") {
 	int val = 0;
@@ -57,13 +52,8 @@ void sorted(int *a, int size, string direction = "desc") {
 /**
 * @FunctionName: exists
 * @Description:
-*     Checks if value exists in array
-* @Params:
-*    int* data        - 1D array of integers
-*    int size         - size of array
-*    int key          - key to search for
-* @Returns:
-*    bool - true = key exists / false = not in array
+*     This was written in class and is unmodified so I'm shrinking its 
+*     comment block to save paper
 */
 bool exists(int *data, int size, int key) {
 	for (int i = 0;i<size;i++) {
@@ -77,12 +67,8 @@ bool exists(int *data, int size, int key) {
 /**
 * @FunctionName: unique_items
 * @Description:
-*     Generates an array of unique integers
-* @Params:
-*    int size          - size of data set to create
-*    string direction  - "asc" = ascending / "desc" = descending
-* @Returns:
-*    int* - pointer to newly allocated array
+*     This was written in class and is unmodified so I'm shrinking its 
+*     comment block to save paper
 */
 int* unique_items(int size, string direction) {
 
@@ -151,10 +137,8 @@ int BinarySearch(int* data, int key, int size) {
 /**
 * @FunctionName: main
 * @Description:
-*     Driver for program that creates an array of unique integers and
-*     then performs a binary search on that array
-* @Params:
-*     NULL
+*     This was written in class and is unmodified so I'm shrinking its 
+*     comment block to save paper
 * @Returns:
 *    int - 0 = all ok
 */
