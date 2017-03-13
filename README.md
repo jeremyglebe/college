@@ -1,5 +1,5 @@
 # Jeremy Glebe
-![Literally me](./portrait_jeremyglebe3-13-17.jpg)
+![Literally me](./jglebe.jpg)
 
 
 Email: jeremyglebe@gmail.com
