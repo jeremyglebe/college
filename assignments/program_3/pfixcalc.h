@@ -1,8 +1,28 @@
+/**
+* @ProgramName: Postfix Calculator
+* @Author: Jeremy Glebe
+* @Description:
+*     This program implements a calculator (and relevant functions) that 
+*		handles expressions by first converting them to postfix form.
+* @Course: 1063 Data Structures
+* @Semester: Spring 2017
+* @Date: Mar 2017
+*/
+
 #pragma once
 #include "liststructs.h"
 #include<string>
 using namespace std;
 
+/**
+* @FunctionName: OpPr
+* @Description:
+*     Determines the mathmatical priority of an operator character
+* @Params:
+*    char op - The character which is to be prioritized
+* @Returns:
+*    int - Priority on a scale of 1-3, returns -1 if character is not operator
+*/
 int OpPr(char op) {
 	int val;
 	switch (op) {
@@ -24,6 +44,11 @@ int OpPr(char op) {
 	return val;
 }
 
+/**
+* @ClassName: PfixCalc
+* @Description:
+*     Implementation of a postfix calculator using list based stacks and queues
+*/
 class PfixCalc {
 private:
 	string infix;
@@ -31,6 +56,16 @@ private:
 	Queue<char> pfix;
 	Stack<double> ans;
 
+	/**
+	* @FunctionName: _inToPost
+	* @Description:
+	*     Creates the calculator's postfix queue based on the current infix
+	*		string
+	* @Params:
+	*    None
+	* @Returns:
+	*    void
+	*/
 	void _inToPost() {
 
 		// Infix to postfix algorithm
@@ -59,11 +94,29 @@ private:
 		return;
 	}
 
+	/**
+	* @FunctionName: _setProb
+	* @Description:
+	*     Assigns the infix string (representing the current problem)
+	* @Params:
+	*    string ifx - The new infix string to be used
+	* @Returns:
+	*    void
+	*/
 	void _setProb(string ifx) {
 		infix = ifx;
 		_inToPost();
 	}
 public:
+	/**
+	* @FunctionName: evaluate
+	* @Description:
+	*     Evaluates an expression after converting it to postfix
+	* @Params:
+	*    string problem - The infix problem that should be evaluated
+	* @Returns:
+	*    double - Final result of the evaluated expression
+	*/
 	double evaluate(string problem) {
 		_setProb(problem);
 		double x, y, z;
@@ -77,7 +130,7 @@ public:
 				y = ans.Pop();
 				if (temp == '^') {
 					z = y;
-					for (int i = 0; i < x; i++)
+					for (int i = 1; i < x; i++)
 						z *= y;
 				}
 				else if (temp == '*')
