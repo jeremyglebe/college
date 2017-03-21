@@ -132,6 +132,31 @@ public:
 			cout << "\nERROR: Cannot peek at an empty stack!\n";
 		return NULL;
 	}
+
+	/**
+	* @FunctionName: Stream
+	* @Description:
+	*     Sends the Stack to an ostream
+	* @Params:
+	*    ostream& - reference to an ostream object
+	* @Returns:
+	*    void
+	*/
+	void Stream(ostream& os) {
+		if (top) {
+			NODE* temp = top;
+			os << temp->data;
+			if (temp->prev)
+				os << " ";
+			while (temp->prev) {
+				temp = temp->prev;
+				os << temp->data;
+				if (temp->prev)
+					os << " ";
+			}
+		}
+		return;
+	}
 };
 
 /**
@@ -228,5 +253,62 @@ public:
 		else
 			cout << "\nERROR: Cannot peek at an empty queue!\n";
 			return NULL;
+	}
+
+	/**
+	* @FunctionName: String
+	* @Description:
+	*     Converts the Queue into a string.
+	* @Params:
+	*    bool - should the string be reversed
+	* @Returns:
+	*    string - the Queue as a string
+	*/
+	string String(bool reverse = 0) {
+		string qstring = "";
+		if (!reverse) {
+			NODE* temp = first;
+			while (temp) {
+				qstring += temp->data;
+				temp = temp->next;
+				if (temp)
+					qstring += " ";
+			}
+		}
+		else {
+			NODE* temp = last;
+			while (temp) {
+				qstring += temp->data;
+				temp = temp->prev;
+				if (temp)
+					qstring += " ";
+			}
+		}
+		return qstring;
+	}
+
+	/**
+	* @FunctionName: Stream
+	* @Description:
+	*     Sends the Queue to an ostream
+	* @Params:
+	*    ostream& - reference to an ostream object
+	* @Returns:
+	*    void
+	*/
+	void Stream(ostream& os) {
+		if (first) {
+			NODE* temp = first;
+			os << temp->data;
+			if (temp->next)
+				os << " ";
+			while (temp->next) {
+				temp = temp->next;
+				os << temp->data;
+				if (temp->next)
+					os << " ";
+			}
+		}
+		return;
 	}
 };

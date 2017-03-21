@@ -2,7 +2,7 @@
 * @ProgramName: Postfix Calculator
 * @Author: Jeremy Glebe
 * @Description:
-*     This program implements a calculator (and relevant functions) that 
+*     This program implements a calculator (and relevant functions) that
 *		handles expressions by first converting them to postfix form.
 * @Course: 1063 Data Structures
 * @Semester: Spring 2017
@@ -57,7 +57,20 @@ private:
 	Stack<double> ans;
 
 	/**
-	* @FunctionName: _inToPost
+	* @FunctionName: _setProb
+	* @Description:
+	*     Assigns the infix string (representing the current problem)
+	* @Params:
+	*    string ifx - The new infix string to be used
+	* @Returns:
+	*    void
+	*/
+	void _setProb(string ifx) {
+		infix = ifx;
+	}
+public:
+	/**
+	* @FunctionName: inToPost
 	* @Description:
 	*     Creates the calculator's postfix queue based on the current infix
 	*		string
@@ -66,9 +79,10 @@ private:
 	* @Returns:
 	*    void
 	*/
-	void _inToPost() {
+	void inToPost(string problem) {
 
-		// Infix to postfix algorithm
+		_setProb(problem);
+		// Infix to postfix algorithm as provided
 		stack.Push('(');
 		infix += ')';
 		for (unsigned int i = 0; i < infix.length(); i++) {
@@ -94,20 +108,24 @@ private:
 		return;
 	}
 
+
 	/**
-	* @FunctionName: _setProb
+	* @FunctionName: PostfixString
 	* @Description:
-	*     Assigns the infix string (representing the current problem)
+	*     Converts the postfix queue to a string.
 	* @Params:
-	*    string ifx - The new infix string to be used
+	*    string problem - The infix problem that we will convert to postfix
 	* @Returns:
-	*    void
+	*    string - The Postfix queue as a string
 	*/
-	void _setProb(string ifx) {
-		infix = ifx;
-		_inToPost();
+	string PostfixString(string problem = "Undefined") {
+		// If a new expression wasn't provided, we're going to assume one has
+		// already been converted to postfix with inToPost()
+		if (problem != "Undefined")
+			inToPost(problem); // Otherwise we will convert the problem first
+		return pfix.String();
 	}
-public:
+
 	/**
 	* @FunctionName: evaluate
 	* @Description:
@@ -117,9 +135,13 @@ public:
 	* @Returns:
 	*    double - Final result of the evaluated expression
 	*/
-	double evaluate(string problem) {
-		_setProb(problem);
+	double evaluate(string problem = "Undefined") {
+		// If a new expression wasn't provided, we're going to assume one has
+		// already been converted to postfix with inToPost()
+		if (problem != "Undefined")
+			inToPost(problem); // Otherwise we will convert the problem first
 		double x, y, z;
+		// Evaluation algorithm as provided
 		while (!pfix.Empty()) {
 			char temp = pfix.Pop();
 			if (temp > 47 && temp < 58) {
