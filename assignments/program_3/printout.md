@@ -1,5 +1,15 @@
 calculator.cpp
-```cpp
+```cpp/**
+* @ProgramName: Simple Calculator
+* @Author: Jeremy Glebe
+* @Description:
+*     This program takes infix expressions from an input file and evaluates them
+*		saving the postfix conversions and solutions to another file.
+* @Course: 1063 Data Structures
+* @Semester: Spring 2017
+* @Date: Mar 2017
+*/
+
 #include<fstream>
 #include<iomanip>
 #include"pfixcalc.h"
