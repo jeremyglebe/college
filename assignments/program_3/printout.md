@@ -1,5 +1,6 @@
 calculator.cpp
-```cpp/**
+```cpp
+/**
 * @ProgramName: Simple Calculator
 * @Author: Jeremy Glebe
 * @Description:
