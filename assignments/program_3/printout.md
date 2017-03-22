@@ -1,4 +1,4 @@
-# calculator.cpp
+calculator.cpp
 ```cpp
 #include<fstream>
 #include<iomanip>
@@ -33,7 +33,8 @@ int main() {
 	return 0;
 }
 ```
-# pfcalculator.cpp
+
+pfixcalc.h
 ```cpp
 /**
 * @ProgramName: Postfix Calculator
