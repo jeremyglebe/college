@@ -242,6 +242,11 @@ public:
 		int g = 0;
 		bool stable = false; // I included a variable to track if the world is stable
 
+		// Display the first generation for a moment before it starts
+		clear_screen();
+		PrintBoard();
+		Sleep(500);
+
 		// The while loop is now dependent on whether life has stabilized
 		while (g < generations && !stable) {
 			for (int i = 0; i < Rows; i++) {
@@ -267,16 +272,17 @@ public:
 
 			// Check to see if the world has stabilized
 			stable = Stable();
-			// If it has, pause a couple of seconds extra so viewers
+			// If it has, pause a moment extra so viewers
 			// can see the final state
 			if (stable)
-				Sleep(2000);
+				Sleep(500);
 			AddGens();
 
 			// 72 miliseconds is something close to 1/16th of a second
 			Sleep(72); // Sleep only works with Windows
 			clear_screen();
 			PrintBoard();
+			cout << "Generation: #" << g;
 			g++;
 		}
 
