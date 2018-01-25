@@ -1,7 +1,14 @@
-//Program: Linked List
-//Author: Basically the entire 3013 class but modified by Jeremy Glebe
-//Date: 1/25/18
-//Description: Its a linked list. I added a ordered insert method.
+///////////////////////////////////////////////////////////////////////////////
+// Title:            Linked List - orderedSert
+// Files:            main.cpp
+// Semester:         3013 Algorithms Spring 2018
+//
+// Author:           Jeremy Glebe
+// Email:            jeremyglebe@gmail.com
+// Description:
+//       This program implements an integer linked list. In addition to the code
+//		written in class, I implemented an ordered insert method.
+/////////////////////////////////////////////////////////////////////////////////
 
 #include <iostream>
 #include <ctime>
