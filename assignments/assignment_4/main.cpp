@@ -1,7 +1,18 @@
 /**
+* Title: Correcting Binary Search Tree
+* Files:
+*    - main.cpp
+*    - BSTree.h
+*    - BSTree.cpp
+* Semester: Spring 2018
+* Author: Jeremy Glebe
+* Email: jeremyglebe@gmail.com
+* Description: Program defines and implements a binary search tree class. We test
+*              the new class in main.cpp
+*/
+
+/**
 *	File: main.cpp
-*	Author: Jeremy Glebe (And originally, Dr. Griffin & 3013 Algorithms class)
-*	Date: 2/12/18 Idk when we started this exactly. I fixed stuff on the 12th.
 *	Description: Tests Binary Search Tree class and ensures it can delete properly
 */
 using namespace std;
