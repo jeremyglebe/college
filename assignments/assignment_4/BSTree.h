@@ -1,7 +1,5 @@
 /**
 *	File: BSTree.h
-*	Author: Jeremy Glebe (And originally, Dr. Griffin & 3013 Algorithms class)
-*	Date: 2/12/18 Idk when we started this exactly. I fixed stuff on the 12th.
 *	Description: Defines a Binary Search Tree class (BSTree). Binary Search Tree
 *	can be searched quickly and efficiently. The bug in deletion was
 *	fixed in implementation file.
