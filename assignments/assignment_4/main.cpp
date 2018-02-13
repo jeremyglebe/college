@@ -1,6 +1,6 @@
 /**
 *	File: main.cpp
-*	Author: Dr. Griffin with a little bit of input from the 3013 Algorithms class
+*	Author: Jeremy Glebe (And originally, Dr. Griffin & 3013 Algorithms class)
 *	Date: 2/12/18 Idk when we started this exactly. I fixed stuff on the 12th.
 *	Description: Tests Binary Search Tree class and ensures it can delete properly
 */

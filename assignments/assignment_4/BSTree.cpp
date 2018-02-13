@@ -1,11 +1,10 @@
 /**
 *	File: BSTree.cpp
-*	Author: The entire class, mostly Griffin, and I fixed a line and
-*					rearranged some stuff.
+*	Author: Jeremy Glebe (And originally, Dr. Griffin & 3013 Algorithms class)
 *	Date: 2/12/18 Idk when we started this exactly. I fixed stuff on the 12th.
 *	Description: Implements a Binary Search Tree class (BSTree). Binary Search
 *							 Tree can be searched quickly and efficiently. The bug in deletion
-*							 was fixed on line 310, in the public facing delete method
+*							 was fixed on line 309, in the public facing delete method
 */
 #include"BSTree.h"
 
