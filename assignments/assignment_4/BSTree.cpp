@@ -3,8 +3,8 @@
 *	Author: Jeremy Glebe (And originally, Dr. Griffin & 3013 Algorithms class)
 *	Date: 2/12/18 Idk when we started this exactly. I fixed stuff on the 12th.
 *	Description: Implements a Binary Search Tree class (BSTree). Binary Search
-*							 Tree can be searched quickly and efficiently. The bug in deletion
-*							 was fixed on line 309, in the public facing delete method
+*	Tree can be searched quickly and efficiently. The bug in deletion
+*	was fixed on line 309, in the public facing delete method
 */
 #include"BSTree.h"
 
@@ -109,7 +109,7 @@ node *BSTree::minValueNode(node *root)
  * @param  root  - The root node of the subtree for the current call
  * @param  key   - The data stored in the node we wish to delete
  * @return node* - The node which should take the place of the item from the
- * 								 previous call.
+ * 		   previous call.
  */
 node *BSTree::deleteNode(node *&root, int key)
 {
