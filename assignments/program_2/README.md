@@ -8,7 +8,6 @@ Description:
 
     Corrected the delete method in a binary search tree.
     
-
 Files:
 
     - main.cpp
@@ -16,4 +15,3 @@ Files:
     - BSTree.h
     
     - BSTree.cpp
-    
