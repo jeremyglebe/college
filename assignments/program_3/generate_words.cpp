@@ -8,6 +8,7 @@
 #include<string>
 #include<ctime>
 #include<vector>
+#include<set>
 using namespace std;
 
 //Function Name: generateWords
@@ -21,8 +22,8 @@ void generateWords(int num, string filename) {
 	vector<string> adverbs; //Stores adverbs
 	vector<string> nouns; //Stores nouns
 	vector<string> verbs; //Stores verbs
-	vector<string> all; //Keeps track of all of the words as well
-	vector<string> newWords; //Stores finished crazy words
+	set<string> all; //Set of all of the words from all lists
+	set<string> newWords; //Stores finished crazy words
 	string word; //The current word
 	ifstream infile;
 	ofstream outfile;
@@ -32,8 +33,8 @@ void generateWords(int num, string filename) {
 	infile.open("adjectives.txt");
 	while (infile >> word) {
 		//This condition ensures there are no duplicates between lists of words
-		if (find(all.begin(), all.end(), word) == all.end()) {
-			all.push_back(word);
+		if (all.find(word) == all.end()) {
+			all.insert(word);
 			adjectives.push_back(word);
 		}
 	}
@@ -42,8 +43,8 @@ void generateWords(int num, string filename) {
 	infile.open("adverbs.txt");
 	while (infile >> word) {
 		//This condition ensures there are no duplicates between lists of words
-		if (find(all.begin(), all.end(), word) == all.end()) {
-			all.push_back(word);
+		if (all.find(word) == all.end()) {
+			all.insert(word);
 			adverbs.push_back(word);
 		}
 	}
@@ -52,8 +53,8 @@ void generateWords(int num, string filename) {
 	infile.open("animals.txt");
 	while (infile >> word) {
 		//This condition ensures there are no duplicates between lists of words
-		if (find(all.begin(), all.end(), word) == all.end()) {
-			all.push_back(word);
+		if (all.find(word) == all.end()) {
+			all.insert(word);
 			//Animals are nouns as well
 			nouns.push_back(word);
 		}
@@ -63,8 +64,8 @@ void generateWords(int num, string filename) {
 	infile.open("nouns.txt");
 	while (infile >> word) {
 		//This condition ensures there are no duplicates between lists of words
-		if (find(all.begin(), all.end(), word) == all.end()) {
-			all.push_back(word);
+		if (all.find(word) == all.end()) {
+			all.insert(word);
 			nouns.push_back(word);
 		}
 	}
@@ -73,13 +74,14 @@ void generateWords(int num, string filename) {
 	infile.open("verbs.txt");
 	while (infile >> word){
 		//This condition ensures there are no duplicates between lists of words
-		if (find(all.begin(), all.end(), word) == all.end()) {
-			all.push_back(word);
+		if (all.find(word) == all.end()) {
+			all.insert(word);
 			verbs.push_back(word);
 		}
 	}
 	infile.close();
 	//Generate some number of words and send them to tenthousandwords.txt
+	outfile.open(filename);
 	srand(time(NULL));
 	while (newWords.size() < num) {
 		string crazy = "";
@@ -95,18 +97,15 @@ void generateWords(int num, string filename) {
 		if (newWords.size() + 1 != num)
 			crazy += '\n';
 		//If statement to ensure the word isn't already there
-		if (find(newWords.begin(), newWords.end(), crazy) == newWords.end()) {
-			newWords.push_back(crazy);
+		if (newWords.find(crazy) == newWords.end()) {
+			newWords.insert(crazy);
+			outfile << crazy;
 		}
 		//Tracking status
 		cout << "# of Words Generated: " << ++thusFar << '\r';
 	}
 	//Final status on words generated
 	cout << "# of Words Generated: " << thusFar << endl;
-	outfile.open(filename);
-	for (int i = 0; i < newWords.size(); i++) {
-		outfile << newWords[i];
-	}
 	outfile.close();
 	return;
 }
