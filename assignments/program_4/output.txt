@@ -1,6 +1,6 @@
 - Lebanon, Kansas
-	0 miles 12 edges 
-	0.0212168% connected
+	304067 miles 54952 edges 
+	97.21% connected
 - Miami Beach, Florida
 	280638 miles 54324 edges 
 	96.1067% connected
