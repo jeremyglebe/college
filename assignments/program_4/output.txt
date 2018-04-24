@@ -1,3 +1,15 @@
 - Lebanon, Kansas
 	0 miles 12 edges 
 	0.0212168% connected
+- Miami Beach, Florida
+	280638 miles 54324 edges 
+	96.1067% connected
+- Lake Dallas, Texas
+	312605 miles 55220 edges 
+	97.7033% connected
+- Boston, Massachussets
+	363687 miles 55184 edges 
+	97.6396% connected
+- San Juan, Puerto Rico
+	1162.88 miles 294 edges 
+	100% connected
