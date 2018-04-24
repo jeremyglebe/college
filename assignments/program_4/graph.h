@@ -22,7 +22,7 @@ int debComp = 0;
 void progress(double total) {
 	cout << flush;
 	system("CLS");
-	cout << "Cities Visited: " << '(' << debComp << '/' << total << ") -- " << (debComp / total) << '%' << endl;
+	cout << "Cities Visited: " << '(' << debComp << '/' << total << ") -- " << ((debComp / total) * 100) << '%' << endl;
 }
 
 struct latlon
@@ -157,10 +157,11 @@ class graph
 public:
 	int id;                      // id counter for new vertices
 	int num_edges;               // edge count
+	double totalWeight; //distance the edges add up to
 	vector<vertex *> vertexList; // vector to hold vertices
 	strMapInt cityLookup;
-	//Vertex lists for specifc states
-	map<string, vector<vertex *>> stateList;
+	//ID lists for specifc states
+	map<string, vector<int>> stateList;
 	//Reference for state adjacency
 	map<string, vector<string>> stateRef;
 	//File stream to get state adjacency information
@@ -189,6 +190,7 @@ public:
 		id = 0;
 		num_edges = 0;
 
+		totalWeight = 0;
 		//Generate a state adjacency reference
 		//state_adj.txt MUST be in the SAME folder as program_4.exe
 		state_adj.open("state_adj.txt");
@@ -217,6 +219,7 @@ public:
 		vertexList = G.vertexList;
 		cityLookup = G.cityLookup;
 
+		totalWeight = G.totalWeight;
 		//Generate a state adjacency reference
 		//state_adj.txt MUST be in the SAME folder as program_4.exe
 		state_adj.open("state_adj.txt");
@@ -262,8 +265,6 @@ public:
 
 		vertex *temp = createVertex(city, state, latlon(lat, lon));
 		vertexList.push_back(temp);
-		//Also push it into the state list
-		stateList[temp->state].push_back(temp);
 		//update the value that city points to.
 		cityLookup[city + state] = temp->ID;
 		return temp->ID;
@@ -284,6 +285,7 @@ public:
 		edge e1(toID, weight);
 		vertexList[fromID]->E.push_back(e1);
 		num_edges++;
+		totalWeight += weight;
 		//cout << "adding " << fromID << " to " << toID << endl;
 		if (!directed)
 		{
@@ -371,27 +373,30 @@ public:
 		vector<int> nb;
 		//iterator
 		vector<int>::iterator it;
-		for (int i = 0; i < vertexList.size(); i++) {
-			if (valid(cid, i, max_edges) && nb.size() == 0) {
-				nb.push_back(i);
-			}
-			else if (valid(cid, i, max_edges)) {
-				bool placed = false;
-				for (int j = 0; j < nb.size(); j++) {
-					it = nb.begin() + j;
-					if (vertexList[cid]->dist(*vertexList[i]) < vertexList[cid]->dist(*vertexList[nb[j]])) {
-						nb.insert(it, i);
-						j = nb.size() + 1;
-						placed = true;
+		for (int l = 0; l < stateRef[vertexList[cid]->state].size(); l++) {
+			string st = stateRef[vertexList[cid]->state][l];
+			for (int i = 0; i < stateList[st].size(); i++) {
+				if (valid(cid, stateList[st][i], max_edges) && nb.size() == 0) {
+					nb.push_back(stateList[st][i]);
+				}
+				else if (valid(cid, stateList[st][i], max_edges)) {
+					bool placed = false;
+					for (int j = 0; j < nb.size(); j++) {
+						it = nb.begin() + j;
+						if (vertexList[cid]->dist(*vertexList[stateList[st][i]]) < vertexList[cid]->dist(*vertexList[nb[j]])) {
+							nb.insert(it, stateList[st][i]);
+							j = nb.size() + 1;
+							placed = true;
+						}
+					}
+					if (placed == false && nb.size() < num_get) {
+						nb.push_back(stateList[st][i]);
 					}
 				}
-				if (placed == false && nb.size() < num_get) {
-					nb.push_back(i);
-				}
-			}
 
-			if (nb.size() > num_get) {
-				nb.pop_back();
+				if (nb.size() > num_get) {
+					nb.pop_back();
+				}
 			}
 		}
 		return nb;
@@ -405,6 +410,14 @@ public:
 	*/
 	void createSpanningTree(int cid, int max_edges)
 	{
+		//CREATE STATE BASED CITY ID LISTS
+		//I honestly have no idea why this has to be located here but it
+		//doesn't work anywhere else and using state reference greatly improves
+		//performance time so its here to stay
+		for (int i = 0; i < vertexList.size(); i++) {
+			stateList[vertexList[i]->state].push_back(i);
+		}
+
 		//The city queue
 		queue<int> q;
 		//The current selected city

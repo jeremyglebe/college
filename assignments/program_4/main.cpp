@@ -1,26 +1,29 @@
 #include<iostream>
 #include<string>
+#include<fstream>
 #include"graph.h"
 using namespace std;
 
-graph loadGraphCSV(string, int);
+graph loadGraphCSV(string filename, int max = 0, string filter = "PR", bool filterout = true);
 
 int main(int argc, char** argv) {
+	ofstream outfile;
+	ofstream graphfile;
 
-	graph g(loadGraphCSV("filtered_cities.csv", 0));
-	//graph g(loadGraphCSV("test.csv", 0));
+	graph KS(loadGraphCSV("filtered_cities.csv"));
+	KS.createSpanningTree(KS.cityLookup["LebanonKS"], 3);
 
-	////
-	//Make sure state adjaceny reference is working
-	for (auto subject : g.stateRef) {
-		for (auto adjacents : g.stateRef[subject.first]) {
-			cout << adjacents << '\t';
-		}
-		cout << endl;
-	}
+	graph FL(loadGraphCSV("filtered_cities.csv"));
+	FL.createSpanningTree(FL.cityLookup["Miami BeachFL"], 3);
 
-	//g.createSpanningTree(g.cityLookup["HoltsvilleNY"], 3);
-	g.createSpanningTree(g.cityLookup["BrooksvilleME"], 3);
+	graph TX(loadGraphCSV("filtered_cities.csv"));
+	TX.createSpanningTree(TX.cityLookup["Lake DallasTX"], 3);
+
+	graph MA(loadGraphCSV("filtered_cities.csv"));
+	MA.createSpanningTree(MA.cityLookup["BostonMA"], 3);
+
+	graph PR(loadGraphCSV("filtered_cities.csv", 0, "PR", false));
+	PR.createSpanningTree(PR.cityLookup["San JuanPR"], 3);
 
 	return 0;
 }
@@ -29,10 +32,13 @@ int main(int argc, char** argv) {
 * loadGraphCSV - loads a graph with the given csv
 * Params:
 *     string filename  - filename to open
+*     string filter - state to include/exclude
+*     bool filterout - if true, don't include the filtered state, if false,
+*                      ONLY include the filtered state
 * Returns
 *     graph
 */
-graph loadGraphCSV(string filename, int max = 0)
+graph loadGraphCSV(string filename, int max, string filter, bool filterout)
 {
 	int zip;
 	double lat;
@@ -81,7 +87,9 @@ graph loadGraphCSV(string filename, int max = 0)
 			// Add the city as a key to the map.
 			cityCheck[city] = 0;
 
-			if (state != "PR") {
+			//I changed this to allow for filtering OUT a specific state
+			//OR filtering to ONLY INCLUDE a certain state
+			if ((filterout && state != filter) || (!filterout && state == filter)) {
 				G.addVertex(city, state, lat, lon);
 				i++;
 			}
