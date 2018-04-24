@@ -1,9 +1,28 @@
-#pragma once
+///////////////////////////////////////////////////////////////////////////////
+// Title:            Spanning Trees
+// Files:            main.cpp
+//					 graph.h
+//					 distance.h
+//					 edge_heap.h
+//					 csv.h
+// Semester:         3013 Algorithms Spring 2018
+//
+// Author:           Jeremy Glebe
+// Email:            jeremyglebe@gmail.com
+// Description:
+//       This program reads in cities from a file and then inserts them into a 
+//       graph. It connects the graph using a specified # of edges per city.
+/////////////////////////////////////////////////////////////////////////////////
 
+/* Notes:
+** I changed a LOT in this file but I've commented all my changes for the most
+** part so they should be able to be followed.
+*/
+
+#pragma once
 #include <algorithm>
 #include <vector>
 #include <queue>
-#include <set>
 #include <map>
 #include <iostream>
 #include <fstream>
@@ -11,19 +30,25 @@
 #include "edge_heap.h"
 #include "distance.h"
 #include "csv.h"
-
 using namespace std;
-
 // Might use as a lookup from city name to ID.
 // And to filter duplicate cities.
 typedef map<string, int> strMapInt;
 
+/* Function: progress
+** Description: Displays the progress of the program at the moment, originally
+**     I was just using this for debugging but as it turns out I think it looks
+**     kinda nice so I left it in.
+*/
 void progress(double soFar, double total) {
 	cout << flush;
 	system("CLS");
 	cout << "Cities Visited: " << '(' << soFar << '/' << total << ") -- " << ((soFar / total) * 100) << '%' << endl;
 }
 
+/* A latitude/longitude location structure
+** made by Dr. Griffin and unchanged
+*/
 struct latlon
 {
 	double lat;
@@ -73,6 +98,7 @@ struct latlon
 
 /**
  * vertex - represents a vertex in a graph.
+ * I added lat() lon() dist() and connected()
  */
 struct vertex
 {
@@ -112,6 +138,7 @@ struct vertex
 	}
 
 	/* Method: dist
+	** Description: Gets distance from a vertex, just reuses distanceEarth
 	*/
 	double dist(vertex other) {
 		return distanceEarth(lat(), lon(), other.lat(), other.lon());
@@ -119,6 +146,8 @@ struct vertex
 
 	/* Method: connected
 	** Description: Determines if there is a connection to the vertex #id
+	** Param: id, the id of the vertex we're checking if we're connected to
+	** Return: bool, is the vertex connected to this vertex
 	*/
 	bool connected(int id) {
 		for (int i = 0; i < E.size(); i++) {
@@ -150,6 +179,9 @@ struct vertex
  *     vertex* createVertex(string city,string state)
  * Methods (public):
  *     graph()
+ * I modified: createSpanningTree(), I implemented it, addVertex(), addEdge(),
+ *     and maybe a few others
+ * I added: state reference stuff, total weight, valid(), and neighbors()
  */
 class graph
 {
@@ -252,6 +284,7 @@ public:
 	 */
 	int addVertex(string city, string state, double lat = 0.0, double lon = 0.0)
 	{
+		//I modified this to use state, borrowed from Shady's code on slack ofc
 		if (cityLookup.find(city + state) == cityLookup.end())
 		{
 			// Add the city as a key to the map.
@@ -284,6 +317,7 @@ public:
 		edge e1(toID, weight);
 		vertexList[fromID]->E.push_back(e1);
 		num_edges++;
+		//Just included total weight cumulation here
 		totalWeight += weight;
 		//cout << "adding " << fromID << " to " << toID << endl;
 		if (!directed)
@@ -320,6 +354,9 @@ public:
 		}
 	}
 
+	/* Method: mylower
+	** Description: Not my lower, rather, Dr. Griffin's mylower
+	*/
 	string mylower(string s) {
 		for (int i = 0; i < s.length(); i++) {
 			if (s[i] >= 'A' && s[i] <= 'Z') {
@@ -329,6 +366,10 @@ public:
 		return s;
 	}
 
+	/* Method: searchGraph
+	** Description: searches the graph and returns the string back if found
+	**     also not mine. Haven't changed it any.
+	*/
 	string searchGraph(string c)
 	{
 
@@ -354,10 +395,13 @@ public:
 	**     max_edges - the maximum edges that a city should have
 	*/
 	bool valid(int cid, int vid, int max_edges) {
+		//A valid vertex is not already connected to the city
 		if (vertexList[cid]->connected(vid))
 			return false;
+		//A valid vertex has less than max_edges edges
 		if (vertexList[vid]->E.size() >= max_edges)
 			return false;
+		//A valid vertex is NOT the same city looking for neighbors
 		if (vid == cid)
 			return false;
 		return true;
@@ -366,19 +410,30 @@ public:
 	/* Method: neighbors
 	** Description: Finds the nearest valid neighbors and returns a vector of
 	**     their ids
+	** Params:
+	**     cid - the id of the city we are drawing edges from
+	**     num_get - how many neighbors the city needs
+	**     max_edges - how many edges a city can have
 	*/
 	vector<int> neighbors(int cid, int num_get, int max_edges) {
 		//vertex holding the neighbors
 		vector<int> nb;
 		//iterator
 		vector<int>::iterator it;
+		//Basically this goes through the state reference and uses every near
+		// enough state
 		for (int l = 0; l < stateRef[vertexList[cid]->state].size(); l++) {
+			//this sets our current state so we can access its list
 			string st = stateRef[vertexList[cid]->state][l];
+			//This loops through all the city ids in this states list
 			for (int i = 0; i < stateList[st].size(); i++) {
+				//If the neighbor list is empty, and we have a valid city, push it
 				if (valid(cid, stateList[st][i], max_edges) && nb.size() == 0) {
 					nb.push_back(stateList[st][i]);
 				}
 				else if (valid(cid, stateList[st][i], max_edges)) {
+					//placement once theres stuff there is slightly more complicated
+					//but I'm basically just using a vector as a heap
 					bool placed = false;
 					for (int j = 0; j < nb.size(); j++) {
 						it = nb.begin() + j;
@@ -388,11 +443,13 @@ public:
 							placed = true;
 						}
 					}
+					//If it didn't find a place before any items, and the list
+					//still isn't at the objective size, just push it to the back
 					if (placed == false && nb.size() < num_get) {
 						nb.push_back(stateList[st][i]);
 					}
 				}
-
+				//Don't forget, we need to keep it under num_get
 				if (nb.size() > num_get) {
 					nb.pop_back();
 				}
@@ -401,7 +458,6 @@ public:
 		return nb;
 	}
 
-	// find the three closest vertices and create edges between them.
 	/* Method: createSpanningTree
 	** Params:
 	**     cid - id of the starting city
@@ -449,6 +505,10 @@ public:
 		return debComp;
 	}
 
+	/* Method: printVids
+	** Description: I do not know the purpose or functionality of this method
+	**     Seems to print ids. Makes sense given the name.
+	*/
 	void printVids() {
 		vector<vertex *>::iterator vit;
 		vector<edge>::iterator eit;
@@ -459,6 +519,9 @@ public:
 		}
 	}
 
+	/* Method: graphViz
+	** Description: This is really cool but I couldn't comment it if I tried
+	*/
 	string graphViz(bool directed = true) {
 		vector<vertex *>::iterator vit;
 		vector<edge>::iterator eit;

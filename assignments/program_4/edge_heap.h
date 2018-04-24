@@ -1,18 +1,20 @@
 ///////////////////////////////////////////////////////////////////////////////
-//                   YOU MUST COMPLETE AND COMMENT YOUR CODE!
-// Title:            (program's title)
-// Files:            (list of source files)
-// Semester:         (course) Spring 2018
+// Title:            Spanning Trees
+// Files:            main.cpp
+//					 graph.h
+//					 distance.h
+//					 edge_heap.h
+//					 csv.h
+// Semester:         3013 Algorithms Spring 2018
 //
-// Author:           (your name)
-// Email:            (your email address)
+// Author:           Jeremy Glebe
+// Email:            jeremyglebe@gmail.com
 // Description:
-//       describe program here thoroughly
+//       This program reads in cities from a file and then inserts them into a 
+//       graph. It connects the graph using a specified # of edges per city.
 /////////////////////////////////////////////////////////////////////////////////
 #pragma once
-
 #include "graph.h"
-
 using namespace std;
 
 /**
