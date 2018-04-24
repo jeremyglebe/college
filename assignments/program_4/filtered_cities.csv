@@ -798,7 +798,6 @@
 3751,43.4487,-72.0637,Georges Mills,NH,Sullivan
 3753,43.4631,-72.2184,Grantham,NH,Sullivan
 3754,43.3656,-72.1256,Guild,NH,Sullivan
-3756,43.9675,-71.8409,Lebanon,NH,Grafton
 3768,43.8017,-72.1305,Lyme,NH,Grafton
 3769,43.7863,-72.1205,Lyme Center,NH,Grafton
 3770,43.4217,-72.2556,Meriden,NH,Sullivan
@@ -14281,6 +14280,7 @@
 66941,39.821,-98.4334,Esbon,KS,Jewell
 66942,39.7783,-97.9932,Formoso,KS,Jewell
 66946,39.8415,-96.9663,Hollenberg,KS,Washington
+66952,39.8097,-98.5556,Lebanon,KS,Smith
 66955,39.8417,-97.2261,Mahaska,KS,Washington
 66958,39.8858,-97.1721,Morrowville,KS,Washington
 66959,39.8603,-97.4985,Munden,KS,Republic
@@ -18950,4 +18950,4 @@
 99927,55.5179,-132.003,Point Baker,AK,Prince Wales Ketchikan
 99928,55.3954,-131.675,Ward Cove,AK,Ketchikan Gateway
 99929,56.4499,-132.364,Wrangell,AK,Wrangell Petersburg
-66952,39.8097,-98.5556,Lebanon,KS,Smith
+3756,43.9675,-71.8409,Lebanon,NH,Grafton
