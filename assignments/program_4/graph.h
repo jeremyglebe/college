@@ -18,11 +18,10 @@ using namespace std;
 // And to filter duplicate cities.
 typedef map<string, int> strMapInt;
 
-int debComp = 0;
-void progress(double total) {
+void progress(double soFar, double total) {
 	cout << flush;
 	system("CLS");
-	cout << "Cities Visited: " << '(' << debComp << '/' << total << ") -- " << ((debComp / total) * 100) << '%' << endl;
+	cout << "Cities Visited: " << '(' << soFar << '/' << total << ") -- " << ((soFar / total) * 100) << '%' << endl;
 }
 
 struct latlon
@@ -407,9 +406,11 @@ public:
 	** Params:
 	**     cid - id of the starting city
 	**     max_edges - number of edges each vertex can have
+	** Returns: the number of successfully connected cities
 	*/
-	void createSpanningTree(int cid, int max_edges)
+	int createSpanningTree(int cid, int max_edges)
 	{
+		int debComp = 0; //debugging - count the number of cities connected
 		//CREATE STATE BASED CITY ID LISTS
 		//I honestly have no idea why this has to be located here but it
 		//doesn't work anywhere else and using state reference greatly improves
@@ -426,7 +427,7 @@ public:
 		vertexList[cid]->visited = true;
 		////
 		debComp++;
-		progress(vertexList.size());
+		progress(debComp, vertexList.size());
 		do {
 			city = q.front();
 			q.pop();
@@ -441,11 +442,11 @@ public:
 					vertexList[nbs[i]]->visited = true;
 					////
 					debComp++;
-					progress(vertexList.size());
+					progress(debComp, vertexList.size());
 				}
 			}
 		} while (!q.empty());
-		return;
+		return debComp;
 	}
 
 	void printVids() {

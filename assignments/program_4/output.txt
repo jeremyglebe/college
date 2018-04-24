@@ -1,0 +1,3 @@
+- Lebanon, Kansas
+	0 miles 12 edges 
+	0.0212168% connected
