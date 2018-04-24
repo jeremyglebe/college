@@ -1,3 +1,14 @@
+Name: Jeremy Glebe
+
+Date: 4/24/2018
+
+Assignment: Program 4
+
+Description:
+
+    Creates a graph using cities loaded in from a file.
+    
+
 - assignments
     - program_4   
         - [readme.md](https://github.com/jeremyglebe/3013-Algorithms-Glebe/blob/master/assignments/program_4/readme.md)
