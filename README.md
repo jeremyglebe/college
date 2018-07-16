@@ -2,6 +2,6 @@
 
 ### Jeremy Glebe
 
-![Literally me](./jglebe.jpg)
+![Literally me](./jglebe.jpg | width=300)
 
 jeremyglebe@gmail.com
