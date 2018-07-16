@@ -35,6 +35,7 @@
 
         //Constants
         const MAX_TIME = 120;
+        const IRON_COST = 300;
         //Variables
         var cursors;
         var sky;
@@ -50,10 +51,13 @@
         var gameTime = MAX_TIME;
         //Flags
         var gameOver = false;
+        var iron = false;
         //Display
         var scoreText;
         var deathText;
         var timeText;
+        //Sounds
+        var snd_iron;
 
         var game = new Phaser.Game(config);
 
@@ -73,6 +77,8 @@
             //http://hasgraphics.com/wp-content/uploads/2010/08/spritesheet1.png
             this.load.spritesheet('explosion', 'assets/explosion.png', { frameWidth: 100, frameHeight: 100 });
             this.load.spritesheet('scarf_guy', 'assets/sheet_scarf_guy.png', { frameWidth: 50, frameHeight: 70 });
+            //Audio
+            this.load.audio('ironman', 'assets/music_iron_man.mp3');
         }
 
         /*
@@ -82,6 +88,9 @@
         function create() {
             //  A simple background for our game
             sky = this.add.image(400, 300, 'sky');
+
+            //Sound effects
+            snd_iron = this.sound.add('ironman');
 
             //  The platforms group contains the ground and the 2 ledges we can jump on
             platforms = this.physics.add.staticGroup();
@@ -226,6 +235,25 @@
             if (cursors.up.isDown && player.body.touching.down) {
                 player.setVelocityY(-330);
             }
+            //The player can power up by pressing down, if they have 300 points
+            //and are not already powered up
+            if (cursors.down.isDown && score >= IRON_COST && iron == false) {
+                console.log('Scarf Guy is iron!')
+                iron = true;
+                score -= IRON_COST;
+                scoreText.setText('SCORE: ' + score);
+                player.setTint(0x999999).setAlpha(125);
+                snd_iron.play();
+                //example: https://phaser.io/phaser3/devlog/87
+                var pwrtime = this.time.delayedCall(1000 * 10, function () {
+                    iron = false;
+                    if (deaths < 16) {
+                        player.setTint(plyTint);
+                    } else {
+                        player.setTint(0xff0000);
+                    }
+                }, [], this);
+            }
         }
 
         //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
@@ -281,28 +309,43 @@
                 bomb - the bomb with which they collide
         */
         function hitBomb(player, bomb) {
-            //Add and update the deaths
-            deaths++;
-            deathText.setText('DEATHS: ' + deaths);
-            //Update the score
-            score = 0;
-            scoreText.setText('SCORE: ' + score);
+            if (!iron) {
+                //Add and update the deaths
+                deaths++;
+                deathText.setText('DEATHS: ' + deaths);
+                //Update the score
+                score = 0;
+                scoreText.setText('SCORE: ' + score);
 
-            //Destroy the bomb, including explosion animation
-            var boom = this.add.sprite(bomb.x, bomb.y, 'bomb');
-            //Animation completion callback example:
-            //https://labs.phaser.io/edit.html?src=src\animation\on%20complete%20callback.js
-            boom.on('animationcomplete', function (anim, frame) { boom.destroy(); }, this);
-            boom.anims.play('explosion');
-            bomb.destroy();
+                //Destroy the bomb, including explosion animation
+                var boom = this.add.sprite(bomb.x, bomb.y, 'bomb');
+                //Animation completion callback example:
+                //https://labs.phaser.io/edit.html?src=src\animation\on%20complete%20callback.js
+                boom.on('animationcomplete', function (anim, frame) { boom.destroy(); }, this);
+                boom.anims.play('explosion');
+                bomb.destroy();
 
-            //"bloody" the player
-            //Its just a redder tint...
-            if (deaths < 16) {
-                plyTint -= 0x001010;
-                player.setTint(plyTint);
-            } else {
-                player.setTint(0xff0000);
+                //"bloody" the player
+                //Its just a redder tint...
+                if (deaths < 16) {
+                    plyTint -= 0x001010;
+                    player.setTint(plyTint);
+                } else {
+                    player.setTint(0xff0000);
+                }
+            }
+            else {
+                //  Add and update the score
+                score += 10;
+                scoreText.setText('SCORE: ' + score);
+
+                //Destroy the bomb, including explosion animation
+                var boom = this.add.sprite(bomb.x, bomb.y, 'bomb');
+                //Animation completion callback example:
+                //https://labs.phaser.io/edit.html?src=src\animation\on%20complete%20callback.js
+                boom.on('animationcomplete', function (anim, frame) { boom.destroy(); }, this);
+                boom.anims.play('explosion');
+                bomb.destroy();
             }
         }
 
