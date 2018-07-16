@@ -111,6 +111,11 @@
             // Creating the player & their settings
             player = this.physics.add.sprite(100, 450, 'scarf_guy');
             player.body.setSize(player.width - 8, player.height - 8);
+            /****Adding Members to Single Objects (not the class prototype)****
+            player.myvar = 10;
+            console.log(player.myvar);
+            console.log(player);
+            ******************************************************************/
             //  Player physics properties. Give the little guy a slight bounce.
             player.setBounce(0.2);
             player.setCollideWorldBounds(true);
