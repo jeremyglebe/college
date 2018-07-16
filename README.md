@@ -2,7 +2,6 @@
 
 ### Jeremy Glebe
 
-![Something wrong?](./jglebe.jpg)
-<img src="./jglebe.jpg" alt="Something wrong?" width="100" height="300">
+<img src="./jglebe.jpg" alt="Something wrong?" width="108" height="186">
 
 jeremyglebe@gmail.com
