@@ -2,6 +2,6 @@
 
 ### Jeremy Glebe
 
-<img src="./jglebe.jpg" alt="Something wrong?" width="108" height="186">
+<img src="./jglebe.jpg" alt="Something wrong?" width="216" height="372">
 
 jeremyglebe@gmail.com
