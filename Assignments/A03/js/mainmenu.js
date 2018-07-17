@@ -41,7 +41,8 @@ var mainMenu = {
 			"Tell your friends!",
 			"This is not a test.",
 			"Space. Space. Gotta go to space.",
-			"!?"
+			"!?",
+			"5-Stars \"Boulders rock.\"-IGN"
 		]
 		label.text = Phaser.ArrayUtils.getRandomItem(label.texts)
 
