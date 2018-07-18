@@ -54,7 +54,10 @@ var gameOver = {
 	*/
 	listener: function () {
 		game.sound.stopAll();
+		// Reset values
 		game.global.score = 0;
+		game.global.g_speed = 1;
+		game.global.ob_frames = 120;
 		BG_COLOR = COLORS_PASTEL[Math.floor(Math.random() * (COLORS_PASTEL.length - 1))]
 		//Return to the menu after the game over. Just thought it seemed nicer
 		game.state.start('mainMenu')

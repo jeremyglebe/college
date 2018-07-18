@@ -17,7 +17,11 @@ var game = new Phaser.Game(450, 550, Phaser.Canvas, "game")
 game.global = {
 	score: 0,
 	best_score: 0,
-	obstacle_id: 0
+	obstacle_id: 0,
+	// Delay between obstacles in frames
+	ob_frames: 120,
+	// Game speed multiplier
+	g_speed: 1
 }
 
 game.state.add("boot", boot)
