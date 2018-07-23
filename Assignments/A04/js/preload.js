@@ -15,10 +15,14 @@ preload.prototype = {
         // Character sprites
         this.load.spritesheet('guy', 'assets/flying.png', 97, 87);
 
-        //Obstacles
+        // Obstacle sprites
         this.load.image('boulder', 'assets/boulder.png');
         this.load.image('axe', 'assets/axe.png');
+        this.load.spritesheet('explosion', 'assets/explosion.png', 100, 100 );
         this.load.spritesheet('fireball', 'assets/fireball.png', 220, 124);
+
+        // Sounds
+        this.load.audio('boom', "assets/halo3_plasma_grenade_exp.mp3");
 
 	},
     

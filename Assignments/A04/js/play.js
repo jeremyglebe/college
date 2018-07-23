@@ -59,6 +59,8 @@ play.prototype = {
             'D': d
         });
         this.game.input.keyboard.addKeyCapture([a, d, l, r]);
+        //For moving the player with the mouse
+        this.dragPly = false;
     },
 
     update: function () {
@@ -115,6 +117,20 @@ play.prototype = {
             shot.body.velocity.x = -500 * Math.cos(ang * (Math.PI / 180));
             shot.body.velocity.y = -500 * Math.sin(ang * (Math.PI / 180));
         }
+        //Move player with mouse
+        if (this.game.input.activePointer.isDown && plySelected && this.game.global.CAN_CLICK) {
+            this.dragPly = true;
+        } else if (this.game.input.activePointer.isDown && this.dragPly && !this.game.global.CAN_CLICK) {
+            if (rel_x < 5) {
+                this.player.x = px;
+            }else if (px < this.player.x){
+                this.player.x -= 5;
+            }else{
+                this.player.x += 5;
+            }
+        } else {
+            this.dragPly = false;
+        }
 
         //Mouse click management, update mouse click
         if (this.game.input.activePointer.isDown) {
@@ -166,9 +182,9 @@ play.prototype = {
         //Size adjustment
         obstacle.scale.setTo(.25, .25);
         //Rotate it
-        obstacle.body.angularVelocity = 200 + (5 * this.player.score);
+        obstacle.body.angularVelocity = 200 + (this.game.global.DIFFICULTY * this.player.score);
         //Determining the obstacles speed
-        obstacle.body.velocity.y = -(100 + (5 * this.player.score));
+        obstacle.body.velocity.y = -(100 + (this.game.global.DIFFICULTY * this.player.score));
 
         frameCounter = frameDelay;
 
@@ -177,8 +193,24 @@ play.prototype = {
     },
 
     shotHit: function (shot, ob) {
-        shot.destroy();
-        ob.destroy();
+
+        //Create the explosion
+        var expl = this.game.add.sprite(ob.x, ob.y, 'explosion');
+        expl.anchor.setTo(.5, .5);
+        expl.animations.add('boom', null, 150, 0);
+        expl.animations.play('boom');
+        expl.events.onAnimationComplete.add(function () {
+            expl.destroy();
+        }, this);
+        expl.sound = this.game.add.audio('boom');
+        expl.sound.volume = .0625;
+        expl.sound.play();
+
+        //Destroy the objects
+        shot.pendingDestroy = true;
+        ob.pendingDestroy = true;
+
+        //Update the score
         this.player.score += 1;
         this.stext.text = String(this.player.score);
     },

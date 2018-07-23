@@ -13,8 +13,8 @@ function main() {
 
     /***Game Globals***/
     game.global = {
-        SCORE: 0,
-        CAN_CLICK: true
+        CAN_CLICK: true,
+        DIFFICULTY: 5
     }
 
     /***Game States***/
