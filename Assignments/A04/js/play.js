@@ -108,7 +108,7 @@ play.prototype = {
         var rel_y = Math.abs(py - this.player.y);
         var plySelected = (rel_x < 40 && rel_y < 40);
         //Player ability to create a fireball at click;
-        if (this.game.input.activePointer.isDown && !plySelected && this.game.global.CAN_CLICK) {
+        if (this.game.input.activePointer.isDown && !plySelected && this.game.global.CAN_CLICK && this.player.tint == 0xffffff) {
             var shot = this.player.shots.create(this.player.x, this.player.y, 'fireball');
             //Setting up the fireball
             this.game.physics.enable(shot, Phaser.Physics.ARCADE);
@@ -122,6 +122,14 @@ play.prototype = {
             //Determining speed
             shot.body.velocity.x = -500 * Math.cos(ang * (Math.PI / 180));
             shot.body.velocity.y = -500 * Math.sin(ang * (Math.PI / 180));
+            
+            //Make the player orange (for shooting delay)
+            this.player.tint = 0xff0000;
+        }
+        //Recover the player's color after fireball
+        if (this.player.tint < 0xffffff){
+            //this.player.tint += 0x001111;
+            this.player.tint += 0x000505;
         }
         //Move player with mouse
         if (this.game.input.activePointer.isDown && plySelected && this.game.global.CAN_CLICK) {
@@ -156,7 +164,7 @@ play.prototype = {
         }
 
         //Update the frame counter
-        frameDelay = (120 - this.player.score > 30) ? (120 - this.player.score) : 30;
+        frameDelay = (120 - this.player.score > 15) ? (120 - this.player.score) : 15;
         frameCounter--;
 
     },
