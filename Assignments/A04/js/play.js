@@ -59,8 +59,14 @@ play.prototype = {
             'D': d
         });
         this.game.input.keyboard.addKeyCapture([a, d, l, r]);
-        //For moving the player with the mouse
+        //Mouse stuff
         this.dragPly = false;
+        if (Phaser.Device.desktop) {
+            console.log("DESKTOP!");
+            this.cursor = this.game.add.sprite(0, 0, 'cursor');
+            this.cursor.anchor.setTo(.5,.5);
+            this.cursor.scale.setTo(.125,.125);
+        }
     },
 
     update: function () {
@@ -123,9 +129,9 @@ play.prototype = {
         } else if (this.game.input.activePointer.isDown && this.dragPly && !this.game.global.CAN_CLICK) {
             if (rel_x < 5) {
                 this.player.x = px;
-            }else if (px < this.player.x){
+            } else if (px < this.player.x) {
                 this.player.x -= 5;
-            }else{
+            } else {
                 this.player.x += 5;
             }
         } else {
@@ -141,6 +147,12 @@ play.prototype = {
         } else {
             //This allows us to check for a single click
             this.game.global.CAN_CLICK = true;
+        }
+
+        //If on desktop, move the emulated cursor
+        if (Phaser.Device.desktop){
+            this.cursor.x = px;
+            this.cursor.y = py;
         }
 
         //Update the frame counter

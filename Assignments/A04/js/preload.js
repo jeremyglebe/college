@@ -12,6 +12,9 @@ preload.prototype = {
     //Load all assets here
 	preload: function(){
         
+        // UI
+        this.load.image('cursor', 'assets/cursor.png');
+
         // Character sprites
         this.load.spritesheet('guy', 'assets/flying.png', 97, 87);
 
