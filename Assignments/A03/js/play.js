@@ -1,5 +1,6 @@
 /* Program: Assignment 03 - Freefall Game
-** Description: Modified version of the freefall game from class.
+** Description: Modified version of the freefall game from class. Now featuring
+**     difficulty scaling based on score.
 ** Author: Jeremy Glebe
 ** File: play.js
 ** Purpose: The main file that controls the game. This handles effecitively
@@ -58,16 +59,11 @@ var play = {
 		this.bmpText.text = game.global.score
 		// Collision
 		game.physics.arcade.overlap(this.player, this.obstacles, this.killPlayer, null, this)
-		/*Spawns obstacles in such a way as to increase difficulty with
-		player score. If you look at the second half of the "or" logic,
-		this is how the difficulty increases. The higher the game score, the
-		more frequently this will be true. The left half of the "or"
-		sets a cap on just how often the obstacles can spawn.*/
-		var score = game.global.score //Just so I can make the next line shorter
-		if ((frame_counter % 60 == 0 && score >= 30) || (frame_counter % (90 - score) == 0 && score < 30)) {
+		// Spawns the obstacles with increasing frequency
+		if (frame_counter % game.global.ob_frames == 0) {
 			console.log("Ob spawned on frame: " + String(frame_counter))
 			//No longer spawn in pairs, random x
-			this.spawnObstacle(game.global.obstacle_id++, game.rnd.integerInRange(0,game.width), game.height, speed = 200)
+			this.spawnObstacle(game.global.obstacle_id++, game.rnd.integerInRange(0, game.width), game.height, speed = 200 * game.global.g_speed)
 		}
 		frame_counter++
 		//Moves the player if needed
@@ -89,14 +85,14 @@ var play = {
 		//This generates a random obstacle
 		var obstacle;
 		var r = game.rnd.integerInRange(0, 2)
-		if (r == 0){
+		if (r == 0) {
 			obstacle = this.obstacles.create(x, y, 'obstacle', entity)
-		}else if (r == 1){
+		} else if (r == 1) {
 			obstacle = this.obstacles.create(x, y, 'boulder', entity)
-			obstacle.scale.setTo(.25,.25)
-		}else{
+			obstacle.scale.setTo(.25, .25)
+		} else {
 			obstacle = this.obstacles.create(x, y, 'axe', entity)
-			obstacle.scale.setTo(.125,.125)
+			obstacle.scale.setTo(.125, .125)
 		}
 
 		game.physics.enable(obstacle, Phaser.Physics.ARCADE)
@@ -106,6 +102,8 @@ var play = {
 		obstacle.body.immovable = true
 		obstacle.anchor.setTo(.5, .5)
 		obstacle.body.velocity.y = -speed
+		// To ensure you only score once per obstacle
+		obstacle.scored = false;
 
 		obstacle.checkWorldBounds = true;
 		// Kill obstacle/enemy if vertically out of bounds
@@ -136,10 +134,22 @@ var play = {
 				let py = this.player.y;
 				let oy = obstacles[i].y;
 				let ox = obstacles[i].x;
-				//If player is below obstacle and within 5 pixels, score!
-				if (py > oy && Math.abs(py - oy) < 5) {
+				//If below obstacle and haven't already scored off of it
+				if (py > oy && !obstacles[i].scored) {
 					point++;
 					this.sound.score.play('', 0, 0.5, false)
+					// Increase the game speed
+					game.global.g_speed += .1;
+					// Flag the obstacle as already scored from
+					obstacles[i].scored = true;
+					// Controls hbow frequently obstacles spawn based on score
+					if (game.global.score > 90) {
+						// This is the highest possible frequency
+						game.global.ob_frames = 30;
+					} else {
+						// Otherwise, frame delay is 120 - score
+						game.global.ob_frames = 120 - game.global.score;
+					}
 				}
 			}
 		}
@@ -158,7 +168,7 @@ var play = {
 
 
 	// Tap on touchscreen or click with mouse
-	onDown: function (pointer) {},
+	onDown: function (pointer) { },
 
 	// Move player
 	move: function () {
@@ -194,8 +204,12 @@ var play = {
 			ratio /= 2;
 			rate = ratio;
 		}
-		//console.log(rate * skill);
-		return rate * skill;
+
+		// Experimental way to increase movement speed with score, so the
+		// difficulty increases but remains possible
+		return rate * skill * game.global.g_speed;
+
+		//return rate * skill;
 	},
 
 	pauseAndUnpause: function (game) {

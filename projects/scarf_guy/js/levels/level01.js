@@ -6,6 +6,8 @@ level01.prototype = {
     //},
 
     create: function () {
+        // Background Color
+		this.game.stage.backgroundColor = 0xff00ff;
         //  We're going to be using physics, so enable the Arcade Physics system
         this.physics.startSystem(Phaser.Physics.ARCADE);
         //  A simple background for our game
@@ -26,7 +28,9 @@ level01.prototype = {
         ledge = platforms.create(-150, 250, 'ground');
         ledge.body.immovable = true;
         // The player and its settings
-        player = this.add.sprite(32, this.world.height - 150, 'dude');
+        player = this.add.sprite(32, this.world.height - 150, 'scarf_guy');
+        // Add a new attribute to "player" called "score"
+        player.score = 0;
         //  We need to enable physics on the player
         this.physics.arcade.enable(player);
         //  Player physics properties. Give the little guy a slight bounce.
@@ -50,7 +54,7 @@ level01.prototype = {
             star.body.bounce.y = 0.7 + Math.random() * 0.2;
         }
         //  The score
-        scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
+        scoreText = this.add.text(16, 16, 'SCORE: 0', { fontSize: '32px', fill: '#000' });
         //  Our controls.
         cursors = this.input.keyboard.createCursorKeys();
     },
@@ -89,7 +93,7 @@ level01.prototype = {
         // Removes the star from the screen
         star.kill();
         //  Add and update the score
-        score += 10;
-        scoreText.text = 'Score: ' + score;
+        player.score += 10;
+        scoreText.text = 'SCORE: ' + player.score;
     }
 }

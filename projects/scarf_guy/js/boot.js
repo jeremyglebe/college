@@ -9,22 +9,26 @@ var boot = function () { };
 boot.prototype = {
 
     create: function () {
-        // Always show the game in proportion, even if only part of screen used
-        this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+        // Scaling, if we're okay with non-absolute size
+        if (this.game.global.G_SCALABLE) {
 
-        // Set scaling minimums and maximums
-        this.scale.minWidth = 1024;
-        this.scale.minHeight = 576;
-        this.scale.maxWidth = 1280;
-        this.scale.maxHeight = 720;
+            //Set scaling minimums and maximums
+            //this.scale.minWidth = 400;
+            //this.scale.minHeight = 300;
+            //this.scale.maxWidth = 1600;
+            //this.scale.maxHeight = 1200;
 
-        // Scale the screen
-		this.scale.pageAlignHorizontally = true;
-		this.scale.pageAlignVertically = true;
-        this.scale.setScreenSize = true;
-        
+            // Always show the game in proportion, even if only part of screen used
+            this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+
+            // Scale the screen
+            this.scale.pageAlignHorizontally = true;
+            this.scale.pageAlignVertically = true;
+            this.scale.setScreenSize = true;
+        }
+
         // Start loading assets (next game state)
-		this.game.state.start('preload');
+        this.game.state.start('preload');
     }
 
 }

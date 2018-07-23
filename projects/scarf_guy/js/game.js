@@ -11,10 +11,16 @@
 window.onload = main();
 function main() {
     /***Game Object***/
-    var game = new Phaser.Game(1280, 720, Phaser.Canvas, "game");
+    var game = new Phaser.Game(800, 600, Phaser.Canvas, "game");
 
     /***Game "Globals" (Not true globals, but availble to all game elements)***/
-
+    //(Use G_ to distinguish from true globals)
+    game.global = {
+        // The overall game score (unused)
+        G_SCORE: 0,
+        // Is it okay to scale the display?
+        G_SCALABLE: true
+    };
 
     /***Game States***/
     game.state.add("boot", boot);

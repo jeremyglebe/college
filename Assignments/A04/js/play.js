@@ -1,250 +1,193 @@
-/* Program: Assignment 03 - Freefall Game
-** Description: Modified version of the freefall game from class. Now featuring
-**     difficulty scaling based on score.
+/* Program: Assignment 04 - Falling game
+** Description: A guy with wings can't fly b/c he sucks now he has to shoot
+**     obstacles and try to score points.
 ** Author: Jeremy Glebe
 ** File: play.js
-** Purpose: The main file that controls the game. This handles effecitively
-**     everything. Obstacles, the player, scoring points. Its all here.
+** Purpose: Actual gameplay. Controls, player, obstacles. Its all here.
 */
 
-var play = {
-	create: function () {
-		console.log("play.js");
-		// Game width and height for convenience
-		w = game.width
-		h = game.height
-		//Number of updates that has occured
-		frame_counter = 0
-		// Bg color
-		game.stage.backgroundColor = BG_COLOR
-		// Bg image
-		this.bg = game.add.image(0, 0, 'bg')
-		// Platform width
-		platform_width = game.cache.getImage('obstacle').width
-		// Score sound
-		this.sound.score = game.add.audio('score')
-		this.sound.score.volume = .4
-		// Death sound
-		this.sound.kill = game.add.audio('kill')
-		// Music
-		this.music = game.add.audio('music')
-		this.music.play('', 0, 0.5, true)
-		//Kick off the physics system
-		this.physics.startSystem(Phaser.Physics.ARCADE)
-		// Obstacles
-		this.obstacles = game.add.group()
-		// Player
-		this.player = game.add.sprite(game.width / 2, 250, 'player')
-		game.physics.enable(this.player, Phaser.Physics.ARCADE)
-		this.player.enableBody = true
-		this.player.body.collideWorldBounds = true
-		this.player.scale.setTo(.5, .5)
-		this.player.anchor.setTo(.5, .5)
-		this.player.body.setSize(this.player.width - 10, this.player.height)
-		// Score label
-		this.bmpText = game.add.bitmapText(game.width / 2, 100, 'fontUsed', '', 150);
-		this.bmpText.anchor.setTo(.5, .5)
-		this.bmpText.scale.setTo(.3, .3)
-		// Support for mouse click and touchscreen input
-		game.input.onDown.add(this.onDown, this)
-		//
-		this.pauseAndUnpause(game)
-	},
+var play = function () { }
+play.prototype = {
 
-	//Changed
-	/* Function: update()
-	** Desc: Runs each time the game updates. 60/s
-	*/
-	update: function () {
-		this.bmpText.text = game.global.score
-		// Collision
-		game.physics.arcade.overlap(this.player, this.obstacles, this.killPlayer, null, this)
-		// Spawns the obstacles with increasing frequency
-		if (frame_counter % game.global.ob_frames == 0) {
-			console.log("Ob spawned on frame: " + String(frame_counter))
-			//No longer spawn in pairs, random x
-			this.spawnObstacle(game.global.obstacle_id++, game.rnd.integerInRange(0, game.width), game.height, speed = 200 * game.global.g_speed)
-		}
-		frame_counter++
-		//Moves the player if needed
-		this.move();
-		//Checks if the score should be increased and does
-		game.global.score += this.scorePoint();
-	},
+    create: function () {
 
-	//Changed
-	/* Function: spawnObstacle()
-	** Description: Spawns a random obstacle for the player to avoid
-	** Params:
-	**     entity - I left this alone. I think its an id?
-	**     x - x coordinate on screen. Left->Right
-	**     y - y coordinate on screen. Top->Bottom
-	**     speed - The speed at which to move up
-	*/
-	spawnObstacle: function (entity, x, y, speed) {
-		//This generates a random obstacle
-		var obstacle;
-		var r = game.rnd.integerInRange(0, 2)
-		if (r == 0) {
-			obstacle = this.obstacles.create(x, y, 'obstacle', entity)
-		} else if (r == 1) {
-			obstacle = this.obstacles.create(x, y, 'boulder', entity)
-			obstacle.scale.setTo(.25, .25)
-		} else {
-			obstacle = this.obstacles.create(x, y, 'axe', entity)
-			obstacle.scale.setTo(.125, .125)
-		}
+        //Change the background color to a nice "sky blue"
+        this.stage.backgroundColor = '#00aaff';
 
-		game.physics.enable(obstacle, Phaser.Physics.ARCADE)
+        //Counts the number of frames that have passed, for spawning
+        frameCounter = 120;
+        frameDelay = 120;
 
-		obstacle.enableBody = true
-		obstacle.body.colliderWorldBounds = true
-		obstacle.body.immovable = true
-		obstacle.anchor.setTo(.5, .5)
-		obstacle.body.velocity.y = -speed
-		// To ensure you only score once per obstacle
-		obstacle.scored = false;
+        //World width & height
+        var gw = this.world.width;
+        var gh = this.world.height;
 
-		obstacle.checkWorldBounds = true;
-		// Kill obstacle/enemy if vertically out of bounds
-		obstacle.events.onOutOfBounds.add(this.killObstacle, this);
+        //The game world needs physics
+        this.game.physics.startSystem(Phaser.Physics.ARCADE)
 
-		obstacle.outOfBoundsKill = true;
-		//console.log(this.obstacles);
-	},
+        //The player
+        this.player = this.game.add.sprite(gw / 2, gh / 6, 'guy');
+        this.game.physics.enable(this.player, Phaser.Physics.ARCADE)
+        this.player.enableBody = true;
+        this.player.body.collideWorldBounds = true;
+        this.player.anchor.setTo(.5, .5)
+        this.player.body.setSize(this.player.width - 10, this.player.height)
+        //Initialize the score
+        this.player.score = 0;
+        //Player animation
+        this.player.animations.add('fly', [0, 1], 5, -1);
+        this.player.animations.play('fly');
+        //Player's fireballs
+        this.player.shots = this.game.add.group();
 
-	killObstacle: function (obstacle) {
-		//console.log(obstacle);
-		this.obstacles.remove(obstacle);
-		//console.log(this.obstacles.children.length);
-	},
+        //Score text
+        this.stext = this.game.add.text(gw / 2, gh / 40, "0");
 
-	/* Function: scorePoint()
-	** Desc: Determines if a point should be scored each update.
-	** Return: 1 point, or 0 points to be added to score.
-	*/
-	scorePoint: function () {
-		//console.log(this.obstacles)
-		var point = 0;
-		var obstacles = this.obstacles.children;
-		//For ever obstacle
-		for (var i = 0; i < obstacles.length; i++) {
-			//If it is visible
-			if (obstacles[i].visible) {
-				let py = this.player.y;
-				let oy = obstacles[i].y;
-				let ox = obstacles[i].x;
-				//If below obstacle and haven't already scored off of it
-				if (py > oy && !obstacles[i].scored) {
-					point++;
-					this.sound.score.play('', 0, 0.5, false)
-					// Increase the game speed
-					game.global.g_speed += .1;
-					// Flag the obstacle as already scored from
-					obstacles[i].scored = true;
-					// Controls hbow frequently obstacles spawn based on score
-					if (game.global.score > 90) {
-						// This is the highest possible frequency
-						game.global.ob_frames = 30;
-					} else {
-						// Otherwise, frame delay is 120 - score
-						game.global.ob_frames = 120 - game.global.score;
-					}
-				}
-			}
-		}
-		return point;
-	},
+        //Obstacles object
+        this.obstacles = this.game.add.group();
+        this.obstacles.speed = 100;
 
-	killPlayer: function (player) {
+        //Create keyboard controls
+        var l = Phaser.KeyCode.LEFT;
+        var r = Phaser.KeyCode.RIGHT;
+        var a = Phaser.KeyCode.A;
+        var d = Phaser.KeyCode.D;
+        keys = this.game.input.keyboard.addKeys({
+            'left': l,
+            'right': r,
+            'A': a,
+            'D': d
+        });
+        this.game.input.keyboard.addKeyCapture([a, d, l, r]);
+    },
 
-		//issues with this
-		//game.plugins.screenShake.shake(20);
-		this.sound.kill.play('', 0, 0.5, false)
-		player.kill();
-		game.state.start('gameOver');
+    update: function () {
 
-	},
+        this.game.physics.arcade.overlap(this.player, this.obstacles, this.gameOver, null, this);
+        this.game.physics.arcade.overlap(this.player.shots, this.obstacles, this.shotHit, null, this);
 
+        //Creates obstacles with frequency relative to the score
+        if (frameCounter == 0) {
+            this.spawnObstacle();
+        }
 
-	// Tap on touchscreen or click with mouse
-	onDown: function (pointer) { },
+        //Destroy obstacles that are too high
+        for (var i = 0; i < this.obstacles.length; i++) {
+            //This method will handle checking y and destroying
+            this.obstacles.children[i].outGameDestroy();
+        }
 
-	// Move player
-	move: function () {
-		if (game.input.activePointer.isDown) {
-			//console.log(game.input.x);
-			let rate = this.moveSpeed(game.input.x, game.width);
-			let angle = this.moveAngle(rate, 3);
-			//console.log("rate: " + rate);
-			this.player.x += rate;
-			this.player.angle = angle;
-		} else {
-			this.player.angle = 0;
-		}
-	},
-	moveAngle: function (rate, factor) {
+        //Destroy fireballs that are out
+        for (var i = 0; i < this.player.shots.length; i++) {
+            if (!(this.player.shots.children[i].inWorld)) {
+                this.player.shots.children[i].pendingDestroy = true;
+                //console.log(this.player.shots)
+            }
+        }
 
-		return rate * factor;
-	},
+        //Control the player's movement with keys
+        if (keys['left'].isDown || keys['A'].isDown) {
+            this.player.x -= 5;
+        } else if (keys['right'].isDown || keys['D'].isDown) {
+            this.player.x += 5;
+        }
 
-	moveSpeed: function (x, width, skill = 2) {
-		var ratio = 0;
+        /*******Mouse actions*******/
+        var px = this.game.input.activePointer.x;
+        var py = this.game.input.activePointer.y;
+        //Is the pointer over the player?
+        var rel_x = Math.abs(px - this.player.x);
+        var rel_y = Math.abs(py - this.player.y);
+        var plySelected = (rel_x < 40 && rel_y < 40);
+        //Player ability to create a fireball at click;
+        if (this.game.input.activePointer.isDown && !plySelected && this.game.global.CAN_CLICK) {
+            var shot = this.player.shots.create(this.player.x, this.player.y, 'fireball');
+            //Setting up the fireball
+            this.game.physics.enable(shot, Phaser.Physics.ARCADE);
+            shot.enableBody = true;
+            var ang = (this.physics.arcade.angleToPointer(shot) * (180 / Math.PI)) + 180;
+            shot.scale.setTo(.25, .25)
+            shot.anchor.setTo(.5, .5);
+            shot.angle = ang;
+            shot.animations.add('fire', [0, 4], 10, -1);
+            shot.animations.play('fire');
+            //Determining speed
+            shot.body.velocity.x = -500 * Math.cos(ang * (Math.PI / 180));
+            shot.body.velocity.y = -500 * Math.sin(ang * (Math.PI / 180));
+        }
 
-		if (x < width / 2) {
-			ratio = x / (width / 2);
-			ratio *= 10;
-			ratio = Math.ceil(ratio);
-			ratio /= 2;
-			rate = (5 - ratio) * -1;
-		} else {
-			ratio = x / width;
-			ratio *= 10;
-			ratio = Math.ceil(ratio);
-			ratio /= 2;
-			rate = ratio;
-		}
+        //Mouse click management, update mouse click
+        if (this.game.input.activePointer.isDown) {
+            //This allows us to check for a single click
+            if (this.game.global.CAN_CLICK == true) {
+                this.game.global.CAN_CLICK = false;
+            }
+        } else {
+            //This allows us to check for a single click
+            this.game.global.CAN_CLICK = true;
+        }
 
-		// Experimental way to increase movement speed with score, so the
-		// difficulty increases but remains possible
-		return rate * skill * game.global.g_speed;
+        //Update the frame counter
+        frameDelay = (120 - this.player.score > 30) ? (120 - this.player.score) : 30;
+        frameCounter--;
 
-		//return rate * skill;
-	},
+    },
 
-	pauseAndUnpause: function (game) {
-		var pause_button = game.add.sprite(game.width - 40, 40, 'pause')
-		pause_button.anchor.setTo(.5, .5)
-		pause_button.inputEnabled = true
-		// pause:
-		pause_button.events.onInputUp.add(
-			function () {
-				if (!game.paused) {
-					game.paused = true
-				}
-				pause_watermark = game.add.sprite(game.width / 2, game.height / 2, 'pause')
-				pause_watermark.anchor.setTo(.5, .5)
-				pause_watermark.alpha = .1
-			}, this)
-		// Unpause:
-		game.input.onDown.add(
-			function () {
-				if (game.paused) {
-					game.paused = false
-					pause_watermark.destroy()
-				}
-			}, self)
-	},
+    spawnObstacle: function () {
 
-	render: function () {
-		debug = false
-		if (debug) {
-			// Show hitbox
-			game.debug.body(this.player)
+        console.log("Ob spawned on frame: " + String(frameCounter));
 
-			for (var i = 0; i < obstacles.length; i++) {
-				game.debug.body(obstacles[i])
-			}
-		}
-	}
+        var obstacle;
+        var r = rint(2); //Random ob selector
+        //World width & height
+        var gw = this.game.world.width;
+        var gh = this.game.world.height;
+
+        //Randomly selects an object to spawn
+        if (r == 0) {
+            obstacle = this.obstacles.create(rint(gw), gh, 'axe');
+            obstacle.type = 'axe';
+        } else if (r == 1) {
+            obstacle = this.obstacles.create(rint(gw), gh, 'boulder');
+            obstacle.type = 'boulder';
+        }
+
+        this.game.physics.enable(obstacle, Phaser.Physics.ARCADE);
+        obstacle.enableBody = true;
+        //Sets the origin of the object to the center
+        obstacle.anchor.setTo(.5, .5);
+        //Destroys the object when its flown off screen
+        obstacle.outGameDestroy = function () {
+            if (obstacle.y < 0 - obstacle.height) {
+                //pending destroy so it can be done iteratively over the group
+                obstacle.pendingDestroy = true;
+            }
+        }
+        //Size adjustment
+        obstacle.scale.setTo(.25, .25);
+        //Rotate it
+        obstacle.body.angularVelocity = 200 + (5 * this.player.score);
+        //Determining the obstacles speed
+        obstacle.body.velocity.y = -(100 + (5 * this.player.score));
+
+        frameCounter = frameDelay;
+
+        return obstacle;
+
+    },
+
+    shotHit: function (shot, ob) {
+        shot.destroy();
+        ob.destroy();
+        this.player.score += 1;
+        this.stext.text = String(this.player.score);
+    },
+
+    gameOver: function (ply, ob) {
+
+        console.log("wrecked.");
+        this.game.state.start('menu');
+
+    }
+
 }
