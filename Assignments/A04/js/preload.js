@@ -14,6 +14,8 @@ preload.prototype = {
         
         // UI
         this.load.image('cursor', 'assets/cursor.png');
+        this.load.image('menu_border', 'assets/cloud_border.png');
+        this.load.image('btn_play', 'assets/play_button.png');
 
         // Character sprites
         this.load.spritesheet('guy', 'assets/flying.png', 97, 87);

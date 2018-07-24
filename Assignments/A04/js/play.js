@@ -12,7 +12,7 @@ play.prototype = {
     create: function () {
 
         //Change the background color to a nice "sky blue"
-        this.stage.backgroundColor = '#00aaff';
+        this.game.stage.backgroundColor = '#00bbff';
 
         //Counts the number of frames that have passed, for spawning
         frameCounter = 120;
