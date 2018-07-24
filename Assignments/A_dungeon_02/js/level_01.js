@@ -20,12 +20,18 @@ var level_01 = {
 		this.player.animations.add('idle_left', Phaser.Animation.generateFrameNames('Idle_left', 0, 9), 20, true);
 		this.player.animations.add('idle_right', Phaser.Animation.generateFrameNames('Idle_right', 0, 9), 20, true);
 		this.player.animations.play('idle_left');
+		// Running animations
+		this.player.animations.add('run_left', Phaser.Animation.generateFrameNames('Run_left', 0, 9), 20, true);
+		this.player.animations.add('run_right', Phaser.Animation.generateFrameNames('Run_right', 0, 9), 20, true);
+		// Attack Animations
+		this.player.animations.add('atk_left', Phaser.Animation.generateFrameNames('Attack_left', 0, 9), 20, true);
+		this.player.animations.add('atk_right', Phaser.Animation.generateFrameNames('Attack_right', 0, 9), 20, true);
 
 		// turn physics on for player
 		game.physics.arcade.enable(this.player);
 
-		// set the anchor for sprite to middle of the view
-		this.player.anchor.setTo(0.5);
+		// Set the anchor to the middle of his feet
+		this.player.anchor.setTo(.5,1);
 
 		this.downKey = game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
 		this.upKey = game.input.keyboard.addKey(Phaser.Keyboard.UP);
@@ -38,23 +44,17 @@ var level_01 = {
 
 	update: function () {
 
-		// Each key changes the players velocity in the x or y direction
-		// and plays the proper animation. It sets the prevDir so we can
-		// face the correct way when stopped.
-
 		// Use the shift key to add running by changing speed and animation
 
-		this.move();
-
-		// if (!this.leftKey.isDown && !this.rightKey.isDown && !this.upKey.isDown && !this.downKey.isDown) {
-		// 	if (this.prevDir == 'left') {
-		// 		this.player.animations.play('idle_left');
-		// 	} else {
-		// 		this.player.animations.play('idle_right');
-		// 	}
-		// 	this.player.body.velocity.x = 0;
-		// 	this.player.body.velocity.y = 0;
-		// }
+		if (game.input.activePointer.isDown) {;
+			if (game.input.activePointer.x > this.player.x) {
+				this.player.animations.play('atk_right');
+			} else {
+				this.player.animations.play('atk_left');
+			}
+		} else {
+			this.move();
+		}
 
 		if (this.spaceBar.isDown) {
 
@@ -84,8 +84,8 @@ var level_01 = {
 		var sw = s && w;
 		var se = s && e;
 		//Impossible two
-		ns = n && s;
-		we = w && e;
+		var ns = n && s;
+		var we = w && e;
 
 		//If no weird combinations are pressed
 		if (!ns && !we) {
