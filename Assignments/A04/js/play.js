@@ -64,8 +64,8 @@ play.prototype = {
         if (Phaser.Device.desktop) {
             console.log("DESKTOP!");
             this.cursor = this.game.add.sprite(0, 0, 'cursor');
-            this.cursor.anchor.setTo(.5,.5);
-            this.cursor.scale.setTo(.125,.125);
+            this.cursor.anchor.setTo(.5, .5);
+            this.cursor.scale.setTo(.125, .125);
         }
     },
 
@@ -122,12 +122,12 @@ play.prototype = {
             //Determining speed
             shot.body.velocity.x = -500 * Math.cos(ang * (Math.PI / 180));
             shot.body.velocity.y = -500 * Math.sin(ang * (Math.PI / 180));
-            
+
             //Make the player orange (for shooting delay)
             this.player.tint = 0xff0000;
         }
         //Recover the player's color after fireball
-        if (this.player.tint < 0xffffff){
+        if (this.player.tint < 0xffffff) {
             //this.player.tint += 0x001111;
             this.player.tint += 0x000505;
         }
@@ -158,7 +158,7 @@ play.prototype = {
         }
 
         //If on desktop, move the emulated cursor
-        if (Phaser.Device.desktop){
+        if (Phaser.Device.desktop) {
             this.cursor.x = px;
             this.cursor.y = py;
         }
@@ -230,8 +230,9 @@ play.prototype = {
         shot.pendingDestroy = true;
         ob.pendingDestroy = true;
 
-        //Update the score
-        this.player.score += 1;
+        //Update the score, points for destroying objects goes up
+        this.player.score += Math.ceil((this.player.score + 1) * .1);
+
         this.stext.text = String(this.player.score);
     },
 
