@@ -34,6 +34,82 @@ DungeonGame.Game.prototype = {
         //Make the game world match the Tilemap layer size
         this.backgroundlayer.resizeWorld();
 
+        //Prepare the level to be played, add objects
+        this.prepareLevel();
+
+        //create player
+        var result = TileObjects.getTiledObs('playerStart', this.map01, 'objectsLayer')
+
+        //we know there is just one result
+        this.player = this.game.add.sprite(result[0].x, result[0].y, 'player');
+        this.game.physics.arcade.enable(this.player);
+
+        //the camera will follow the player in the world
+        this.game.camera.follow(this.player);
+
+        //move player with cursor keys
+        this.cursors = this.game.input.keyboard.createCursorKeys();
+    },
+
+    update: function () {
+
+        //collision
+        this.game.physics.arcade.collide(this.player, this.blockedLayer);
+        this.game.physics.arcade.overlap(this.player, this.items, this.collect, null, this);
+        this.game.physics.arcade.overlap(this.player, this.doors, this.enterDoor, null, this);
+
+        //player movement
+        this.player.body.velocity.y = 0;
+        this.player.body.velocity.x = 0;
+
+        if (this.cursors.up.isDown) {
+            this.player.body.velocity.y -= 50;
+        }
+        else if (this.cursors.down.isDown) {
+            this.player.body.velocity.y += 50;
+        }
+        if (this.cursors.left.isDown) {
+            this.player.body.velocity.x -= 50;
+        }
+        else if (this.cursors.right.isDown) {
+            this.player.body.velocity.x += 50;
+        }
+
+    },
+
+    collect: function (player, collectable) {
+        console.log('yummy!');
+
+        //remove sprite
+        collectable.destroy();
+    },
+
+    enterDoor: function (player, door) {
+        console.log('entering door that will take you to ' + door.targetTilemap + ' on x:' + door.targetX + ' and y:' + door.targetY);
+    },
+
+    /* Function: prepareLevel()
+    ** Desc: create all the items/doors/objects for level 1
+    */
+    prepareLevel: function () {
+
+        //Generate the items
+        this.items = this.game.add.group();
+        this.items.enableBody = true;
+        result = TileObjects.getTiledObs('item', this.map01, 'objectsLayer');
+        result.forEach(function (element) {
+            TileObjects.sprTiledOb(element, this.items);
+        }, this);
+
+        //Generate the doors
+        this.doors = this.game.add.group();
+        this.doors.enableBody = true;
+        result = TileObjects.getTiledObs('door', this.map01, 'objectsLayer');
+
+        result.forEach(function (element) {
+            TileObjects.sprTiledOb(element, this.doors);
+        }, this);
+
     }
 
 }

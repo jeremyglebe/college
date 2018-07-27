@@ -22,7 +22,7 @@ DungeonGame.Preload.prototype = {
 
         //Load Tilemap stuff
         this.load.tilemap("level01", "assets/tilemaps/level01.json", null, Phaser.Tilemap.TILED_JSON);
-        this.load.image("gameTiles", "assets/images/tiles.png");
+        this.load.image("gameTiles", "assets/images/tiles_t.png");
 
         //Load player sprites
         this.load.image('player', 'assets/images/player.png');
