@@ -15,6 +15,7 @@ var level_01 = {
 		//Action flags
 		this.player.jumping = false;
 		this.player.attacking = false;
+		this.player.dead = false;
 
 		// Add walking and idle animations. Different aninmations are needed based on direction of movement.
 		this.player.animations.add('walk_left', Phaser.Animation.generateFrameNames('Walk_left', 0, 8), 20, true);
@@ -34,14 +35,17 @@ var level_01 = {
 		// Jump-Attack Animations
 		this.player.animations.add('jmpatk_left', Phaser.Animation.generateFrameNames('JumpAttack_left', 0, 9), 20, false);
 		this.player.animations.add('jmpatk_right', Phaser.Animation.generateFrameNames('JumpAttack_right', 0, 9), 20, false);
+		//Death Animation
+		this.player.animations.add('die', Phaser.Animation.generateFrameNames('Dead', 1, 10), 20, false);
 
 		//Defining keys
-		this.downKey = game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
-		this.upKey = game.input.keyboard.addKey(Phaser.Keyboard.UP);
-		this.leftKey = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
-		this.rightKey = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
+		this.downKey = game.input.keyboard.addKey(Phaser.Keyboard.S);
+		this.upKey = game.input.keyboard.addKey(Phaser.Keyboard.W);
+		this.leftKey = game.input.keyboard.addKey(Phaser.Keyboard.A);
+		this.rightKey = game.input.keyboard.addKey(Phaser.Keyboard.D);
 		this.shiftKey = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT);
 		this.spaceBar = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+		this.dieKey = game.input.keyboard.addKey(Phaser.Keyboard.F);
 
 		//Creating the player's walking object
 		//First the configuation
@@ -99,6 +103,10 @@ var level_01 = {
 
 	update: function () {
 
+		if (this.dieKey.isDown){
+			this.die();
+		}
+
 		if (!this.player.jumping){
 		if (this.shiftKey.isDown) {
 			this.player.run.move();
@@ -118,19 +126,24 @@ var level_01 = {
 
 	render: function () {
 		// Instructions:
-		game.debug.text("Use arrow keys to move sprite around.", game.width / 2, game.height - 10);
+		game.debug.text("Use WASD keys to move sprite around.", game.width / 2, game.height - 45);
+		game.debug.text("Click to attack. Space bar to jump.", game.width / 2, game.height - 30);
+		game.debug.text("Press F to kill the knight, you sadist.", game.width / 2, game.height - 15);
 	},
 
 	attack: function () {
 
+		//If the player is dead, do nothing
+		if (this.player.dead) { return; };
+
 		//If already attacking, do nothing
-		if (this.player.attacking) { return; }
+		if (this.player.attacking) { return; };
 
 		var anim;
 		//If not jumping, ground attack
 		if (!this.player.jumping) {
 			//Left or right?
-			if (game.input.activePointer.x > this.player.x) {
+			if (this.player.walk.direction == 'e') {
 				anim = this.player.animations.play('atk_right');
 			} else {
 				anim = this.player.animations.play('atk_left');
@@ -143,11 +156,14 @@ var level_01 = {
 		// Or do a jump attack
 		else {
 			//Left or right?
-			if (game.input.activePointer.x > this.player.x) {
+			if (this.player.walk.direction == 'e') {
 				anim = this.player.animations.play('jmpatk_right');
 			} else {
 				anim = this.player.animations.play('jmpatk_left');
 			}
+			//If a player is in a horizontal leap, the attack should make them
+			//fall straight down, canceling x velocity
+			this.player.body.velocity.x = 0;
 			//Disable other actions
 			this.player.attacking = true;
 			this.player.jumping = true;
@@ -169,6 +185,9 @@ var level_01 = {
 
 	jump: function () {
 		
+		//If the player is dead, do nothing
+		if (this.player.dead) { return; };
+
 		//If already jumping or attacking, do nothing
 		if (this.player.jumping || this.player.attacking) { return; }
 
@@ -182,14 +201,10 @@ var level_01 = {
 
 		//Flags set
 		this.player.jumping = true;
-		// this.player.walk.stopped = true;
-		// this.player.run.stopped = true;
 
 		//Enables other actions after animation completion
 		anim.onComplete.addOnce(function () {
 			this.player.jumping = false;
-			// this.player.walk.stopped = false;
-			// this.player.run.stopped = false;
 		}, this);
 
 		var ply = this.player;
@@ -202,6 +217,13 @@ var level_01 = {
 			ply.body.velocity.y = 0;
 		});
 
+	},
+
+	die: function() {
+		this.player.dead = true;
+		this.player.walk.stopped = true;
+		this.player.run.stopped = true;
+		this.player.animations.play('die');
 	}
 
 }
