@@ -25,7 +25,7 @@ DungeonGame.Preload.prototype = {
         this.load.image("gameTiles", "assets/images/tiles_t.png");
 
         //Load player sprites
-        this.load.image('player', 'assets/images/player.png');
+        this.load.spritesheet('player', 'assets/images/sheet_hitmonchan.png', 40, 40);
 
         //Load item sprites
         this.load.image('skull_red', 'assets/images/greencup.png');

@@ -28,7 +28,7 @@ DungeonGame.Game.prototype = {
         this.backgroundlayer = this.map01.createLayer('backgroundLayer');
         this.blockedLayer = this.map01.createLayer('blockedLayer');
 
-        //Add collision to every tile (1-) of blockedLayer
+        //Add collision to every tile (1-2506) of blockedLayer
         this.map01.setCollisionBetween(1, 2506, true, 'blockedLayer');
 
         //Make the game world match the Tilemap layer size
@@ -39,16 +39,51 @@ DungeonGame.Game.prototype = {
 
         //create player
         var result = TileObjects.getTiledObs('playerStart', this.map01, 'objectsLayer')
-
         //we know there is just one result
-        this.player = this.game.add.sprite(result[0].x, result[0].y, 'player');
+        this.player = this.game.add.sprite(result[0].x, result[0].y + 10, 'player');
+
+        //Animations
+        this.player.animations.add('sIdle', [0], 0, true);
+        this.player.animations.add('nIdle', [8], 0, true);
+        this.player.animations.add('wIdle', [16], 0, true)
+        this.player.animations.add('eIdle', [24], 0, true)
+        this.player.animations.add('sWalk', [2, 3, 4], 5, true);
+        this.player.animations.add('nWalk', [10, 11, 12], 5, true);
+        this.player.animations.add('wWalk', [18, 19, 20], 5, true);
+        this.player.animations.add('eWalk', [26, 27, 28], 5, true);
+
+        //Resizes the player image
+        this.player.scale.setTo(0.75);
+        //Set the player's origin to the middle of his feet
+        this.player.anchor.setTo(0.5, 0.8);
+        //Enables a physics body for the player
         this.game.physics.arcade.enable(this.player);
+        //Changes the physics (collision) body of the player
+        this.player.body.setSize(20, 20, 0, 0);
+
+        //Setting up player movement
+        this.player.moveConfig = {
+            sprite: this.player,
+            //controls
+            nKey: this.game.input.keyboard.addKey(Phaser.Keyboard.W),
+            sKey: this.game.input.keyboard.addKey(Phaser.Keyboard.S),
+            wKey: this.game.input.keyboard.addKey(Phaser.Keyboard.A),
+            eKey: this.game.input.keyboard.addKey(Phaser.Keyboard.D),
+            //animations
+            speed: 30,
+            nAnim: 'nWalk',
+            sAnim: 'sWalk',
+            wAnim: 'wWalk',
+            eAnim: 'eWalk',
+            fnAnim: 'nIdle',
+            fsAnim: 'sIdle',
+            fwAnim: 'wIdle',
+            feAnim: 'eIdle'
+        }
+        this.player.walk = new Move8(this.player.moveConfig);
 
         //the camera will follow the player in the world
         this.game.camera.follow(this.player);
-
-        //move player with cursor keys
-        this.cursors = this.game.input.keyboard.createCursorKeys();
     },
 
     update: function () {
@@ -59,21 +94,7 @@ DungeonGame.Game.prototype = {
         this.game.physics.arcade.overlap(this.player, this.doors, this.enterDoor, null, this);
 
         //player movement
-        this.player.body.velocity.y = 0;
-        this.player.body.velocity.x = 0;
-
-        if (this.cursors.up.isDown) {
-            this.player.body.velocity.y -= 50;
-        }
-        else if (this.cursors.down.isDown) {
-            this.player.body.velocity.y += 50;
-        }
-        if (this.cursors.left.isDown) {
-            this.player.body.velocity.x -= 50;
-        }
-        else if (this.cursors.right.isDown) {
-            this.player.body.velocity.x += 50;
-        }
+        this.player.walk.move();
 
     },
 
@@ -93,6 +114,9 @@ DungeonGame.Game.prototype = {
     */
     prepareLevel: function () {
 
+        //Resize the game (not the window, or the world)
+        this.game.scale.setGameSize(200, 150);
+
         //Generate the items
         this.items = this.game.add.group();
         this.items.enableBody = true;
@@ -109,6 +133,14 @@ DungeonGame.Game.prototype = {
         result.forEach(function (element) {
             TileObjects.sprTiledOb(element, this.doors);
         }, this);
+
+    },
+
+
+
+    render: function () {
+
+        //this.game.debug.body(this.player);
 
     }
 
