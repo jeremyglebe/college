@@ -1,6 +1,6 @@
-#Assignment 05 - Tilemap Dungeon
+# Assignment 05 - Tilemap Dungeon
 
-###Requirements
+### Requirements
 - 5 Levels if using premade levels
 	- 3 Levels if making your own
 - Connect each level somehow, some way
