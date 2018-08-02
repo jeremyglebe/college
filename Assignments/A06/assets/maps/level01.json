@@ -144,9 +144,9 @@
                     {
                      "alpha":0.1,
                      "sprite":"block",
-                     "targetMap":"level01",
-                     "targetX":16,
-                     "targetY":16,
+                     "targetMap":"level02",
+                     "targetX":160,
+                     "targetY":65,
                      "type":"transition",
                      "width":224
                     },
@@ -174,7 +174,7 @@
                  "name":"",
                  "properties":
                     {
-                     "alpha":0.5,
+                     "alpha":0.75,
                      "logic":"chaser",
                      "sprite":"ditto",
                      "type":"enemy"
@@ -241,7 +241,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":17,
+ "nextobjectid":18,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",

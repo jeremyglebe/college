@@ -22,19 +22,24 @@ A06.Preload.prototype = {
 
         //Load Tilemap stuff
         this.load.tilemap("level01", "assets/maps/level01.json", null, Phaser.Tilemap.TILED_JSON);
+        this.load.tilemap("level02", "assets/maps/level02.json", null, Phaser.Tilemap.TILED_JSON);
+        this.load.tilemap("level03", "assets/maps/level03.json", null, Phaser.Tilemap.TILED_JSON);
         this.load.image("gameTiles", "assets/tilesets/ProjectUtumno_full.png");
 
         //Load specific tile images
-        this.load.image('block', 'assets/block.png');
+        this.load.image('block', 'assets/ui/block.png');
+        this.load.image('icon_gold', 'assets/ui/gold.png');
+        this.load.spritesheet('portal', 'assets/items/blue_portal.png', 48, 48);
+        this.load.spritesheet('bloodFountain', 'assets/items/blood_fountain.png', 32, 32);
 
         //Load player sprites
-        this.load.atlas('player', 'assets/hitmonchan.png', 'assets/hitmonchan.json');
+        this.load.atlas('player', 'assets/characters/hitmonchan.png', 'assets/characters/hitmonchan.json');
 
         //Load monster sprites
-        this.load.atlas('ditto', 'assets/ditto.png', 'assets/ditto.json');
+        this.load.atlas('ditto', 'assets/characters/ditto.png', 'assets/characters/ditto.json');
 
         //Load item sprites
-        this.load.atlas('coin', 'assets/coin.png', 'assets/coin.json');
+        this.load.atlas('coin', 'assets/items/coin.png', 'assets/items/coin.json');
 
     },
 

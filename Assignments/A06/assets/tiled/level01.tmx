@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.1.6" orientation="orthogonal" renderorder="right-down" width="50" height="50" tilewidth="32" tileheight="32" infinite="0" nextobjectid="17">
+<map version="1.0" tiledversion="1.1.6" orientation="orthogonal" renderorder="right-down" width="50" height="50" tilewidth="32" tileheight="32" infinite="0" nextobjectid="18">
  <tileset firstgid="1" name="tiles" tilewidth="32" tileheight="32" tilecount="6080" columns="64">
   <image source="../tilesets/ProjectUtumno_full.png" width="2048" height="3040"/>
  </tileset>
@@ -153,16 +153,16 @@
    <properties>
     <property name="alpha" type="float" value="0.1"/>
     <property name="sprite" value="block"/>
-    <property name="targetMap" value="level01"/>
-    <property name="targetX" type="int" value="16"/>
-    <property name="targetY" type="int" value="16"/>
+    <property name="targetMap" value="level02"/>
+    <property name="targetX" type="int" value="160"/>
+    <property name="targetY" type="int" value="65"/>
     <property name="type" value="transition"/>
     <property name="width" type="int" value="224"/>
    </properties>
   </object>
   <object id="15" gid="3999" x="1296" y="879.5" width="32" height="32">
    <properties>
-    <property name="alpha" type="float" value="0.5"/>
+    <property name="alpha" type="float" value="0.75"/>
     <property name="logic" value="chaser"/>
     <property name="sprite" value="ditto"/>
     <property name="type" value="enemy"/>

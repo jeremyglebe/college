@@ -64,7 +64,7 @@ TileObjects = {
         if (group) {
             var sprite = group.create(object.x, object.y, object.properties.sprite);
         } else {
-            var sprite = game.add.sprite(object.x, object.y, object.properties.sprite);
+            var sprite = A06.game.add.sprite(object.x, object.y, object.properties.sprite);
         }
 
         //Copy all properties to the sprite

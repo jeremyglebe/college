@@ -9,22 +9,24 @@
 //if A06 exists, use it, otherwise initiate it as empty object
 var A06 = A06 || {};
 
-A06.Map = function () { };
+A06.Map = function() { };
 
 A06.Map.prototype = {
 
     //This is where state parameters are passed
-    init: function (map, player) {
+    init: function(map, player) {
 
         this.mapName = map;
         this.player = player;
 
     },
 
-    create: function () {
+    create: function() {
 
+        console.log(this.mapName);
         // Create the tilemap object from tilemap data
         this.map = this.game.add.tilemap(this.mapName);
+        console.log(this.map);
         //Associate a tileset image with the object
         //param1 = tileset name in Tiled, param2 = asset key
         this.map.addTilesetImage('tiles', 'gameTiles');
@@ -35,18 +37,10 @@ A06.Map.prototype = {
         //Make the game world match the Tilemap bottom layer's size
         this.mapLayers[this.map.layers[0].name].resizeWorld();
 
-        //Create the player
-        this.createPlayer();
-
-        //Make the camera track the player
-        this.camera.follow(this.player.sprite);
-        //Rounding pixels when following player causes jitters in the camera
-        this.camera.roundPx = false;
-
         //Coins for the player to grab
         this.coins = this.game.add.group();
         this.coins.enableBody = true;
-        this.createCoins(150);
+        this.createCoins(30);
 
         //Enemy object
         this.enemies = {};
@@ -61,19 +55,32 @@ A06.Map.prototype = {
         //Create transition objects
         this.createTransitions();
 
+        //End of the game, if present
+        this.endGame = this.game.add.group();
+        this.endGame.enableBody = true;
+        this.createEndGame();
+
+        //Create the player
+        this.createPlayer();
+
+        //Make the camera track the player
+        this.camera.follow(this.player.sprite);
+        //Rounding pixels when following player causes jitters in the camera
+        this.camera.roundPx = false;
+
         //The overhead layer should be displayed ABOVE the player, so it is
         //created AFTERWARDS
         this.createMapLayers(this.map, "fg");
 
     },
 
-    update: function () {
+    update: function() {
 
         //If player dies
         if (this.player.health <= 0 && !this.player._moveController.stopped) {
             this.player._moveController.stopped = true;
             this.player.sprite.animations.play('die');
-            this.time.events.add(5000, function () {
+            this.time.events.add(5000, function() {
                 this.state.start("Map", true, false, "level01", null);
             }, this);
         }
@@ -95,7 +102,7 @@ A06.Map.prototype = {
                 //Coins, callback only run if on a non-blank tile
                 this.game.physics.arcade.overlap(this.coins, currMap, this.clsnCoinsLayer,
                     //Additional check to make sure the overlap isn't with an empty tile
-                    function (coin, tile) {
+                    function(coin, tile) {
                         if (tile.index == -1) { return false; }; return true;
                     }, this);
             }
@@ -106,27 +113,32 @@ A06.Map.prototype = {
         //Check for collisions with enemies
         this.game.physics.arcade.overlap(this.player.sprite, this.enemies.sprites,
             this.clsnPlyEnemy, null, this);
+        //Check for collision with coin
+        this.game.physics.arcade.overlap(this.player.sprite, this.coins, this.clsnPlyCoin, null, this);
+        //Check for collisioins with end game
+        this.game.physics.arcade.overlap(this.player.sprite, this.endGame, this.clsnPlyEnd, null, this);
 
     },
 
-    render: function () {
+    render: function() {
 
         //this.game.debug.body(this.player.sprite);
         //this.game.debug.body(this.coins);
 
     },
 
-    shutdown: function () {
+    shutdown: function() {
 
         //Remove the sprite from the world so it sin't destroyed
         //on state change and can be re-used
         //Thanks to https://codepen.io/lewster32/pen/XJWJde for explaining
         //how to keep sprites between states
         this.world.remove(this.player.sprite);
+        this.world.remove(this.player.hud);
 
     },
 
-    createCoins: function (num) {
+    createCoins: function(num) {
 
         for (var i = 0; i < num; i++) {
             x = this.rnd.integerInRange(0, this.game.world.width);
@@ -141,20 +153,32 @@ A06.Map.prototype = {
 
     },
 
-    createEnemies: function () {
+    createEndGame: function() {
 
-        //Generate the transitions
-        result = TileObjects.getTiledObs('enemy', this.map);
-        result.forEach(function (child) {
-
-            TileObjects.sprTiledOb(child, this.enemySprites);
-            this.enemies = new A06.EnemyManager(this.enemySprites);
-
-        }, this);
+        //Find all objects of type "endGame"
+        var result = TileObjects.getTiledObs('endGame', this.map);
+        //There should be one result
+        if (result[0]) {
+            TileObjects.sprTiledOb(result[0], this.endGame);
+        }
 
     },
 
-    createMapLayers: function (map, loc) {
+    createEnemies: function() {
+
+        //Generate the transitions
+        result = TileObjects.getTiledObs('enemy', this.map);
+        result.forEach(function(child) {
+
+            TileObjects.sprTiledOb(child, this.enemySprites);
+
+        }, this);
+
+        this.enemies = new A06.EnemyManager(this.enemySprites);
+
+    },
+
+    createMapLayers: function(map, loc) {
 
         //Add collision to every tile (1-1467) of collision layer
         //this.map.setCollisionBetween(1, 1467, true, 'collision');
@@ -181,7 +205,7 @@ A06.Map.prototype = {
 
     },
 
-    createPlayer: function () {
+    createPlayer: function() {
 
         //If the player was passed in an "null", create a new one
         if (!this.player) {
@@ -198,21 +222,34 @@ A06.Map.prototype = {
             //Thanks to https://codepen.io/lewster32/pen/XJWJde for explaining
             //how to keep sprites between states
             this.game.add.existing(this.player.sprite);
+            this.game.add.existing(this.player.hud);
         }
 
     },
 
-    createTransitions: function () {
+    createTransitions: function() {
 
         //Generate the transitions
         result = TileObjects.getTiledObs('transition', this.map);
-        result.forEach(function (child) {
+        result.forEach(function(child) {
             TileObjects.sprTiledOb(child, this.transitions);
+        }, this);
+
+        //Animate any transitions that should for
+        this.transitions.forEach(function(child) {
+            if (child.animated) {
+                if (child.frameRate) {
+                    child.animations.add('anim', null, frameRate, true);
+                } else {
+                    child.animations.add('anim', null, 5, true);
+                }
+                child.animations.play('anim');
+            }
         }, this);
 
     },
 
-    clsnCoinsLayer: function (coin, tile) {
+    clsnCoinsLayer: function(coin, tile) {
 
         console.log("Coin collided with non-negative index tile");
         //console.log(tile.index + "Failed to place coin object!")
@@ -223,11 +260,25 @@ A06.Map.prototype = {
 
     },
 
-    clsnPlyEnemy: function (ply, enemy) {
+    clsnPlyCoin: function(ply, coin) {
+        ply.player.collectCoin(coin);
+    },
+
+    clsnPlyEnd: function(ply, end) {
+        ply.player._moveController.stopped = true;
+        var wintext = this.game.add.text(0.37*this.game.width, this.game.height / 2, "YOU WIN!");
+        wintext.fixedToCamera = true;
+        wintext.fill = '#ffffff';
+        this.time.events.add(5000, function() {
+            this.state.start("Map", true, false, "level01", null);
+        }, this);
+    },
+
+    clsnPlyEnemy: function(ply, enemy) {
 
         ply.player.setHealth(ply.player.health - 10);
         ply.player.knockedBack = true;
-        this.time.events.add(250, function () {
+        this.time.events.add(250, function() {
             ply.player.knockedBack = false;
         }, this);
         if (enemy.body.x > ply.body.x + 2) { ply.body.velocity.x = -100; }
@@ -237,7 +288,7 @@ A06.Map.prototype = {
 
     },
 
-    clsnPlyTrans: function (ply, trans) {
+    clsnPlyTrans: function(ply, trans) {
 
         if (trans.targetMap == "same") {
 

@@ -6,7 +6,7 @@
 //if A06 exists, use it, otherwise initiate it as empty object
 var A06 = A06 || {};
 
-A06.Player = function (x = 0, y = 0) {
+A06.Player = function(x = 0, y = 0) {
 
     //Creating the player's main sprite and body
     this.sprite = A06.game.add.sprite(x, y, 'player');
@@ -35,7 +35,7 @@ A06.Player = function (x = 0, y = 0) {
     this.sprite.animations.add('seMove', Phaser.Animation.generateFrameNames('move', 15, 17), 5, true);
     this.sprite.animations.add('nwMove', Phaser.Animation.generateFrameNames('move', 18, 20), 5, true);
     this.sprite.animations.add('neMove', Phaser.Animation.generateFrameNames('move', 21, 23), 5, true);
-    this.sprite.animations.add('die', ['idle0','idle8', 'idle4', 'idle13', 'idle3'], 5, false);
+    this.sprite.animations.add('die', ['idle0', 'idle8', 'idle4', 'idle13', 'idle3'], 5, false);
 
     //Creating the player's attack box sprite and body
     //this.atkBox = A06.game.add.sprite();
@@ -43,6 +43,7 @@ A06.Player = function (x = 0, y = 0) {
     //Define this player's stats
     this.maxHealth = 100;
     this.health = 100;
+    this.gold = 0;
 
     //Create the player's heads up display
     this.createHUD();
@@ -79,7 +80,7 @@ A06.Player = function (x = 0, y = 0) {
 
 A06.Player.prototype = {
 
-    move: function () {
+    move: function() {
 
         //Movement
         this._moveController.move();
@@ -88,48 +89,76 @@ A06.Player.prototype = {
 
     },
 
-    attack: function () {
+    attack: function() {
 
         return;
 
     },
 
-    createHUD: function () {
+    createHUD: function() {
 
         //Create a hud for the player
         this.hud = A06.game.add.group();
         //Make the hud fixed to the screen
         this.hud.fixedToCamera = true;
+        //Set boundaries
+        this.hud.xOrigin = 0.9 * A06.game.width;
+        this.hud.yOrigin = 0.6 * A06.game.height;
+        this.hud.wOrigin = 0.1 * A06.game.width;
+        this.hud.hOrigin = 0.4 * A06.game.height;
+
+        //Add a transparent box for the HUD to lie over
+        var box = this.hud.create(this.hud.xOrigin, this.hud.yOrigin, 'block');
+        box.tint = 0x000000;
+        box.height = this.hud.hOrigin;
+        box.width = this.hud.wOrigin;
+        box.alpha = 0.3;
+
         //Add a health bar in 3 layers
-        var blackbar = this.hud.create(0.95 * A06.game.width, 0.735 * A06.game.height, 'block');
+        var blackbar = this.hud.create(0.935 * A06.game.width, 0.735 * A06.game.height, 'block');
         blackbar.tint = 0x000000;
         blackbar.height = 75;
         blackbar.width = 15;
-        var redbar = this.hud.create(0.955 * A06.game.width, 0.742 * A06.game.height, 'block');
+        var redbar = this.hud.create(0.94 * A06.game.width, 0.742 * A06.game.height, 'block');
         redbar.tint = 0xff0000;
         redbar.height = 71;
         redbar.width = 11;
         //The third, green layer is the one we'll actually have to change later.
-        this.healthbar = this.hud.create(0.955 * A06.game.width, 0.742 * A06.game.height, 'block');
+        this.healthbar = this.hud.create(0.94 * A06.game.width, 0.742 * A06.game.height, 'block');
         this.healthbar.maxHeight = 71;
         this.healthbar.tint = 0x00ff00;
         this.healthbar.height = 71;
         this.healthbar.width = 11;
 
+        //Add a coin counter
+        var goldicon = this.hud.create(this.hud.xOrigin + (0.05 * this.hud.wOrigin), (0.03 * this.hud.hOrigin) + this.hud.yOrigin, 'icon_gold');
+        goldicon.scale.setTo(0.5);
+        //The text display
+        this.goldText = A06.game.add.text(this.hud.xOrigin + (0.5 * this.hud.wOrigin), (0.04 * this.hud.hOrigin) + this.hud.yOrigin, "0");
+        this.goldText.fontSize = 10;
+        this.goldText.fill = '#ffffff';
+        this.hud.add(this.goldText);
+
     },
 
-    setHealth: function (newHealth) {
+    setHealth: function(newHealth) {
 
         if (newHealth >= 0) {
             this.health = newHealth;
         } else {
             this.health = 0;
         }
-        
+
         var ratio = this.health / this.maxHealth;
         this.healthbar.height = ratio * this.healthbar.maxHeight;
         this.healthbar.y = 0.742 * A06.game.height + (this.healthbar.maxHeight - this.healthbar.height);
 
+    },
+
+    collectCoin: function(coin){
+        coin.pendingDestroy = true;
+        this.gold++;
+        this.goldText.text = String(this.gold);
     }
 
 }
