@@ -91,8 +91,24 @@ Move8.prototype = {
     */
     move: function () {
 
+        //Warnings
         //There needs to be a sprite to move
-        if (!this.sprite) { return; }
+        if (!this.sprite) { 
+            console.log("Move8 Warning: No sprite to move!")
+            return; 
+        }
+        if (!this.nKey){
+            console.log("Move8 Warning: No nKey defined!")
+        }
+        if (!this.sKey){
+            console.log("Move8 Warning: No sKey defined!")
+        }
+        if (!this.wKey){
+            console.log("Move8 Warning: No wKey defined!")
+        }
+        if (!this.eKey){
+            console.log("Move8 Warning: No eKey defined!")
+        }
 
         //If stopped, end motion and don't affect animation
         if (this.stopped) {

@@ -30,6 +30,7 @@ A06.Map.prototype = {
         this.map.addTilesetImage('tiles', 'gameTiles');
         //Create the layers from Tiled in the game (overhead is further down)
         this.mapLayers = {};
+        //Create the map layers
         this.createMapLayers(this.map, "bg");
         //Make the game world match the Tilemap bottom layer's size
         this.mapLayers[this.map.layers[0].name].resizeWorld();
@@ -42,6 +43,24 @@ A06.Map.prototype = {
         //Rounding pixels when following player causes jitters in the camera
         this.camera.roundPx = false;
 
+        //Coins for the player to grab
+        this.coins = this.game.add.group();
+        this.coins.enableBody = true;
+        this.createCoins(150);
+
+        //Enemy object
+        this.enemies = {};
+        //Group of enemies
+        this.enemySprites = this.game.add.group();
+        this.enemySprites.enableBody = true;
+        this.createEnemies();
+
+        //Group of transition objects
+        this.transitions = this.game.add.group();
+        this.transitions.enableBody = true;
+        //Create transition objects
+        this.createTransitions();
+
         //The overhead layer should be displayed ABOVE the player, so it is
         //created AFTERWARDS
         this.createMapLayers(this.map, "fg");
@@ -50,7 +69,88 @@ A06.Map.prototype = {
 
     update: function () {
 
-        this.player.move();
+        //If player dies
+        if (this.player.health <= 0 && !this.player._moveController.stopped) {
+            this.player._moveController.stopped = true;
+            this.player.sprite.animations.play('die');
+            this.time.events.add(5000, function () {
+                this.state.start("Map", true, false, "level01", null);
+            }, this);
+        }
+
+        //Move the player
+        if (!this.player.knockedBack) {
+            this.player.move();
+        }
+
+        //Move enemies
+        this.enemies.moveAll(this.player.sprite);
+
+        //Check for collisions with layers
+        for (key in this.mapLayers) {
+            var currMap = this.mapLayers[key];
+            //Collisions only need to check with collision layers
+            if (currMap.map.layers[currMap.index].properties.collide == "true") {
+                this.game.physics.arcade.collide(this.player.sprite, currMap);
+                //Coins, callback only run if on a non-blank tile
+                this.game.physics.arcade.overlap(this.coins, currMap, this.clsnCoinsLayer,
+                    //Additional check to make sure the overlap isn't with an empty tile
+                    function (coin, tile) {
+                        if (tile.index == -1) { return false; }; return true;
+                    }, this);
+            }
+        }
+        //Check for collisions with transition objects
+        this.game.physics.arcade.overlap(this.player.sprite, this.transitions,
+            this.clsnPlyTrans, null, this);
+        //Check for collisions with enemies
+        this.game.physics.arcade.overlap(this.player.sprite, this.enemies.sprites,
+            this.clsnPlyEnemy, null, this);
+
+    },
+
+    render: function () {
+
+        //this.game.debug.body(this.player.sprite);
+        //this.game.debug.body(this.coins);
+
+    },
+
+    shutdown: function () {
+
+        //Remove the sprite from the world so it sin't destroyed
+        //on state change and can be re-used
+        //Thanks to https://codepen.io/lewster32/pen/XJWJde for explaining
+        //how to keep sprites between states
+        this.world.remove(this.player.sprite);
+
+    },
+
+    createCoins: function (num) {
+
+        for (var i = 0; i < num; i++) {
+            x = this.rnd.integerInRange(0, this.game.world.width);
+            y = this.rnd.integerInRange(0, this.game.world.height);
+            var coin = this.coins.create(x, y, 'coin');
+            coin.animations.add('spin', Phaser.Animation.generateFrameNames('goldCoin', 1, 9), 5, true);
+            coin.animations.play('spin');
+            coin.scale.setTo(0.5);
+            coin.anchor.setTo(0.5);
+            coin.trys = 0;
+        }
+
+    },
+
+    createEnemies: function () {
+
+        //Generate the transitions
+        result = TileObjects.getTiledObs('enemy', this.map);
+        result.forEach(function (child) {
+
+            TileObjects.sprTiledOb(child, this.enemySprites);
+            this.enemies = new A06.EnemyManager(this.enemySprites);
+
+        }, this);
 
     },
 
@@ -71,8 +171,8 @@ A06.Map.prototype = {
                 this.mapLayers[layerName] = l;
 
                 //If this is a collision layer
-                if (map.layers[i].collide == "true") {
-                    map.setCollisioniBetween(1, 10000, true, layerName);
+                if (map.layers[i].properties.collide == "true") {
+                    map.setCollisionBetween(1, 10000, true, layerName);
                 }
 
             }
@@ -81,7 +181,7 @@ A06.Map.prototype = {
 
     },
 
-    createPlayer: function(){
+    createPlayer: function () {
 
         //If the player was passed in an "null", create a new one
         if (!this.player) {
@@ -90,6 +190,69 @@ A06.Map.prototype = {
             var plyTile = TileObjects.getTiledObs('playerStart', this.map);
             //There should be one result, use its x,y to spawn the player
             this.player = new A06.Player(plyTile[0].x, plyTile[0].y);
+
+        }
+        //If the player was passed in, there's still stuff to fix
+        else {
+            //We need to bring the player's sprite back into the world
+            //Thanks to https://codepen.io/lewster32/pen/XJWJde for explaining
+            //how to keep sprites between states
+            this.game.add.existing(this.player.sprite);
+        }
+
+    },
+
+    createTransitions: function () {
+
+        //Generate the transitions
+        result = TileObjects.getTiledObs('transition', this.map);
+        result.forEach(function (child) {
+            TileObjects.sprTiledOb(child, this.transitions);
+        }, this);
+
+    },
+
+    clsnCoinsLayer: function (coin, tile) {
+
+        console.log("Coin collided with non-negative index tile");
+        //console.log(tile.index + "Failed to place coin object!")
+        var x = this.rnd.integerInRange(0, this.game.world.width);
+        var y = this.rnd.integerInRange(0, this.game.world.height);
+        coin.body.x = x;
+        coin.body.y = y;
+
+    },
+
+    clsnPlyEnemy: function (ply, enemy) {
+
+        ply.player.setHealth(ply.player.health - 10);
+        ply.player.knockedBack = true;
+        this.time.events.add(250, function () {
+            ply.player.knockedBack = false;
+        }, this);
+        if (enemy.body.x > ply.body.x + 2) { ply.body.velocity.x = -100; }
+        else if (enemy.body.x < ply.body.x - 2) { ply.body.velocity.x = 100 }
+        if (enemy.body.y > ply.body.y + 2) { ply.body.velocity.y = -100; }
+        else if (enemy.body.y < ply.body.y - 2) { ply.body.velocity.y = 100 }
+
+    },
+
+    clsnPlyTrans: function (ply, trans) {
+
+        if (trans.targetMap == "same") {
+
+            //If the target map is the same, we're just moving
+            ply.x = trans.targetX;
+            ply.y = trans.targetY;
+
+        } else {
+
+            //Otherwise we need to change states
+            //First set the player's x and y
+            ply.x = trans.targetX;
+            ply.y = trans.targetY;
+            //Then transition to the new map
+            this.state.start("Map", true, false, trans.targetMap, ply.player);
 
         }
 

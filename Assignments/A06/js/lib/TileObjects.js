@@ -23,27 +23,27 @@ TileObjects = {
         var arr = new Array();
 
         //If there's a layer specified, we need only search that layer
-        if (layer){
+        if (layer) {
             //Tilemaps have a property objects, which stores all objects in
             //key-value pairs with the object layer as the key.
             map.objects[layer].forEach(function (object) {
                 if (object.properties.type === type) {
                     //Phaser y=0 is top, but Tiled is bottom
-                    object.y -= map.tileHeight;
+                    object.y -= object.properties.height || map.tileHeight;
                     arr.push(object);
                 }
             });
         }
 
-        else{
+        else {
             //For every layer
-            for (key in map.objects){
+            for (key in map.objects) {
 
                 //For each object in that layer
                 map.objects[key].forEach(function (object) {
                     if (object.properties.type === type) {
                         //Phaser y=0 is top, but Tiled is bottom
-                        object.y -= map.tileHeight;
+                        object.y -= object.properties.height || map.tileHeight;
                         arr.push(object);
                     }
                 });
@@ -60,11 +60,11 @@ TileObjects = {
     **     object: the tiled object to make the sprite from
     **     group: the group to put that sprite in
     */
-    sprTiledOb: function (object, group = null) {
+    sprTiledOb: function (object, group = null, game = null) {
         if (group) {
             var sprite = group.create(object.x, object.y, object.properties.sprite);
         } else {
-            var sprite = this.game.add.sprite(object.x, object.y, object.properties.sprite);
+            var sprite = game.add.sprite(object.x, object.y, object.properties.sprite);
         }
 
         //Copy all properties to the sprite

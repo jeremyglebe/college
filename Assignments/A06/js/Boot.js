@@ -31,8 +31,8 @@ A06.Boot.prototype = {
         //Minimum/Maximum Scaling
         this.scale.minWidth = 400;
         this.scale.minHeight = 300;
-        this.scale.maxWidth = 1600;
-        this.scale.maxHeight = 1200;
+        this.scale.maxWidth = 800;
+        this.scale.maxHeight = 600;
 
         //Align things with the center
         this.scale.pageAlignHorizontally = true;

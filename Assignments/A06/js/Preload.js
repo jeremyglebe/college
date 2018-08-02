@@ -24,10 +24,17 @@ A06.Preload.prototype = {
         this.load.tilemap("level01", "assets/maps/level01.json", null, Phaser.Tilemap.TILED_JSON);
         this.load.image("gameTiles", "assets/tilesets/ProjectUtumno_full.png");
 
+        //Load specific tile images
+        this.load.image('block', 'assets/block.png');
+
         //Load player sprites
         this.load.atlas('player', 'assets/hitmonchan.png', 'assets/hitmonchan.json');
 
+        //Load monster sprites
+        this.load.atlas('ditto', 'assets/ditto.png', 'assets/ditto.json');
+
         //Load item sprites
+        this.load.atlas('coin', 'assets/coin.png', 'assets/coin.json');
 
     },
 
