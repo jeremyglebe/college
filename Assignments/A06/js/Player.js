@@ -139,6 +139,17 @@ A06.Player.prototype = {
         this.goldText.fill = '#ffffff';
         this.hud.add(this.goldText);
 
+        this.hud.message = function(msg){
+
+            var text = this.game.add.text(0.37*this.game.width, this.game.height / 2, msg);
+            text.fixedToCamera = true;
+            text.fill = '#ffffff';
+            this.time.events.add(5000, function() {
+                text.destroy();
+            }, this);
+
+        }
+
     },
 
     setHealth: function(newHealth) {
