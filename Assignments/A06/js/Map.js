@@ -98,7 +98,10 @@ A06.Map.prototype = {
             var currMap = this.mapLayers[key];
             //Collisions only need to check with collision layers
             if (currMap.map.layers[currMap.index].properties.collide == "true") {
+                //Player collision with layers
                 this.game.physics.arcade.collide(this.player.sprite, currMap);
+                //Enemy collision with layers
+                this.game.physics.arcade.collide(this.enemies.sprites, currMap);
                 //Coins, callback only run if on a non-blank tile
                 this.game.physics.arcade.overlap(this.coins, currMap, this.clsnCoinsLayer,
                     //Additional check to make sure the overlap isn't with an empty tile
