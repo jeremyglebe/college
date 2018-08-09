@@ -13,6 +13,16 @@ DoW.Preload.prototype = {
         this.load.image('ship1', 'assets/ship1.png');
         this.load.image('ship2', 'assets/ship2.png');
         this.load.image('ship3', 'assets/ship3.png');
+        this.load.image('hpBar', 'assets/hpBar.png');
+
+        //Loading planet assets
+        this.load.spritesheet('planet1', 'assets/planet1.png', 275, 250);
+        this.load.spritesheet('planet2', 'assets/planet2.png', 200, 185);
+        this.load.spritesheet('planet3', 'assets/planet3.png', 475, 292);
+        this.load.spritesheet('planet4', 'assets/planet4.png', 300, 353);
+        this.load.spritesheet('planet5', 'assets/planet5.png', 350, 340);
+        this.load.spritesheet('planet6', 'assets/planet6.png', 275, 246);
+        this.load.spritesheet('planet7', 'assets/planet7.png', 375, 350);
 
     },
     create: function () {
