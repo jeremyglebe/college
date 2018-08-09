@@ -17,10 +17,10 @@ DoW.Boot.prototype = {
         this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
 
         //Minimum/Maximum Scaling
-        this.scale.minWidth = 400;
-        this.scale.minHeight = 300;
-        this.scale.maxWidth = 1600;
-        this.scale.maxHeight = 1200;
+        this.scale.minWidth = 480;
+        this.scale.minHeight = 640;
+        this.scale.maxWidth = 1080;
+        this.scale.maxHeight = 1920;
 
         //Align things with the center
         this.scale.pageAlignHorizontally = true;

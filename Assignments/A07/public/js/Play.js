@@ -7,7 +7,7 @@ DoW.Play.prototype = {
         console.log('State: Play');
 
         //Very dark blue as background
-        this.game.stage.backgroundColor = '#000010';
+        this.game.stage.backgroundColor = '#101020';
 
         //Create necessary variables
         this.players = {}
@@ -42,6 +42,9 @@ DoW.Play.prototype = {
             if (id == idkey) {
                 this.players[id] = this.add.sprite(plys[id].x, plys[id].y, 'ship' + String(plys[id].ship));
                 this.players[id].tint = Phaser.Color.RGBtoString(plys[id].colR, plys[id].colG, plys[id].colB, 255, '0x');
+                this.players[id].anchor.setTo(0.5);
+                this.players[id].width = 150;
+                this.players[id].height = 150;
             }
         }
 
@@ -55,6 +58,9 @@ DoW.Play.prototype = {
             if (plys[id]) {
                 this.players[id] = this.add.sprite(plys[id].x, plys[id].y, 'ship' + String(plys[id].ship));
                 this.players[id].tint = Phaser.Color.RGBtoString(plys[id].colR, plys[id].colG, plys[id].colB, 255, '0x');
+                this.players[id].anchor.setTo(0.5);
+                this.players[id].width = 150;
+                this.players[id].height = 150;
             }
         }
 

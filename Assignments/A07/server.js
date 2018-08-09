@@ -46,8 +46,8 @@ io.on('connection', function (socket) {
             colR: Math.floor(Math.random() * 256),
             colG: Math.floor(Math.random() * 256),
             colB: Math.floor(Math.random() * 256),
-            x: Math.floor(Math.random() * 700) + 50,
-            y: Math.floor(Math.random() * 500) + 50,
+            x: Math.floor(Math.random() * 980) + 50,
+            y: Math.floor(Math.random() * 860) + 50,
             hp: 100,
             score: 0,
             busy: false,
@@ -80,8 +80,8 @@ io.on('connection', function (socket) {
         }else{
             //Move towards the mouse at a set pace
             var angle = Math.atan2(y - plyY, x - plyX);
-            players[socket.id].x += 2 * Math.cos(angle);
-            players[socket.id].y += 2 * Math.sin(angle);
+            players[socket.id].x += 8 * Math.cos(angle);
+            players[socket.id].y += 8 * Math.sin(angle);
         }
 
         io.emit('order plyPosSet', players, socket.id);

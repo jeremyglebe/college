@@ -1,6 +1,6 @@
 var DoW = DoW || {};
 
-DoW.game = new Phaser.Game(800, 600, Phaser.AUTO);
+DoW.game = new Phaser.Game(1080, 1920, Phaser.AUTO);
 
 DoW.game.state.add('Boot', DoW.Boot);
 DoW.game.state.add('Preload', DoW.Preload);
