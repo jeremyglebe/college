@@ -57,7 +57,7 @@ io.on('connection', function (socket) {
                 x: 0,
                 y: 0
             },
-            shots: {}
+            shots: []
         };
 
         //Send the players object to the new player
@@ -203,8 +203,26 @@ io.on('connection', function (socket) {
 
     });
 
+    //Request: Let the player ship fire
+    socket.on('request plyShoot', function(){
+        var shot = {
+            x: players[socket.id].x,
+            y: players[socket.id].y
+        }
+        players[socket.id].shots.push(shot);
+        io.emit('order shotCreate', shot, socket.id);
+    })
+
+    //Request: Move a laser shot
+    socket.on('request shotMove', function(index){
+
+        players[socket.id].shots[index].y += 16;
+        io.emit('order shotPosSet', players, socket.id, index);
+
+    });
+
     //Request: Spawn an obstacle
-    socket.on('request spawnOb', function (socket) {
+    socket.on('request spawnOb', function () {
 
         //Create the object for the spawned obstacle
         ob = {

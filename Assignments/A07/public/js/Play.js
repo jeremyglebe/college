@@ -6,8 +6,10 @@ DoW.Play.prototype = {
     create: function () {
         console.log('State: Play');
 
-        //Very dark blue as background
-        this.game.stage.backgroundColor = '#101020';
+        //Background
+        this.bgImage = this.add.tileSprite(0, 0, this.world.width, this.world.height, 'bg');
+        //1080 is my margins on the sides, 3840 + 1080 + 1080 is the image width
+        this.bgImage.tilePosition.x = Math.floor(Math.random() * 667) + 1080;
 
         //Create necessary variables
         this.myID = null;
@@ -24,6 +26,14 @@ DoW.Play.prototype = {
         }
         this.obRequest();
 
+        //Create the player's shoot button
+        this.button = this.add.sprite(980, 1820, 'fireButton');
+        this.button.inputEnabled = true;
+        this.button.events.onInputDown.add(function () {
+            console.log("Button press recognized.");
+            this.game.socket.emit('request plyShoot');
+        }, this);
+
         //Listeners for server orders
         //We bind the methods to this, or else they will not see this.game
         this.game.socket.on('order obCreate', this.obCreate.bind(this));
@@ -37,10 +47,15 @@ DoW.Play.prototype = {
         this.game.socket.on('order setHP', this.setHP.bind(this));
         this.game.socket.on('order shipBusy', this.shipBusy.bind(this));
         this.game.socket.on('order shipFree', this.shipFree.bind(this));
+        this.game.socket.on('order shotCreate', this.shotCreate.bind(this));
+        this.game.socket.on('order shotPosSet', this.shotPosSet.bind(this));
 
     },
 
     update: function () {
+
+        //Update the background image
+        this.bgImage.tilePosition.y -= 1;
 
         //Update the health bar
         for (id in this.players) {
@@ -65,7 +80,6 @@ DoW.Play.prototype = {
         //Collisions with obstacles
         for (var i = 0; i < this.obstacles.length; i++) {
             this.physics.arcade.overlap(this.players[this.myID], this.obstacles[i], function (ply, ob) {
-                console.log("Obstacle crash occured.");
                 this.game.socket.emit('alert obCrash', this.myID, i);
             }, null, this);
         }
@@ -82,6 +96,13 @@ DoW.Play.prototype = {
             this.game.socket.emit('request plyMove', pointer.x, pointer.y);
         }
 
+        //Request to move player shots
+        if (this.players[this.myID]) {
+            for (var i = 0; i < this.players[this.myID].shots.length; i++) {
+                this.game.socket.emit('request shotMove', i);
+            }
+        }
+
         //Request to move the obstacles
         for (var i = 0; i < this.obstacles.length; i++) {
             this.game.socket.emit('request obMove', i, this.obstacles[i].x, this.obstacles[i].y);
@@ -90,8 +111,6 @@ DoW.Play.prototype = {
     },
 
     obCreate: function (ob) {
-        console.log("Received order to create obstacle");
-        console.log(ob);
         var obSpr = this.add.sprite(ob.x, ob.y, 'planet' + String(ob.planet));
         this.game.physics.arcade.enable(obSpr);
         obSpr.animations.add('spin', null, 5, true);
@@ -99,13 +118,21 @@ DoW.Play.prototype = {
         obSpr.speed = ob.speed;
         obSpr.scale.setTo(ob.size);
         obSpr.anchor.setTo(0.5);
-        console.log(obSpr);
         this.obstacles.push(obSpr);
     },
 
-    obDestroy: function(index){
-        console.log("Received order to destroy obstacle.")
-        console.log(this.obstacles[index]);
+    obDestroy: function (index) {
+
+        //Create an explosion
+        var explo = this.add.sprite(this.obstacles[index].x, this.obstacles[index].y, 'expl')
+        explo.anchor.setTo(0.5);
+        explo.scale.setTo(0.5);
+        explo.animations.add('boom', null, 10, false);
+        explo.animations.play('boom');
+        explo.animations.currentAnim.onComplete.add(function () {
+            explo.destroy();
+        }, this);
+
         this.obstacles[index].destroy();
         this.obstacles.splice(index, 1);
     },
@@ -128,11 +155,14 @@ DoW.Play.prototype = {
                 this.players[id].anchor.setTo(0.5);
                 this.players[id].scale.setTo(0.3);
                 this.players[id].busy = false;
+                //HP and HP bar
                 this.players[id].hp = 100;
                 this.players[id].hpBar = this.add.sprite(plys[id].x, plys[id].y + 0.6 * this.players[id].height, 'hpBar');
                 this.players[id].hpBar.anchor.setTo(0.5);
                 this.players[id].hpBar.width = this.players[id].width * (this.players[id].hp / 100);
                 this.players[id].hpBar.height = this.players[id].height * 0.1;
+                //Shots
+                this.players[id].shots = [];
             }
         }
 
@@ -154,11 +184,14 @@ DoW.Play.prototype = {
                 this.players[id].anchor.setTo(0.5);
                 this.players[id].scale.setTo(0.3);
                 this.players[id].busy = false;
+                //HP and HP bar
                 this.players[id].hp = 100;
                 this.players[id].hpBar = this.add.sprite(plys[id].x, plys[id].y + 0.6 * this.players[id].height, 'hpBar');
                 this.players[id].hpBar.anchor.setTo(0.5);
                 this.players[id].hpBar.width = this.players[id].width * (this.players[id].hp / 100);
                 this.players[id].hpBar.height = this.players[id].height * 0.1;
+                //Shots
+                this.players[id].shots = [];
             }
         }
 
@@ -177,6 +210,17 @@ DoW.Play.prototype = {
     plyDestroy: function (plyID) {
 
         if (this.players[plyID]) {
+
+            //Create an explosion
+            var explo = this.add.sprite(this.players[plyID].x, this.players[plyID].y, 'expl')
+            explo.anchor.setTo(0.5);
+            explo.scale.setTo(0.5);
+            explo.animations.add('boom', null, 10, false);
+            explo.animations.play('boom');
+            explo.animations.currentAnim.onComplete.add(function () {
+                explo.destroy();
+            }, this);
+
             this.players[plyID].hpBar.destroy();
             this.players[plyID].destroy();
             this.players[plyID] = null;
@@ -227,6 +271,34 @@ DoW.Play.prototype = {
             }
         }
 
-    }
+    },
+
+    shotCreate: function (shot, idkey) {
+
+        var shotSpr = this.add.sprite(shot.x, shot.y, 'laser');
+        shotSpr.anchor.setTo(0.5, 0);
+        shotSpr.width = 4;
+        shotSpr.height = 0.75 * shotSpr.height;
+
+        for (id in this.players) {
+            //Verifies that this is the correct id
+            if (id == idkey) {
+                this.players[id].shots.push(shotSpr);
+            }
+        }
+
+    },
+
+    shotPosSet: function (plys, idkey, index) {
+
+        for (id in plys) {
+            //Verifies that this is the correct id
+            if (id == idkey) {
+                this.players[id].shots[index].x = plys[id].shots[index].x;
+                this.players[id].shots[index].y = plys[id].shots[index].y;
+            }
+        }
+
+    },
 
 }

@@ -13,7 +13,6 @@ DoW.Preload.prototype = {
         this.load.image('ship1', 'assets/ship1.png');
         this.load.image('ship2', 'assets/ship2.png');
         this.load.image('ship3', 'assets/ship3.png');
-        this.load.image('hpBar', 'assets/hpBar.png');
 
         //Loading planet assets
         this.load.spritesheet('planet1', 'assets/planet1.png', 275, 250);
@@ -23,6 +22,13 @@ DoW.Preload.prototype = {
         this.load.spritesheet('planet5', 'assets/planet5.png', 350, 340);
         this.load.spritesheet('planet6', 'assets/planet6.png', 275, 246);
         this.load.spritesheet('planet7', 'assets/planet7.png', 375, 350);
+
+        //Other sprites
+        this.load.image('bg', 'assets/universe.jpg');
+        this.load.image('hpBar', 'assets/hpBar.png');
+        this.load.image('fireButton', 'assets/fireButton.png');
+        this.load.image('laser', 'assets/laser.png');
+        this.load.spritesheet('expl', 'assets/explosion.png', 650, 600);
 
     },
     create: function () {
