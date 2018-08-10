@@ -88,6 +88,8 @@ io.on('connection', function (socket) {
             //Remove player from players object
             players[plyID] = null;
         }
+        //Clear the client's flag
+        socket.emit('clear obCrash');
     });
 
     //Event: Ships crash into each other
@@ -160,6 +162,8 @@ io.on('connection', function (socket) {
         players[socket.id].shots.splice(shotIndex, 1);
         //Order clients to destroy the shot
         io.emit('order shotDestroy', socket.id, shotIndex);
+        //Clear the client's flag
+        socket.emit('clear shotHit');
     });
 
     //Request: Move the obstacles

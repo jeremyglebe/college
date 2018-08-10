@@ -18,6 +18,11 @@ DoW.Play.prototype = {
         this.players = {};
         this.obstacles = [];
 
+        //Flags set when waiting for server response
+        this.flags = {};
+        this.flags.obCrash = false;
+        this.flags.shotHit = false;
+
         //Spawn the player
         this.game.socket.emit('alert plySpawn');
 
@@ -51,6 +56,12 @@ DoW.Play.prototype = {
         this.game.socket.on('order shotCreate', this.shotCreate.bind(this));
         this.game.socket.on('order shotDestroy', this.shotDestroy.bind(this));
         this.game.socket.on('order shotPosSet', this.shotPosSet.bind(this));
+        this.game.socket.on('clear obCrash', function(){
+            this.flags.obCrash = false;
+        }.bind(this));
+        this.game.socket.on('clear shotHit', function(){
+            this.flags.shotHit = false;
+        }.bind(this));
 
     },
 
@@ -82,7 +93,10 @@ DoW.Play.prototype = {
         //Collisions with obstacles
         for (var i = 0; i < this.obstacles.length; i++) {
             this.physics.arcade.overlap(this.players[this.myID], this.obstacles[i], function (ply, ob) {
-                this.game.socket.emit('alert obCrash', this.myID, i);
+                if (!this.flags.obCrash) {
+                    this.game.socket.emit('alert obCrash', this.myID, i);
+                    this.flags.obCrash = true;
+                }
             }, null, this);
         }
 
@@ -91,7 +105,10 @@ DoW.Play.prototype = {
             for (var i = 0; i < this.players[this.myID].shots.length; i++) {
                 for (var j = 0; j < this.obstacles.length; j++) {
                     this.physics.arcade.overlap(this.players[this.myID].shots[i], this.obstacles[j], function (shot, ob) {
-                        this.game.socket.emit('alert shotHit', i, j);
+                        if (!this.flags.shotHit) {
+                            this.game.socket.emit('alert shotHit', i, j);
+                            this.flags.shotHit = true;
+                        }
                     }, null, this);
                 }
             }
