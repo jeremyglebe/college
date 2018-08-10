@@ -6,6 +6,8 @@ DoW.Play.prototype = {
     create: function () {
         console.log('State: Play');
 
+        this.game.stage.disableVisibilityChange = true;
+
         //Background
         this.bgImage = this.add.tileSprite(0, 0, this.world.width, this.world.height, 'bg');
         //1080 is my margins on the sides, 3840 + 1080 + 1080 is the image width
@@ -27,10 +29,9 @@ DoW.Play.prototype = {
         this.obRequest();
 
         //Create the player's shoot button
-        this.button = this.add.sprite(980, 1820, 'fireButton');
+        this.button = this.add.sprite(952, 1792, 'fireButton');
         this.button.inputEnabled = true;
         this.button.events.onInputDown.add(function () {
-            console.log("Button press recognized.");
             this.game.socket.emit('request plyShoot');
         }, this);
 
@@ -48,6 +49,7 @@ DoW.Play.prototype = {
         this.game.socket.on('order shipBusy', this.shipBusy.bind(this));
         this.game.socket.on('order shipFree', this.shipFree.bind(this));
         this.game.socket.on('order shotCreate', this.shotCreate.bind(this));
+        this.game.socket.on('order shotDestroy', this.shotDestroy.bind(this));
         this.game.socket.on('order shotPosSet', this.shotPosSet.bind(this));
 
     },
@@ -84,6 +86,17 @@ DoW.Play.prototype = {
             }, null, this);
         }
 
+        //Laser & obstacle collision
+        if (this.players[this.myID]) {
+            for (var i = 0; i < this.players[this.myID].shots.length; i++) {
+                for (var j = 0; j < this.obstacles.length; j++) {
+                    this.physics.arcade.overlap(this.players[this.myID].shots[i], this.obstacles[j], function (shot, ob) {
+                        this.game.socket.emit('alert shotHit', i, j);
+                    }, null, this);
+                }
+            }
+        }
+
         //Determine if the ship's "busy"(not controllable)
         var busy = false;
         if (this.players[this.myID]) {
@@ -93,7 +106,11 @@ DoW.Play.prototype = {
         var pointer = this.game.input.activePointer;
         //Controlling ship movement
         if (pointer.isDown || busy) {
-            this.game.socket.emit('request plyMove', pointer.x, pointer.y);
+            if (pointer.targetObject && pointer.targetObject.sprite != this.button) {
+                this.game.socket.emit('request plyMove', pointer.x, pointer.y);
+            } else if (!pointer.targetObject) {
+                this.game.socket.emit('request plyMove', pointer.x, pointer.y);
+            }
         }
 
         //Request to move player shots
@@ -133,8 +150,10 @@ DoW.Play.prototype = {
             explo.destroy();
         }, this);
 
-        this.obstacles[index].destroy();
-        this.obstacles.splice(index, 1);
+        if (this.obstacles[index]) {
+            this.obstacles[index].destroy();
+            this.obstacles.splice(index, 1);
+        }
     },
 
     obPosSet: function (obs, index) {
@@ -276,6 +295,7 @@ DoW.Play.prototype = {
     shotCreate: function (shot, idkey) {
 
         var shotSpr = this.add.sprite(shot.x, shot.y, 'laser');
+        this.game.physics.arcade.enable(shotSpr);
         shotSpr.anchor.setTo(0.5, 0);
         shotSpr.width = 4;
         shotSpr.height = 0.75 * shotSpr.height;
@@ -284,6 +304,20 @@ DoW.Play.prototype = {
             //Verifies that this is the correct id
             if (id == idkey) {
                 this.players[id].shots.push(shotSpr);
+            }
+        }
+
+    },
+
+    shotDestroy: function (plyID, shotIndex) {
+
+        for (id in this.players) {
+            //Verifies that this is the correct id
+            if (id == plyID) {
+                if (this.players[id].shots[shotIndex]) {
+                    this.players[id].shots[shotIndex].destroy();
+                    this.players[id].shots.splice(shotIndex, 1);
+                }
             }
         }
 
@@ -301,4 +335,10 @@ DoW.Play.prototype = {
 
     },
 
+
+
+
+    syncReport: function () {
+        this.game.socket.emit('syncReport');
+    }
 }

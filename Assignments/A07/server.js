@@ -74,7 +74,6 @@ io.on('connection', function (socket) {
 
     //Event: Ship crashes into obstacle
     socket.on('alert obCrash', function (plyID, obIndex) {
-        console.log("Obstacle crash occured.");
         //Destroy the obstacle
         obstacles.splice(obIndex, 1);
         //Order clients to destroy the obstacle
@@ -151,6 +150,18 @@ io.on('connection', function (socket) {
 
     });
 
+    //Event: Player shot hits an obstacle
+    socket.on('alert shotHit', function (shotIndex, obIndex) {
+        //Destroy the obstacle
+        obstacles.splice(obIndex, 1);
+        //Order clients to destroy the obstacle
+        io.emit('order obDestroy', obIndex);
+        //Destroy the shot
+        players[socket.id].shots.splice(shotIndex, 1);
+        //Order clients to destroy the shot
+        io.emit('order shotDestroy', socket.id, shotIndex);
+    });
+
     //Request: Move the obstacles
     socket.on('request obMove', function (index, x, y) {
 
@@ -204,7 +215,7 @@ io.on('connection', function (socket) {
     });
 
     //Request: Let the player ship fire
-    socket.on('request plyShoot', function(){
+    socket.on('request plyShoot', function () {
         var shot = {
             x: players[socket.id].x,
             y: players[socket.id].y
@@ -214,11 +225,11 @@ io.on('connection', function (socket) {
     })
 
     //Request: Move a laser shot
-    socket.on('request shotMove', function(index){
-
-        players[socket.id].shots[index].y += 16;
-        io.emit('order shotPosSet', players, socket.id, index);
-
+    socket.on('request shotMove', function (index) {
+        if (players[socket.id].shots[index]) {
+            players[socket.id].shots[index].y += 16;
+            io.emit('order shotPosSet', players, socket.id, index);
+        }
     });
 
     //Request: Spawn an obstacle
@@ -237,6 +248,13 @@ io.on('connection', function (socket) {
 
         //Order clients to create the obstacle
         io.emit('order obCreate', ob);
+
+    });
+
+    //Synchronization report
+    socket.on('syncReport', function(){
+
+        console.log(players);
 
     });
 

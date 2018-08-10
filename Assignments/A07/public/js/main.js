@@ -1,6 +1,13 @@
 var DoW = DoW || {};
 
-DoW.game = new Phaser.Game(1080, 1920, Phaser.AUTO);
+//Game configuration
+var conf = {
+    width: 1080,
+    height: 1920,
+    renderer: Phaser.AUTO,
+    forceSetTimeOut: true
+};
+DoW.game = new Phaser.Game(conf);
 
 DoW.game.state.add('Boot', DoW.Boot);
 DoW.game.state.add('Preload', DoW.Preload);
