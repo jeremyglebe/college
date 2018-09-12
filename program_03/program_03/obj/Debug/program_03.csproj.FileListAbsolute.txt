@@ -1,0 +1,10 @@
+D:\My School Files\ContemporaryC#\contemporary-pl-cs\program_03\program_03\bin\Debug\program_03.exe.config
+D:\My School Files\ContemporaryC#\contemporary-pl-cs\program_03\program_03\bin\Debug\program_03.exe
+D:\My School Files\ContemporaryC#\contemporary-pl-cs\program_03\program_03\bin\Debug\program_03.pdb
+D:\My School Files\ContemporaryC#\contemporary-pl-cs\program_03\program_03\obj\Debug\program_03.csprojAssemblyReference.cache
+D:\My School Files\ContemporaryC#\contemporary-pl-cs\program_03\program_03\obj\Debug\program_03.displayWindow.resources
+D:\My School Files\ContemporaryC#\contemporary-pl-cs\program_03\program_03\obj\Debug\program_03.Properties.Resources.resources
+D:\My School Files\ContemporaryC#\contemporary-pl-cs\program_03\program_03\obj\Debug\program_03.csproj.GenerateResource.cache
+D:\My School Files\ContemporaryC#\contemporary-pl-cs\program_03\program_03\obj\Debug\program_03.csproj.CoreCompileInputs.cache
+D:\My School Files\ContemporaryC#\contemporary-pl-cs\program_03\program_03\obj\Debug\program_03.exe
+D:\My School Files\ContemporaryC#\contemporary-pl-cs\program_03\program_03\obj\Debug\program_03.pdb
