@@ -20,11 +20,11 @@ int main() {
 	//Static variables are given a default value.
 	static int static_i;
 	//Here are the results using Visual Studio 17
-	cout << global_i << endl;	//0
-	cout << i_struct.i << endl;	//0
-	cout << static_i << endl;	//0
-	//cout << i << endl;		//Run-Time Check Failure #3 - The variable 'i'
-								//is being used without being initalized.
+	cout << global_i << endl;   //0
+	cout << i_struct.i << endl; //0
+	cout << static_i << endl;   //0
+	//cout << i << endl;        //Run-Time Check Failure #3 - The variable 'i'
+                                //is being used without being initalized.
 
 	return 0;
 }
