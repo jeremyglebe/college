@@ -28,13 +28,16 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.btnNewGame = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
             this.trackX = new System.Windows.Forms.TrackBar();
             this.trackY = new System.Windows.Forms.TrackBar();
             this.lblXTrack = new System.Windows.Forms.Label();
             this.lblYTrack = new System.Windows.Forms.Label();
-            this.gameDisplay = new System.Windows.Forms.RichTextBox();
+            this.gameDisplay = new System.Windows.Forms.TextBox();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.helpText = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.trackX)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackY)).BeginInit();
             this.SuspendLayout();
@@ -59,6 +62,7 @@
             this.btnOK.TabIndex = 1;
             this.btnOK.Text = "OK!";
             this.btnOK.UseVisualStyleBackColor = true;
+            this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
             // 
             // trackX
             // 
@@ -102,21 +106,37 @@
             // 
             // gameDisplay
             // 
-            this.gameDisplay.Font = new System.Drawing.Font("Lucida Sans Unicode", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.gameDisplay.Location = new System.Drawing.Point(12, 12);
+            this.gameDisplay.Font = new System.Drawing.Font("Lucida Console", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.gameDisplay.Location = new System.Drawing.Point(12, 86);
+            this.gameDisplay.Multiline = true;
             this.gameDisplay.Name = "gameDisplay";
             this.gameDisplay.ReadOnly = true;
-            this.gameDisplay.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this.gameDisplay.Size = new System.Drawing.Size(400, 400);
-            this.gameDisplay.TabIndex = 7;
-            this.gameDisplay.Text = "";
+            this.gameDisplay.Size = new System.Drawing.Size(566, 326);
+            this.gameDisplay.TabIndex = 8;
             this.gameDisplay.WordWrap = false;
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
+            // 
+            // helpText
+            // 
+            this.helpText.Font = new System.Drawing.Font("Lucida Console", 11F);
+            this.helpText.Location = new System.Drawing.Point(12, 12);
+            this.helpText.Multiline = true;
+            this.helpText.Name = "helpText";
+            this.helpText.ReadOnly = true;
+            this.helpText.Size = new System.Drawing.Size(566, 55);
+            this.helpText.TabIndex = 11;
+            this.helpText.Text = "New Game: Select a game size and hit \"OK!\"";
             // 
             // gameForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(784, 561);
+            this.Controls.Add(this.helpText);
             this.Controls.Add(this.gameDisplay);
             this.Controls.Add(this.lblYTrack);
             this.Controls.Add(this.lblXTrack);
@@ -141,7 +161,9 @@
         private System.Windows.Forms.TrackBar trackY;
         private System.Windows.Forms.Label lblXTrack;
         private System.Windows.Forms.Label lblYTrack;
-        private System.Windows.Forms.RichTextBox gameDisplay;
+        private System.Windows.Forms.TextBox gameDisplay;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.TextBox helpText;
     }
 }
 
