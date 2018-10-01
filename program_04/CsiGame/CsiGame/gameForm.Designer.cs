@@ -38,6 +38,7 @@
             this.gameDisplay = new System.Windows.Forms.TextBox();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.helpText = new System.Windows.Forms.TextBox();
+            this.guessLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.trackX)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackY)).BeginInit();
             this.SuspendLayout();
@@ -131,11 +132,22 @@
             this.helpText.TabIndex = 11;
             this.helpText.Text = "New Game: Select a game size and hit \"OK!\"";
             // 
+            // guessLabel
+            // 
+            this.guessLabel.AutoSize = true;
+            this.guessLabel.Font = new System.Drawing.Font("Lucida Console", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.guessLabel.Location = new System.Drawing.Point(584, 86);
+            this.guessLabel.Name = "guessLabel";
+            this.guessLabel.Size = new System.Drawing.Size(172, 27);
+            this.guessLabel.TabIndex = 12;
+            this.guessLabel.Text = "Guesses: 0";
+            // 
             // gameForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(784, 561);
+            this.Controls.Add(this.guessLabel);
             this.Controls.Add(this.helpText);
             this.Controls.Add(this.gameDisplay);
             this.Controls.Add(this.lblYTrack);
@@ -164,6 +176,7 @@
         private System.Windows.Forms.TextBox gameDisplay;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.TextBox helpText;
+        private System.Windows.Forms.Label guessLabel;
     }
 }
 

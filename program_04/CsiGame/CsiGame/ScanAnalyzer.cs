@@ -19,6 +19,16 @@ namespace CsiGame
         //Number of guesses made
         private int guesses;
 
+        //Guesses property
+        public int Guesses
+        {
+            get
+            {
+                return guesses;
+            }
+        }
+
+
         //Location structure for holding x,y pairs
         public struct loc
         {
@@ -159,56 +169,56 @@ namespace CsiGame
             switch (direction)
             {
                 case "n":
-                    grid[r][c] = '╧';
-                    for (int i = 0; i < grid[r].Length; i++)
-                    {
-                        if (grid[r][i] == '~')
-                        {
-                            grid[r][i] = '═';
-                        }
-                    }
+                    grid[r][c] = '^';
                     break;
                 case "s":
-                    grid[r][c] = '╤';
-                    for (int i = 0; i < grid[r].Length; i++)
-                    {
-                        if (grid[r][i] == '~')
-                        {
-                            grid[r][i] = '═';
-                        }
-                    }
+                    grid[r][c] = 'V';
                     break;
                 case "w":
-                    grid[r][c] = '╢';
-                    for (int i = 0; i < grid.Length; i++)
-                    {
-                        if (grid[i][c] == '~')
-                        {
-                            grid[i][c] = '║';
-                        }
-                    }
+                    grid[r][c] = '<';
                     break;
                 case "e":
-                    grid[r][c] = '╟';
-                    for (int i = 0; i < grid.Length; i++)
-                    {
-                        if (grid[i][c] == '~')
-                        {
-                            grid[i][c] = '║';
-                        }
-                    }
+                    grid[r][c] = '>';
                     break;
                 case "nw":
-                    grid[r][c] = '╝';
+                    if ((guesses % 2) == 0)
+                    {
+                        grid[r][c] = '^';
+                    }
+                    else
+                    {
+                        grid[r][c] = '<';
+                    }
                     break;
                 case "ne":
-                    grid[r][c] = '╚';
+                    if ((guesses % 2) == 0)
+                    {
+                        grid[r][c] = '^';
+                    }
+                    else
+                    {
+                        grid[r][c] = '>';
+                    }
                     break;
                 case "sw":
-                    grid[r][c] = '╗';
+                    if ((guesses % 2) == 0)
+                    {
+                        grid[r][c] = 'V';
+                    }
+                    else
+                    {
+                        grid[r][c] = '<';
+                    }
                     break;
                 case "se":
-                    grid[r][c] = '╔';
+                    if ((guesses % 2) == 0)
+                    {
+                        grid[r][c] = 'V';
+                    }
+                    else
+                    {
+                        grid[r][c] = '>';
+                    }
                     break;
                 default:
                     grid[r][c] = 'X';
@@ -224,6 +234,7 @@ namespace CsiGame
                     }
                     break;
             }
+            guesses++;
         }
     }
 }

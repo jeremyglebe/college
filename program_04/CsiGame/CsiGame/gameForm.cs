@@ -53,6 +53,8 @@ namespace CsiGame
                 scanner.Guess(trackX.Value, trackY.Value);
                 //Update the grid display
                 gameDisplay.Text = scanner.DisplayGrid();
+                //Update the guesses text
+                guessLabel.Text = "Guesses: " + scanner.Guesses.ToString();
             }
             //If the user is choosing a new game size
             else
@@ -65,8 +67,8 @@ namespace CsiGame
                 trackY.Maximum = trackY.Value - 1;
                 //Set the instruction text
                 helpText.Text = "Guessing: Choose the row and column of your" +
-                    " guess, then hit \"OK!\"\r\nThe Scan Analyzer will draw a" +
-                    " box around the hidden sample";
+                    " guess, then hit \"OK!\"\r\nThe Scan Analyzer will draw" +
+                    " an arrow pointing towards the hidden sample.";
                 //The game has started
                 gameStarted = true;
             }
