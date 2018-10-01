@@ -1,4 +1,10 @@
-﻿using System;
+﻿/* Program 04: CSI
+ * Description: A game in which you find DNA samples of a crime based on random
+ *     guessing.
+ * Author: Jeremy Glebe
+ * Date: 10/1/18
+ */
+ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,9 +22,12 @@ namespace CsiGame
         private char[][] grid;
         //Hidden evidence sample locations
         private loc[] secret;
+        //Whether the player has found both samples
+        private bool winner;
         //Number of guesses made
         private int guesses;
-
+        //Maximum guesses
+        private int maxGuesses;
         //Guesses property
         public int Guesses
         {
@@ -27,7 +36,22 @@ namespace CsiGame
                 return guesses;
             }
         }
-
+        //MaxGuesses property
+        public int MaxGuesses
+        {
+            get
+            {
+                return maxGuesses;
+            }
+        }
+        //Winner property
+        public bool Winner
+        {
+            get
+            {
+                return winner;
+            }
+        }
 
         //Location structure for holding x,y pairs
         public struct loc
@@ -47,6 +71,8 @@ namespace CsiGame
             //Set the grid dimensions
             rows = 10;
             cols = 10;
+            //Set the maximum guesses
+            maxGuesses = (int)Math.Sqrt(rows * cols) * 2;
             //Generate the array
             grid = new char[rows][];
             for (int i = 0; i < 10; i++)
@@ -78,6 +104,8 @@ namespace CsiGame
             //Set the grid dimensions
             rows = r;
             cols = c;
+            //Set the maximum guesses
+            maxGuesses = (int)Math.Sqrt(rows * cols) * 2;
             //Generate the array
             grid = new char[rows][];
             for (int i = 0; i < r; i++)
@@ -92,7 +120,10 @@ namespace CsiGame
             Random rnd = new Random();
             secret = new loc[2];
             secret[0] = new loc(rnd.Next(0, cols), rnd.Next(0, rows));
-            secret[1] = new loc(rnd.Next(0, cols), rnd.Next(0, rows));
+            do
+            {
+                secret[1] = new loc(rnd.Next(0, cols), rnd.Next(0, rows));
+            } while (secret[1].x == secret[0].x && secret[1].y == secret[0].y);
             //Set the guess counter to 0
             guesses = 0;
             //Exit the method
@@ -140,7 +171,7 @@ namespace CsiGame
         /* Method: Guess
          * Desc: Changes the grid to reflect a guess made.
          */
-        public void Guess(int r, int c)
+        public void EvaluateGuess(int r, int c)
         {
             //Are we looking for the first or second sample?
             int sample = grid[secret[0].y][secret[0].x] == 'X' ? 1 : 0;
@@ -152,7 +183,8 @@ namespace CsiGame
             if (secret[sample].y > r)
             {
                 direction += "s";
-            } else if (secret[sample].y < r)
+            }
+            else if (secret[sample].y < r)
             {
                 direction += "n";
             }
@@ -165,76 +197,58 @@ namespace CsiGame
                 direction += "w";
             }
 
-            //Behaviors based on direction
-            switch (direction)
+            if (grid[r][c] != 'X' && !winner && guesses < maxGuesses)
             {
-                case "n":
-                    grid[r][c] = '^';
-                    break;
-                case "s":
-                    grid[r][c] = 'V';
-                    break;
-                case "w":
-                    grid[r][c] = '<';
-                    break;
-                case "e":
-                    grid[r][c] = '>';
-                    break;
-                case "nw":
-                    if ((guesses % 2) == 0)
-                    {
+                //Behaviors based on direction
+                switch (direction)
+                {
+                    case "n":
                         grid[r][c] = '^';
-                    }
-                    else
-                    {
-                        grid[r][c] = '<';
-                    }
-                    break;
-                case "ne":
-                    if ((guesses % 2) == 0)
-                    {
-                        grid[r][c] = '^';
-                    }
-                    else
-                    {
-                        grid[r][c] = '>';
-                    }
-                    break;
-                case "sw":
-                    if ((guesses % 2) == 0)
-                    {
+                        break;
+                    case "s":
                         grid[r][c] = 'V';
-                    }
-                    else
-                    {
+                        break;
+                    case "w":
                         grid[r][c] = '<';
-                    }
-                    break;
-                case "se":
-                    if ((guesses % 2) == 0)
-                    {
-                        grid[r][c] = 'V';
-                    }
-                    else
-                    {
+                        break;
+                    case "e":
                         grid[r][c] = '>';
-                    }
-                    break;
-                default:
-                    grid[r][c] = 'X';
-                    for (int i = 0; i < rows; i++)
-                    {
-                        for (int j = 0; j < cols; j++)
+                        break;
+                    case "nw":
+                        grid[r][c] = (guesses % 2) < 1 ? '<' : '^';
+                        break;
+                    case "ne":
+                        grid[r][c] = (guesses % 2) < 1 ? '>' : '^';
+                        break;
+                    case "sw":
+                        grid[r][c] = (guesses % 2) < 1 ? '<' : 'V';
+                        break;
+                    case "se":
+                        grid[r][c] = (guesses % 2) < 1 ? '>' : 'V';
+                        break;
+                    default:
+                        grid[r][c] = 'X';
+                        if (sample == 0)
                         {
-                            if (grid[i][j] != '~' && grid[i][j] != 'X')
+                            for (int i = 0; i < rows; i++)
                             {
-                                grid[i][j] = '~';
+                                for (int j = 0; j < cols; j++)
+                                {
+                                    if (grid[i][j] != '~' && grid[i][j] != 'X')
+                                    {
+                                        grid[i][j] = '~';
+                                    }
+                                }
                             }
                         }
-                    }
-                    break;
+                        else
+                        {
+                            winner = true;
+                        }
+                        break;
+                }
+                guesses++;
             }
-            guesses++;
         }
     }
 }

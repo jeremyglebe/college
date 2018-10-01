@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(gameForm));
             this.btnNewGame = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
             this.trackX = new System.Windows.Forms.TrackBar();
@@ -39,8 +40,11 @@
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.helpText = new System.Windows.Forms.TextBox();
             this.guessLabel = new System.Windows.Forms.Label();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.gameTitleLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.trackX)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackY)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // btnNewGame
@@ -69,6 +73,7 @@
             // 
             this.trackX.Location = new System.Drawing.Point(97, 457);
             this.trackX.Maximum = 20;
+            this.trackX.Minimum = 2;
             this.trackX.Name = "trackX";
             this.trackX.Size = new System.Drawing.Size(481, 45);
             this.trackX.TabIndex = 2;
@@ -79,6 +84,7 @@
             // 
             this.trackY.Location = new System.Drawing.Point(97, 487);
             this.trackY.Maximum = 20;
+            this.trackY.Minimum = 2;
             this.trackY.Name = "trackY";
             this.trackY.Size = new System.Drawing.Size(481, 45);
             this.trackY.TabIndex = 3;
@@ -108,7 +114,7 @@
             // gameDisplay
             // 
             this.gameDisplay.Font = new System.Drawing.Font("Lucida Console", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.gameDisplay.Location = new System.Drawing.Point(12, 86);
+            this.gameDisplay.Location = new System.Drawing.Point(12, 104);
             this.gameDisplay.Multiline = true;
             this.gameDisplay.Name = "gameDisplay";
             this.gameDisplay.ReadOnly = true;
@@ -124,29 +130,51 @@
             // helpText
             // 
             this.helpText.Font = new System.Drawing.Font("Lucida Console", 11F);
-            this.helpText.Location = new System.Drawing.Point(12, 12);
+            this.helpText.Location = new System.Drawing.Point(12, 43);
             this.helpText.Multiline = true;
             this.helpText.Name = "helpText";
             this.helpText.ReadOnly = true;
             this.helpText.Size = new System.Drawing.Size(566, 55);
             this.helpText.TabIndex = 11;
-            this.helpText.Text = "New Game: Select a game size and hit \"OK!\"";
+            this.helpText.Text = "Find the murderer!\r\n\r\nNew Game: Select a game size and hit \"OK!\"";
             // 
             // guessLabel
             // 
             this.guessLabel.AutoSize = true;
-            this.guessLabel.Font = new System.Drawing.Font("Lucida Console", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.guessLabel.Location = new System.Drawing.Point(584, 86);
+            this.guessLabel.Font = new System.Drawing.Font("Lucida Console", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.guessLabel.Location = new System.Drawing.Point(607, 57);
             this.guessLabel.Name = "guessLabel";
-            this.guessLabel.Size = new System.Drawing.Size(172, 27);
+            this.guessLabel.Size = new System.Drawing.Size(140, 21);
             this.guessLabel.TabIndex = 12;
             this.guessLabel.Text = "Guesses: 0";
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+            this.pictureBox1.Location = new System.Drawing.Point(584, 153);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(190, 190);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox1.TabIndex = 13;
+            this.pictureBox1.TabStop = false;
+            // 
+            // gameTitleLabel
+            // 
+            this.gameTitleLabel.AutoSize = true;
+            this.gameTitleLabel.Font = new System.Drawing.Font("Lucida Console", 15.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.gameTitleLabel.Location = new System.Drawing.Point(12, 10);
+            this.gameTitleLabel.Name = "gameTitleLabel";
+            this.gameTitleLabel.Size = new System.Drawing.Size(388, 21);
+            this.gameTitleLabel.TabIndex = 14;
+            this.gameTitleLabel.Text = "CSI: Forensics Investigator";
             // 
             // gameForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(784, 561);
+            this.Controls.Add(this.gameTitleLabel);
+            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.guessLabel);
             this.Controls.Add(this.helpText);
             this.Controls.Add(this.gameDisplay);
@@ -160,6 +188,7 @@
             this.Text = "CSI: Find the Evidence Sample";
             ((System.ComponentModel.ISupportInitialize)(this.trackX)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackY)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -177,6 +206,8 @@
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.TextBox helpText;
         private System.Windows.Forms.Label guessLabel;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.Label gameTitleLabel;
     }
 }
 

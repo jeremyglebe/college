@@ -16,6 +16,7 @@ namespace CsiGame
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            //Create the scanner
             ScanAnalyzer scanner = new ScanAnalyzer();
             gameForm myGame = new gameForm(scanner);
             Application.Run(myGame);
