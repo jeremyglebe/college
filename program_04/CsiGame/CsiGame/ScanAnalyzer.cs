@@ -159,12 +159,44 @@ namespace CsiGame
             switch (direction)
             {
                 case "n":
+                    grid[r][c] = '╧';
+                    for (int i = 0; i < grid[r].Length; i++)
+                    {
+                        if (grid[r][i] == '~')
+                        {
+                            grid[r][i] = '═';
+                        }
+                    }
+                    break;
                 case "s":
-                    grid[r][c] = '═';
+                    grid[r][c] = '╤';
+                    for (int i = 0; i < grid[r].Length; i++)
+                    {
+                        if (grid[r][i] == '~')
+                        {
+                            grid[r][i] = '═';
+                        }
+                    }
                     break;
                 case "w":
+                    grid[r][c] = '╢';
+                    for (int i = 0; i < grid.Length; i++)
+                    {
+                        if (grid[i][c] == '~')
+                        {
+                            grid[i][c] = '║';
+                        }
+                    }
+                    break;
                 case "e":
-                    grid[r][c] = '║';
+                    grid[r][c] = '╟';
+                    for (int i = 0; i < grid.Length; i++)
+                    {
+                        if (grid[i][c] == '~')
+                        {
+                            grid[i][c] = '║';
+                        }
+                    }
                     break;
                 case "nw":
                     grid[r][c] = '╝';
