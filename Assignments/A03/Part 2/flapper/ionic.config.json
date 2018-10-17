@@ -1,0 +1,7 @@
+{
+  "name": "flapper",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "ionic-angular"
+}
