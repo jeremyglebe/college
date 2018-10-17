@@ -7,6 +7,7 @@ import { ViewChild, ElementRef } from '@angular/core';
 import { Geolocation } from '@ionic-native/geolocation';
 //My providers
 import { DatabaseProvider } from '../../providers/database/database';
+import { resolveDefinition } from '@angular/core/src/view/util';
 
 //This prevents some errors when the app looks for google too early
 declare var google;
@@ -64,10 +65,34 @@ export class MapPage {
         time: Math.round(new Date().getTime() / 1000)
       });
 
+      this.addMarker(latLng);
+
+      this.database.getDocuments('locations').then((locs: any) => {
+        locs.forEach((locObj: any) => {
+          var geopoint = locObj['point'];
+          console.log(geopoint);
+          var googlepoint = new google.maps.LatLng(
+            geopoint.latitude,
+            geopoint.longitude
+            );
+          this.addMarker(googlepoint);
+        });
+      });
+
     }, (err) => {
       console.log(err);
     });
 
+
+  }
+
+  addMarker(latLonObj) {
+
+    let marker = new google.maps.Marker({
+      map: this.map,
+      animation: google.maps.Animation.DROP,
+      position: latLonObj
+    });
 
   }
 

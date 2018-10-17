@@ -36,6 +36,39 @@ export class DatabaseProvider {
     });
   }
 
+  getDocuments(collectionObj: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this._db.collection(collectionObj)
+        .get()
+        .then((querySnapshot) => {
+
+          // Declare an array which we'll use to store retrieved documents
+          let obj: any = [];
+          
+          // Iterate through each document, retrieve the values for each field
+          // and then assign these to a key in an object that is pushed into the
+          // obj array
+          querySnapshot.forEach((doc: any) => {
+            var docData = doc.data();
+            var docObj = {};
+            for (var key in docData){
+              docObj[key] = docData[key];
+            }
+            docObj['id'] = doc.id;
+            obj.push(docObj);
+          });
+
+
+          // Resolve the completed array that contains all of the formatted data
+          // from the retrieved documents
+          resolve(obj);
+        })
+        .catch((error: any) => {
+          reject(error);
+        });
+    });
+  }
+
   /** geo
    * Creates a geopoint
    */
