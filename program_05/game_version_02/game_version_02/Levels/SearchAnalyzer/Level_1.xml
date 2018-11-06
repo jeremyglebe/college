@@ -1,0 +1,55 @@
+﻿<Level>
+
+  <Name>Easy</Name>
+
+  <Description>
+    Simple level with 3 pieces of evidence to find.
+    Be careful with your steps, running to the first you see
+    may be reckless!
+  </Description>
+
+  <Goal>3</Goal>
+
+  <MaxGuesses>32</MaxGuesses>
+
+  <Grid>
+    ┌────┬─────┐\
+    │i```│``X``│\
+    │````│`````│\
+    │````│`````│\
+    │````│`````│\
+    │````│`````│\
+    │``````````│\
+    │``````````│\
+    ├───```````│\
+    │`X````````│\
+    │`````````X│\
+    └──────────┘
+  </Grid>
+
+  <Dialogues>
+
+    <D0>
+      <Line>theBigCheese> Hey rookie. I hear its your first time on the job.</Line>
+      <Line>theBigCheese> I'll guide you through this one.</Line>
+      <Line>theBigCheese> Basically, you're looking for evidence at the scene of the crime.</Line>
+      <Line>theBigCheese> Hold on a minute, my secretary is talking to me.</Line>
+      <Line>theBigCheese> Nevermind, I gotta go. Ned, help them.</Line>
+      <Line>*theBigCheese has disconnected*</Line>
+      <Line>Forensics4Life> Just move around and grab evidence samples.</Line>
+      <Line>Forensics4Life> Click spaces next to you (the 'i') to move.</Line>
+      <Line>Forensics4Life> If you land on a sample, you'll pick it up.</Line>
+      <Line>Forensics4Life> Good luck.</Line>
+      <Line>not_a_secret_agent4242> Don't screw it up, rookie.</Line>
+      <Line>Forensics4Life> Oh, and you have limited movement before we run out of time so watch that.</Line>
+      <Line>not_a_secret_agent4242> Shut up, Ned.</Line>
+      <Line>*Forensics4Life has disconnected*</Line>
+    </D0>
+
+    <D1>
+      <Line0>not_a_secret_agent4242> This is just some random banter.</Line0>
+    </D1>
+
+  </Dialogues>
+
+</Level>

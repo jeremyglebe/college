@@ -1,0 +1,56 @@
+﻿<Level>
+
+  <Name>Easy</Name>
+
+  <Description>
+    Simple level with 3 anomalies to find.
+    Try not to guess the same space twice, the anomalies
+    don't disappear upon discovery!
+  </Description>
+
+  <Goal>3</Goal>
+
+  <MaxGuesses>9</MaxGuesses>
+
+  <Grid>
+    ````````````\
+    `i``````X```\
+    ````````````\
+    ````````````\
+    ````````````\
+    ````````````\
+    ````````````\
+    ````````````\
+    ````````````\
+    ``X`````````\
+    ``````````X`\
+    ````````````
+  </Grid>
+
+  <Dialogues>
+
+    <D0>
+      <Line>theBigCheese> Hey rookie. I hear its your first time on the job.</Line>
+      <Line>theBigCheese> I'll guide you through this one.</Line>
+      <Line>theBigCheese> Basically, you're looking for anomalies in the blood.</Line>
+      <Line>theBigCheese> Hold on a minute, my secretary is talking to me.</Line>
+      <Line>theBigCheese> Nevermind, I gotta go. Ned, help them.</Line>
+      <Line>*theBigCheese has disconnected*</Line>
+      <Line>Forensics4Life> Just make guesses.</Line>
+      <Line>Forensics4Life> Your microscopes light will move with your guess.</Line>
+      <Line>Forensics4Life> If you select an anomaly, you'll score.</Line>
+      <Line>Forensics4Life> Anomalies don't disappear after scoring.</Line>
+      <Line>Forensics4Life> Good luck.</Line>
+      <Line>not_a_secret_agent4242> Don't screw it up, rookie.</Line>
+      <Line>Forensics4Life> Oh, and you have limited guesses before the blood is diluted so watch that.</Line>
+      <Line>not_a_secret_agent4242> Shut up, Ned.</Line>
+      <Line>*Forensics4Life has disconnected*</Line>
+    </D0>
+
+    <D1>
+      <Line0>not_a_secret_agent4242> This is just some random banter.</Line0>
+    </D1>
+
+  </Dialogues>
+
+</Level>

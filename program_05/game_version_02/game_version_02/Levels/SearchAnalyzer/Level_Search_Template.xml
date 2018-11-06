@@ -1,0 +1,53 @@
+﻿<Level>
+
+  <Name>Example of an Evidence Search</Name>
+
+  <Description>
+    This level is an example for how to create a Search Analyzer level.
+  </Description>
+
+  <Goal>3</Goal>
+  
+  <MaxGuesses>32</MaxGuesses>
+  
+  <!-- 
+  Game Rules:
+    All Search Analyzer levels (The DNA Sample finding game) require the
+    following elements:
+      goal - one or more samples that must be found to win, marked with 'X'
+        (in game the goals should appear as '~', so fake samples should also
+        be marked with a '~')
+      start - starting position of the investigator, marked with an 'i'
+  General:
+    Every line of the grid must end with a '\', this character will not show
+    in the actual game. 
+    Whitespace is ignored, use '`' to denote a blank space in the grid.
+  -->
+  <Grid>
+    ┌──────────┐\
+    │i```│``X``│\
+    │````│`````│\
+    │````│`````│\
+    │````│`````│\
+    │````│`````│\
+    │``````````│\
+    │``````````│\
+    │───```````│\
+    │`X````````│\
+    │`````````X│\
+    └──────────┘
+  </Grid>
+
+  <Dialogues>
+
+    <D0>
+      <Line0>theBigCheese> This is your tutorial.</Line0>
+    </D0>
+
+    <D1>
+      <Line0>not_a_secret_agent4242> This is just some random banter.</Line0>
+    </D1>
+
+  </Dialogues>
+
+</Level>
