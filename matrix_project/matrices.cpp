@@ -30,7 +30,7 @@ int main(){
 
 	//Read in input values
 	cin >> ROW >> ROW_VAL >> COL >> COL_VAL;
-
+	
 	//Seed random number generator
 	srand(time(NULL));
 
