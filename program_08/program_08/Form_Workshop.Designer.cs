@@ -33,20 +33,25 @@
             // 
             // List_Supplies
             // 
+            this.List_Supplies.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.List_Supplies.FormattingEnabled = true;
             this.List_Supplies.Location = new System.Drawing.Point(12, 12);
             this.List_Supplies.Name = "List_Supplies";
-            this.List_Supplies.Size = new System.Drawing.Size(229, 264);
+            this.List_Supplies.Size = new System.Drawing.Size(337, 264);
             this.List_Supplies.TabIndex = 0;
             // 
             // Form_Workshop
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(253, 330);
+            this.ClientSize = new System.Drawing.Size(361, 330);
             this.Controls.Add(this.List_Supplies);
             this.Name = "Form_Workshop";
             this.Text = "Workshop Form";
+            this.Activated += new System.EventHandler(this.Form_Workshop_Activated);
+            this.Deactivate += new System.EventHandler(this.Form_Workshop_Deactivate);
             this.ResumeLayout(false);
 
         }

@@ -1,4 +1,11 @@
-﻿using System;
+﻿/* Program 08: MDI
+ * Author: Jeremy Glebe
+ * Date: 11/30/2018
+ * File: Record.cs
+ * Desc: Serializable record for storing item information.
+ */
+
+using System;
 
 namespace program_08
 {
@@ -9,6 +16,9 @@ namespace program_08
         public double Price { get; set; }
         public string Name { get; set; }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public Record()
         {
             Quantity = 0;
@@ -16,6 +26,12 @@ namespace program_08
             Name = "";
         }
 
+        /// <summary>
+        /// Parameterized constructor
+        /// </summary>
+        /// <param name="quantity"></param>
+        /// <param name="price"></param>
+        /// <param name="name"></param>
         public Record(int quantity, double price, string name)
         {
             Quantity = quantity;
@@ -23,11 +39,15 @@ namespace program_08
             Name = name;
         }
 
+        /// <summary>
+        /// String representation of a Record
+        /// </summary>
+        /// <returns></returns>
         override public string ToString()
         {
             return "Name: " + Name
-                + " Quantity: " + Quantity.ToString()
-                + " Price: " + Price.ToString();
+                + "\tQuantity: " + Quantity.ToString()
+                + "\tPrice: " + Price.ToString();
         }
 
     }

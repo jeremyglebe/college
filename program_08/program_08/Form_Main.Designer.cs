@@ -31,12 +31,14 @@
             this.Menu = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.Menu_New = new System.Windows.Forms.ToolStripMenuItem();
-            this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.Menu_Open = new System.Windows.Forms.ToolStripMenuItem();
             this.Menu_Save = new System.Windows.Forms.ToolStripMenuItem();
-            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.Menu_Exit = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.Menu_Item = new System.Windows.Forms.ToolStripMenuItem();
-            this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.Menu_Insert = new System.Windows.Forms.ToolStripMenuItem();
+            this.Menu_Delete = new System.Windows.Forms.ToolStripMenuItem();
+            this.MenuAbout = new System.Windows.Forms.ToolStripMenuItem();
+            this.OpenFile = new System.Windows.Forms.OpenFileDialog();
             this.ItemDialog = new program_08.NewItemDialog();
             this.NameDialog = new program_08.WorkshopNameDialog();
             this.Menu.SuspendLayout();
@@ -46,7 +48,8 @@
             // 
             this.Menu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
-            this.editToolStripMenuItem});
+            this.editToolStripMenuItem,
+            this.MenuAbout});
             this.Menu.Location = new System.Drawing.Point(0, 0);
             this.Menu.Name = "Menu";
             this.Menu.Size = new System.Drawing.Size(784, 24);
@@ -57,9 +60,9 @@
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.Menu_New,
-            this.openToolStripMenuItem,
+            this.Menu_Open,
             this.Menu_Save,
-            this.exitToolStripMenuItem});
+            this.Menu_Exit});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
@@ -71,49 +74,69 @@
             this.Menu_New.Text = "New";
             this.Menu_New.Click += new System.EventHandler(this.Menu_New_Click);
             // 
-            // openToolStripMenuItem
+            // Menu_Open
             // 
-            this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.openToolStripMenuItem.Text = "Open";
+            this.Menu_Open.Name = "Menu_Open";
+            this.Menu_Open.Size = new System.Drawing.Size(180, 22);
+            this.Menu_Open.Text = "Open";
+            this.Menu_Open.Click += new System.EventHandler(this.Menu_Open_Click);
             // 
             // Menu_Save
             // 
+            this.Menu_Save.Enabled = false;
             this.Menu_Save.Name = "Menu_Save";
             this.Menu_Save.Size = new System.Drawing.Size(180, 22);
             this.Menu_Save.Text = "Save";
             this.Menu_Save.Click += new System.EventHandler(this.Menu_Save_Click);
             // 
-            // exitToolStripMenuItem
+            // Menu_Exit
             // 
-            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.exitToolStripMenuItem.Text = "Exit";
+            this.Menu_Exit.Name = "Menu_Exit";
+            this.Menu_Exit.Size = new System.Drawing.Size(180, 22);
+            this.Menu_Exit.Text = "Exit";
+            this.Menu_Exit.Click += new System.EventHandler(this.Menu_Exit_Click);
             // 
             // editToolStripMenuItem
             // 
             this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.Menu_Item,
-            this.deleteToolStripMenuItem});
+            this.Menu_Insert,
+            this.Menu_Delete});
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
             this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
             this.editToolStripMenuItem.Text = "Edit";
             // 
-            // Menu_Item
+            // Menu_Insert
             // 
-            this.Menu_Item.Name = "Menu_Item";
-            this.Menu_Item.Size = new System.Drawing.Size(180, 22);
-            this.Menu_Item.Text = "Insert";
-            this.Menu_Item.Click += new System.EventHandler(this.Menu_Item_Click);
+            this.Menu_Insert.Enabled = false;
+            this.Menu_Insert.Name = "Menu_Insert";
+            this.Menu_Insert.Size = new System.Drawing.Size(107, 22);
+            this.Menu_Insert.Text = "Insert";
+            this.Menu_Insert.Click += new System.EventHandler(this.Menu_Insert_Click);
             // 
-            // deleteToolStripMenuItem
+            // Menu_Delete
             // 
-            this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.deleteToolStripMenuItem.Text = "Delete";
+            this.Menu_Delete.Enabled = false;
+            this.Menu_Delete.Name = "Menu_Delete";
+            this.Menu_Delete.Size = new System.Drawing.Size(107, 22);
+            this.Menu_Delete.Text = "Delete";
+            this.Menu_Delete.Click += new System.EventHandler(this.Menu_Delete_Click);
+            // 
+            // MenuAbout
+            // 
+            this.MenuAbout.Name = "MenuAbout";
+            this.MenuAbout.Size = new System.Drawing.Size(52, 20);
+            this.MenuAbout.Text = "About";
+            this.MenuAbout.Click += new System.EventHandler(this.MenuAbout_Click);
+            // 
+            // OpenFile
+            // 
+            this.OpenFile.FileName = "openFileDialog1";
             // 
             // ItemDialog
             // 
+            this.ItemDialog.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.ItemDialog.Location = new System.Drawing.Point(191, 134);
             this.ItemDialog.Name = "ItemDialog";
             this.ItemDialog.Size = new System.Drawing.Size(400, 300);
@@ -123,6 +146,9 @@
             // 
             // NameDialog
             // 
+            this.NameDialog.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.NameDialog.Location = new System.Drawing.Point(191, 134);
             this.NameDialog.Name = "NameDialog";
             this.NameDialog.Size = new System.Drawing.Size(400, 300);
@@ -153,14 +179,16 @@
         private System.Windows.Forms.MenuStrip Menu;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem Menu_New;
-        private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem Menu_Open;
         private System.Windows.Forms.ToolStripMenuItem Menu_Save;
-        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem Menu_Exit;
         private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem Menu_Item;
-        private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem Menu_Insert;
+        private System.Windows.Forms.ToolStripMenuItem Menu_Delete;
         private WorkshopNameDialog NameDialog;
         private NewItemDialog ItemDialog;
+        private System.Windows.Forms.OpenFileDialog OpenFile;
+        private System.Windows.Forms.ToolStripMenuItem MenuAbout;
     }
 }
 

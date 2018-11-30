@@ -36,6 +36,9 @@
             // 
             // TextBox_WSName
             // 
+            this.TextBox_WSName.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.TextBox_WSName.Location = new System.Drawing.Point(85, 205);
             this.TextBox_WSName.Name = "TextBox_WSName";
             this.TextBox_WSName.Size = new System.Drawing.Size(228, 20);
@@ -43,6 +46,9 @@
             // 
             // Label_WSNamePrompt
             // 
+            this.Label_WSNamePrompt.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.Label_WSNamePrompt.AutoSize = true;
             this.Label_WSNamePrompt.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Label_WSNamePrompt.Location = new System.Drawing.Point(12, 177);
@@ -53,6 +59,8 @@
             // 
             // Button_Confirm
             // 
+            this.Button_Confirm.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.Button_Confirm.Location = new System.Drawing.Point(47, 241);
             this.Button_Confirm.Name = "Button_Confirm";
             this.Button_Confirm.Size = new System.Drawing.Size(142, 46);
@@ -63,12 +71,16 @@
             // 
             // Button_Cancel
             // 
+            this.Button_Cancel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.Button_Cancel.Location = new System.Drawing.Point(212, 241);
             this.Button_Cancel.Name = "Button_Cancel";
             this.Button_Cancel.Size = new System.Drawing.Size(142, 46);
             this.Button_Cancel.TabIndex = 3;
             this.Button_Cancel.Text = "Cancel";
             this.Button_Cancel.UseVisualStyleBackColor = true;
+            this.Button_Cancel.Click += new System.EventHandler(this.Button_Cancel_Click);
             // 
             // WorkshopNameDialog
             // 
