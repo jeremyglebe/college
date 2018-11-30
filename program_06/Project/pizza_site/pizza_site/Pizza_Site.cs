@@ -233,6 +233,8 @@ namespace pizza_site
             pizza = new Pizza();
             //Reset the selection controls
             _ResetSelections();
+            //Update the pizza image
+            UpdatePizzaImage();
         }
 
         /* Btn_AddToCart ("Custom Pizza" tab)
@@ -245,6 +247,8 @@ namespace pizza_site
             cart.Add(pizza);
             pizza = new Pizza();
             _ResetSelections();
+            //Update the pizza image
+            UpdatePizzaImage();
             Tabs_Pages.SelectedTab = Tab_Cart;
         }
 
