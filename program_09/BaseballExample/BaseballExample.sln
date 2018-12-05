@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BaseballExample", "Baseball
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DisplayTable", "DisplayTable\DisplayTable.csproj", "{89F3D6D8-133E-4912-82FE-89C6BA0A4991}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParamQuery", "ParamQuery\ParamQuery.csproj", "{E00E4243-4BAB-4911-B9C3-A44DFF044BF8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{89F3D6D8-133E-4912-82FE-89C6BA0A4991}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{89F3D6D8-133E-4912-82FE-89C6BA0A4991}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{89F3D6D8-133E-4912-82FE-89C6BA0A4991}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E00E4243-4BAB-4911-B9C3-A44DFF044BF8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E00E4243-4BAB-4911-B9C3-A44DFF044BF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E00E4243-4BAB-4911-B9C3-A44DFF044BF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E00E4243-4BAB-4911-B9C3-A44DFF044BF8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
