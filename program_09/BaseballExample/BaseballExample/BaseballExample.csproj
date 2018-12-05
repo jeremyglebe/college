@@ -87,7 +87,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Baseball.mdf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="BaseballModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
@@ -100,8 +100,8 @@
       <LastGenOutput>BaseballModel.cs</LastGenOutput>
     </Content>
     <Content Include="Baseball_log.ldf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <DependentUpon>Baseball.mdf</DependentUpon>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>

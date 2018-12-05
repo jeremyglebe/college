@@ -27,8 +27,8 @@ namespace DisplayTable
                 .OrderBy(player => player.LastName)
                 .ThenBy(player => player.FirstName)
                 .Load();
-
             playerBindingSource.DataSource = dbcontext.Players.Local;
+            queryChoiceBox.SelectedIndex = 0;
         }
 
         private void playerBindingNavigatorSaveItem_Click(object sender, EventArgs e)
@@ -42,6 +42,32 @@ namespace DisplayTable
             catch (DbEntityValidationException)
             {
                 MessageBox.Show("Values entered are not valid!");
+            }
+        }
+
+        private void queryChoiceBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            switch (queryChoiceBox.SelectedIndex)
+            {
+                case 0:
+                    playerBindingSource.DataSource = dbcontext.Players.Local
+                        .OrderBy(player => player.LastName)
+                        .ThenBy(player => player.FirstName);
+                    break;
+                case 1:
+                    playerBindingSource.DataSource = dbcontext.Players.Local
+                        .Where(player => (double)player.BattingAverage > 0.300)
+                        .OrderBy(player => player.LastName)
+                        .ThenBy(player => player.FirstName);
+                    break;
+                case 2:
+                    playerBindingSource.DataSource = dbcontext.Players.Local
+                        .Where(player => player.LastName == "Smith")
+                        .OrderBy(player => player.LastName)
+                        .ThenBy(player => player.FirstName);
+                    break;
+                default:
+                    break;
             }
         }
     }
