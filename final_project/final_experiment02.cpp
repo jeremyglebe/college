@@ -7,17 +7,22 @@ void* counting_thread(void*);
 
 //Global variables
 const int N = 6;
-int active_thread = 1;
 int counter = 1;
-pthread_mutex_t mutex;
+pthread_mutex_t mutexes[N];
 
 int main(){
 	
     pthread_t threads[N];
-    pthread_mutex_init(&mutex, NULL);
+	
+	//Initialize mutexes
+	for(int i = 0; i < N; i++){
+		pthread_mutex_init(&mutexes[i], NULL);
+		if (i)
+			pthread_mutex_lock(&mutexes[i]);
+	}
 	
     for (int i = 0; i < N; i++){
-        long int l = i + 1;
+        long int l = i;
         //Create the thread
         pthread_create(
             &threads[i], // Address of pthread variable
@@ -31,24 +36,26 @@ int main(){
         pthread_join(threads[i], NULL);
     }
 
-    pthread_mutex_destroy(&mutex);
+	//Destroy mutexes
+	for(int i = 0; i < N; i++){
+		pthread_mutex_destroy(&mutexes[i]);
+	}
+	
     return 0;
 }
 
 void* counting_thread(void* thread_id){
 	int tid = (long)thread_id;
 	
-	while(counter != 11){
-		pthread_mutex_lock(&mutex);
-		//Check counter again in case another thread changed it
-		if(counter != 11 && active_thread == tid){
+	while(counter != 10){
+		pthread_mutex_lock(&mutexes[tid]);
+		//We check again in case it has changed while waiting
+		if(counter != 10){
 			cout << "Display " << counter++ << " Thread " << tid << '\n';
+		}else{
+			cout << "Counter is already 10 Thread " << tid << '\n';
 		}
-		pthread_mutex_unlock(&mutex);
+		pthread_mutex_unlock(&mutexes[(tid + 1) % N]);
 	}
-
-	pthread_mutex_lock(&mutex);
-	cout << "Counter is already 10 Thread " << tid << '\n';
-	pthread_mutex_unlock(&mutex);
-
+	
 }
