@@ -1,0 +1,9 @@
+- Files:
+    - `scrape_game_ids.py`
+    - `scrape_game_data.py`
+- Instructions
+    - Run scrape_game_ids.py with `python scrape_game_ids.py` to get the game ids
+        - The ids will be store in `game_ids.json`
+    - Run `python scrape_game_data.py` only *after* `python scrape_game_ids.py`
+        - Look in the `game_data/` folder
+        - Good luck.
