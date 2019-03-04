@@ -70,7 +70,12 @@ echo '<h3>Q8 - Find the top 5 players that had field goals over 40 yards</h3>';
 include "q8_field_goals_over_40.php";
 getFieldGoalsOver40();
 
-// Run the script for question 8
+// Run the script for question 9
 echo '<h3>Q9 - Find the top 5 players with the shortest avg field goal length</h3>';
 include "q9_short_avg_field_goal.php";
 getShortAvgFieldGoal();
+
+// Run the script for question 10
+echo '<h3>Q10 - Rank the NFL by win loss percentage (worst first)</h3>';
+include "q10_worst_teams.php";
+getWorstTeams();

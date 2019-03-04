@@ -25,7 +25,7 @@ function getMostTeams()
             echo str_pad($counter, 4, ' ');
             echo str_pad($row['id'], 14, ' ');
             echo str_pad($row['name'], 16, ' ');
-            echo str_pad($row["count(distinct(club))"], 6, ' ', STR_PAD_BOTH);
+            echo $row["count(distinct(club))"];
             echo "\n";
             $counter++;
         }

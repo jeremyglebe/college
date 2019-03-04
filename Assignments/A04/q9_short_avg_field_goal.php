@@ -5,11 +5,12 @@ function getShortAvgFieldGoal()
     global $mysqli;
 
     // Stat codes for rushing yards are 15, 16, 17, 18
-    $sql = 'SELECT playerid, yards
+    $sql = 'SELECT playerid, SUM(yards)/COUNT(statid) AS avg_length
     FROM players_stats
-    WHERE (statid = 70 OR statid = 201) AND yards >= 40
-    ORDER BY yards
-    DESC LIMIT 5';
+    WHERE statid = 70
+    GROUP BY playerid
+    ORDER BY avg_length
+    ASC LIMIT 5';
 
     $result = $mysqli->query($sql);
 
@@ -17,8 +18,8 @@ function getShortAvgFieldGoal()
     if ($result) {
 
         echo "<pre>";
-        echo "#   PlayerID      Name            Length(yds) of Field Goal\n";
-        echo "===========================================================\n";
+        echo "#   PlayerID      Name            Average Length(yds) of Field Goals\n";
+        echo "====================================================================\n";
 
         $counter = 1;
         // loop through the result printing each row
@@ -37,7 +38,7 @@ function getShortAvgFieldGoal()
                 }
             }
 
-            echo str_pad($row['yards'], 8, ' ');
+            echo str_pad($row['avg_length'], 8, ' ');
             echo "\n";
             $counter++;
         }
