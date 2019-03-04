@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Prints a table with
+ * the top 5 players with field goals over 40 yds
+ */
 function getFieldGoalsOver40()
 {
     global $mysqli;

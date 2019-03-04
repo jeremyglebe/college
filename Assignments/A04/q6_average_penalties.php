@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Prints a table with
+ * the average penalties every year
+ */
 function avgPenaltiesByYear(){
     global $mysqli;
     

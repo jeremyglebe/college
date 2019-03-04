@@ -79,3 +79,9 @@ getShortAvgFieldGoal();
 echo '<h3>Q10 - Rank the NFL by win loss percentage (worst first)</h3>';
 include "q10_worst_teams.php";
 getWorstTeams();
+
+// Run the script for question 11
+echo '<h3>Q11 - Find the top 5 most common last names in the NFL</h3>';
+include "q11_common_lastname.php";
+getCommonLastname();
+

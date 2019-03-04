@@ -1,0 +1,164 @@
+<html>
+
+<body>
+
+    <div style="text-align: center">
+        <h1>Assignment 4 - NFL Stats</h1>
+        <h3>by Jeremy Glebe (March 1st, 2019)</h3>
+    </div>
+    <h3 style="color: blue;">Connection to the database established!</h3>
+    <h3>Q1 - Count number of teams an individual player played for</h3>
+    <pre>#   PlayerID      Name            #Teams
+========================================
+1   00-0019536    S.Graham        8
+2   00-0023968    M.Spurlock      7
+3   00-0027768    M.Newhouse      6
+4   00-0029205    T.Cadet         6
+5   00-0026373    J.Forsett       6
+6   00-0023482    M.Nugent        6
+7   00-0026008    M.Mulligan      6
+8   00-0028249    J.Ross          6
+9   00-0026356    L.Cohen         6
+10  00-0027812    D.Watson        6
+</pre>
+
+    <h3>Q2 - Find the players with the highest total rushing yards by year</h3>
+    <pre>#   PlayerID      Name            Year    Yards
+===============================================
+1   00-0025394    A.Peterson      2012    2196    
+2   00-0028009    D.Murray        2014    2043    
+3   00-0026164    C.Johnson       2009    2006    
+4   00-0025399    M.Lynch         2012    1768    
+5   00-0033045    E.Elliott       2016    1756    
+</pre>
+
+    <h3>Q3 - Find the bottom 5 passing players per year</h3>
+    <pre>#   PlayerID      Name            Year    Yards
+===============================================
+1   00-0022738    C.Cooley        2009    -23     
+2   00-0027770    S.Schillinger   2013    -8      
+3   00-0022084    A.Boldin        2010    -6      
+4   00-0023742    J.Ryan          2017    -4      
+5   00-0024417    S.Koch          2015    -3      
+</pre>
+
+    <h3>Q4 - Find the top 5 players that had the most rushes for a loss</h3>
+    <pre>#   PlayerID      Name            Rushes
+========================================
+1   00-0027029    L.McCoy         333     
+2   00-0025394    A.Peterson      313     
+3   00-0023500    F.Gore          252     
+4   00-0026164    C.Johnson       242     
+5   00-0025399    M.Lynch         216     
+</pre>
+
+    <h3>Q5 - Find the top 5 teams with the most penalties</h3>
+    <pre>#   Club      Penalties
+=======================
+1   OAK       1239
+2   SEA       1228
+3   BAL       1114
+4   LA        1106
+5   DEN       1092
+</pre>
+
+    <h3>Q6 - Find the average number of penalties per year</h3>
+    <pre>#   Year    Total Penalties    Avg Penalties
+============================================
+1   2015    3528               13.2135
+2   2017    3430               12.8464
+3   2016    3427               12.8352
+4   2014    3358               12.5768
+5   2018    3328               12.4644
+6   2011    3204               12.0000
+7   2012    3153               11.8090
+8   2010    3108               11.6404
+9   2013    3076               11.5206
+10  2009    3039               11.3820
+</pre>
+
+    <h3>Q7 - Find the Team with the least amount of average plays every year</h3>
+    <pre>Year  Club   Avg Plays-Per-Game
+===============================
+2009  BUF     75.3125
+2010  CLE     73.5000
+2011  IND     75.5000
+2012  TEN     77.4375
+2013  MIA     77.5625
+2014  CHI     72.1875
+2015  CHI     74.3750
+2016  CHI     69.0000
+2017  CHI     66.9375
+2018  MIA     71.6250
+</pre>
+
+    <h3>Q8 - Find the top 5 players that had field goals over 40 yards</h3>
+    <pre>#   PlayerID      Name            Length(yds) of Field Goal
+===========================================================
+1   00-0023853    M.Prater        64      
+2   00-0026858    G.Gano          63      
+3   00-0019646    S.Janikowski    63      
+4   00-0000108    D.Akers         63      
+5   00-0024333    S.Gostkowski    62      
+</pre>
+
+    <h3>Q9 - Find the top 5 players with the shortest avg field goal length</h3>
+    <pre>#   PlayerID      Name            Average Length(yds) of Field Goals
+====================================================================
+1   00-0028872    J.Hekker        20.0000 
+2   00-0027405    A.Pettrey       23.5000 
+3   00-0023234    M.Koenen        24.0000 
+4   00-0031093    N.Freese        28.3333 
+5   00-0033138    S.Ficken        29.0000 
+</pre>
+
+    <h3>Q10 - Rank the NFL by win loss percentage (worst first)</h3>
+    <pre>#   Club    Win/Loss Ratio    Win Percentage
+============================================
+32  CLE     0.3475            25%
+31  JAX     0.4954            33%
+30  TB      0.5238            34%
+29  OAK     0.6100            37%
+28  WAS     0.6429            39%
+27  LA      0.6979            41%
+26  BUF     0.7128            41%
+25  TEN     0.7419            42%
+24  DET     0.7717            43%
+23  MIA     0.8090            44%
+22  NYJ     0.8043            44%
+21  CHI     0.8736            46%
+20  NYG     0.8966            47%
+19  SF      0.9195            47%
+18  ARI     1.0000            50%
+17  CAR     1.0244            50%
+16  HOU     1.0000            50%
+15  CIN     1.0759            51%
+14  MIN     1.0759            51%
+13  LAC     1.1154            52%
+12  KC      1.1538            53%
+11  DAL     1.2267            55%
+10  PHI     1.2400            55%
+9   IND     1.2338            55%
+8   ATL     1.2838            56%
+7   DEN     1.2973            56%
+6   BAL     1.4028            58%
+5   SEA     1.4507            59%
+4   NO      1.6462            62%
+3   PIT     1.7419            63%
+2   GB      1.6769            62%
+1   NE      3.1591            75%
+</pre>
+
+    <h3>Q11 - Find the top 5 most common last names in the NFL</h3>
+    <pre>#   Name        Occurrences
+===========================
+1   Williams    101
+2   Smith       86
+3   Johnson     84
+4   Jones       62
+5   Brown       61
+</pre>
+
+</body>
+
+</html>

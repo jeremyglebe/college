@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Prints a table with
+ * the top 5 players with shortest average field goal
+ */
 function getShortAvgFieldGoal()
 {
     global $mysqli;

@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Prints a table with
+ * the teams with the lowest average plays per game each year
+ */
 function leastAvgPlays()
 {
     global $mysqli;
@@ -69,7 +73,5 @@ function leastAvgPlays()
     }
 
     echo "</pre>";
-
-    echo "<pre>This one is really hard.</pre>";
 
 }

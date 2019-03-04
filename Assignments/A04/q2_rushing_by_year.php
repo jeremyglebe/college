@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Prints a table with
+ * the top 5 players who have the most rushing yards in one year
+ */
 function getRushingByYear()
 {
     global $mysqli;

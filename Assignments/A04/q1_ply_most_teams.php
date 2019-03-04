@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Prints a table with
+ * the top 10 players who have played for the most nfl teams
+ */
 function getMostTeams()
 {
     global $mysqli;

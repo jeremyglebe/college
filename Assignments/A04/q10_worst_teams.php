@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Prints a table with
+ * the teams of the nfl ranked worst->best
+ */
 function getWorstTeams()
 {
     global $mysqli;
@@ -21,8 +25,8 @@ function getWorstTeams()
     if ($result) {
 
         echo "<pre>";
-        echo "#   Club    Win Ratio     Win Percentage\n";
-        echo "========================================\n";
+        echo "#   Club    Win/Loss Ratio    Win Percentage\n";
+        echo "============================================\n";
 
         $counter = 32;
         // loop through the result printing each row
@@ -30,8 +34,8 @@ function getWorstTeams()
 
             echo str_pad($counter, 4, ' ');
             echo str_pad($row['club'], 8, ' ');
-            echo str_pad($row['win_ratio'], 14, ' ');
-            echo (int)$row['win_percentage'] . '%';
+            echo str_pad($row['win_ratio'], 18, ' ');
+            echo (int) $row['win_percentage'] . '%';
             echo "\n";
             $counter--;
         }

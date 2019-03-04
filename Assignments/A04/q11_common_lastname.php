@@ -2,18 +2,19 @@
 
 /**
  * Prints a table with
- * the top 5 teams who have the most penalties
+ * the 5 most common last names in the NFL
  */
-function getMostPenalties()
+function getCommonLastname()
 {
     global $mysqli;
 
-    // Stat codes for rushing yards are 10, 11, 12, 13
-    $sql = 'SELECT club, COUNT(club)
-    FROM players_stats
-    WHERE statid = 93
-    GROUP BY club
-    ORDER BY COUNT(club)
+    // Stat codes for rushing yards are 15, 16, 17, 18
+    $sql = 'SELECT lname, COUNT(lname) as occurrences
+    FROM (SELECT id, SUBSTR(name, INSTR(name,\'.\') + 1) as lname
+        FROM players
+        GROUP BY id) last_names
+    GROUP BY lname
+    ORDER BY COUNT(lname)
     DESC LIMIT 5';
 
     $result = $mysqli->query($sql);
@@ -22,15 +23,16 @@ function getMostPenalties()
     if ($result) {
 
         echo "<pre>";
-        echo "#   Club      Penalties\n";
-        echo "=======================\n";
+        echo "#   Name        Occurrences\n";
+        echo "===========================\n";
 
         $counter = 1;
         // loop through the result printing each row
         while ($row = $result->fetch_assoc()) {
+
             echo str_pad($counter, 4, ' ');
-            echo str_pad($row['club'], 10, ' ');
-            echo $row["COUNT(club)"];
+            echo str_pad($row['lname'], 12, ' ');
+            echo $row['occurrences'];
             echo "\n";
             $counter++;
         }
