@@ -41,5 +41,3 @@ def ascii_image(filepath):
             d.text((c * 10, r * 10), ascii_chars[data[w * r + c] // 23], font=fnt, fill=(0,0,0))
 
     txt.save(filepath.split('.')[0] + '.ascii_image.jpg', 'jpeg')
-
-ascii_image('apple.png')
