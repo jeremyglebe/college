@@ -1,0 +1,10 @@
+{
+    "python.linting.pylintEnabled": true,
+    "python.linting.enabled": true,
+    "python.linting.lintOnSave": true,
+    "python.linting.pylintArgs": [
+        "--enable=F,E,C,R,W",
+        //"--disable=input-builtin"
+    ],
+    "python.pythonPath": "D:\\Program Files\\Python37\\python.exe"
+}
