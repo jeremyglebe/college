@@ -52,7 +52,7 @@ def input_month():
     }  # this key helps convert months entered as a string to numeric months
     month = 0
     while month not in range(1, 13):
-        user_input = input("\nEnter a month\n> ").strip()
+        user_input = input("Enter a month\n> ").strip()
         try:
             # Try getting the month as an integer
             month = int(user_input)
@@ -62,9 +62,9 @@ def input_month():
                 month = month_key[user_input.lower()]
             else:
                 month = 0
-                print("\nNot a valid month (must be a number or month name)")
+                print("Not a valid month (must be a number or month name)")
         if month not in range(1, 13):
-            print("\nMonth must be between 1 and 12!")
+            print("Month must be between 1 and 12!")
     return month
 
 
@@ -90,35 +90,35 @@ def input_day(month):
         # if the month has 30 days, check input until they enter a number 1-30
         while day not in range(1, 31):
             try:
-                day = int(input("\nEnter a day\n> "))
+                day = int(input("Enter a day\n> "))
             except ValueError:
                 # this happens if they don't enter an integer
                 day = 0
-                print("\nNot a valid day (must be a number)")
+                print("Not a valid day (must be a number)")
             if day not in range(1, 31):
-                print("\nDay must be between 1 and 30 for month", month)
+                print("Day must be between 1 and 30 for month", month)
     elif month in thirty_one_days:
         # if the month has 31 days, check input until they enter a number 1-31
         while day not in range(1, 32):
             try:
-                day = int(input("\nEnter a day\n> "))
+                day = int(input("Enter a day\n> "))
             except ValueError:
                 # this happens if they don't enter an integer
                 day = 0
-                print("\nNot a valid day (must be a number)")
+                print("Not a valid day (must be a number)")
             if day not in range(1, 32):
-                print("\nDay must be between 1 and 31 for month", month)
+                print("Day must be between 1 and 31 for month", month)
     elif month == 2:
         # February has 28 (or 29) days, check input until they enter a number 1-29
         while day not in range(1, 30):
             try:
-                day = int(input("\nEnter a day\n> "))
+                day = int(input("Enter a day\n> "))
             except ValueError:
                 # this happens if they don't enter an integer
                 day = 0
-                print("\nNot a valid day (must be a number)")
+                print("Not a valid day (must be a number)")
             if day not in range(1, 30):
-                print("\nDay must be between 1 and 29 for month", month)
+                print("Day must be between 1 and 29 for month", month)
     return day
 
 
@@ -139,7 +139,7 @@ def input_year():
         try:
             # Have the user enter a year in whatever format they please
             full_year = input(
-                "\nEnter a year (No distinction between A.D. or B.C.)\n> ")
+                "Enter a year (No distinction between A.D. or B.C.)\n> ")
             # Get start and end index of the last two digits
             # Getting the index still works with one digit numbers because
             # [-1:1] will start at the end and wrap around back to the end
@@ -152,7 +152,7 @@ def input_year():
         except ValueError:
             # Tsk tsk, user didn't enter a number. Set to zero and try again.
             short_year = 0
-            print("\nNot a valid year (must be a number)")
+            print("Not a valid year (must be a number)")
     return short_year
 
 

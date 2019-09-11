@@ -1,9 +1,0 @@
-bad month name
-adfhgah
-44
-february
-39
-not a number day
-2
-this isn't a number and a year needs to be
-2004
