@@ -1,0 +1,37 @@
+
+Enter a month
+> 
+Not a valid month (must be a number or month name)
+
+Month must be between 1 and 12!
+
+Enter a month
+> 
+Not a valid month (must be a number or month name)
+
+Month must be between 1 and 12!
+
+Enter a month
+> 
+Month must be between 1 and 12!
+
+Enter a month
+> 
+Enter a day
+> 
+Day must be between 1 and 29 for month 2
+
+Enter a day
+> 
+Not a valid day (must be a number)
+
+Day must be between 1 and 29 for month 2
+
+Enter a day
+> 
+Enter a year (No distinction between A.D. or B.C.)
+> 
+Not a valid year (must be a number)
+
+Enter a year (No distinction between A.D. or B.C.)
+> 02/02/04 is magic!
