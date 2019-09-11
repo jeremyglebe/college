@@ -52,7 +52,7 @@ def input_month():
     } # this key helps convert months entered as a string to numeric months
     month = 0
     while month not in range(1, 13):
-        user_input = input("Enter a month\n> ")
+        user_input = input("Enter a month\n> ").strip()
         try:
             # Try getting the month as an integer
             month = int(user_input)
