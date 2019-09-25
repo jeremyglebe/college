@@ -10,3 +10,7 @@ print(ristring)
 mystr = "Goodbye Python!"
 print(mystr[::-1])
 print(''.join(reversed(mystr)))
+
+# also messing with splitting strings
+print("Please\\do split_this-string".replace(' ', '\\')
+      .replace('_', '\\').replace('-', '\\').split('\\'))

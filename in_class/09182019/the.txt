@@ -1,0 +1,4 @@
+How the heck am I supposed to know what to use for the input?
+The total number of potential inputs is larger than the number of atoms in the universe.
+I don't know if that is true, but the point remains the same.
+Surely the input I have provided will be sufficient to test the program.
