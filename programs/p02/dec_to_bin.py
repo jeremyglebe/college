@@ -72,6 +72,10 @@ def main():
     Driver of the program. Loops until the user enters a '-1' or an invalid
     input. Prints the binary strings for the inputs.
     '''
+    # Prompt the user
+    print("[Enter any integer > -1 to see it's binary representation]")
+    print("[Enter -1 to terminate the program]")
+    # get a decimal number from user input
     num = get_num()
     while num != -1:
         # print the binary number version of the input
