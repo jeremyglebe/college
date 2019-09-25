@@ -1,3 +1,16 @@
+Jeremy Glebe
+
+[Beowulf Translation Program] Translates a few old English words
+to more modern language in the UTF-8 text file of "Beowulf". Counts
+the number of replacements made.
+
+[Translation Key]
+    bairns: children
+     bairn: child
+     bight: bay
+     float: ship
+     carle: hero
+
 [REPLACEMENTS]
 Replaced 25 instances of 'bairn'.
 Replaced 1 instances of 'bight'.

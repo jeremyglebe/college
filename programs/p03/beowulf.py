@@ -47,10 +47,12 @@ TRANSLATION_KEY = {
 
 
 def main():
-    with open('Beowulf.txt', encoding='utf8') as ifile, open('Beowulf2.txt', 'w', encoding='utf8') as ofile:
+    '''Driver of the program. Handles input, translation, and output.'''
+    with open('Beowulf.txt', encoding='utf8') as ifile, \
+            open('Beowulf2.txt', 'w', encoding='utf8') as ofile:
         # counting replacements made
         rep_count = {}
-        # read in the file
+        # read text from the file
         text = ifile.read()
         # get only everything between "BEOWULF." and "ADDENDA."
         # DOTALL makes the . character match with \n as well
@@ -65,8 +67,17 @@ def main():
                 rep_count[obj['count']] = 0
             # increase the replacement count for the given word
             rep_count[obj['count']] += count
+        # create a heading to print at the beginning of the program
+        head = 'Jeremy Glebe\n\n[Beowulf Translation Program] Translates a' \
+            + ' few old English words\nto more modern language in the UTF-8' \
+            + ' text file of "Beowulf". Counts\nthe number of replacements' \
+            + ' made.\n\n[Translation Key]\n'
+        for key, val in TRANSLATION_KEY.items():
+            head += '{0}: {1}\n'.format(key.rjust(10), val['replace'])
+        # write the heading to the output file
+        ofile.write(head)
         # write the number of replacements to the output file
-        ofile.write('[REPLACEMENTS]\n')
+        ofile.write('\n[REPLACEMENTS]\n')
         for key, num in rep_count.items():
             ofile.write('Replaced ' + str(num) +
                         ' instances of \'' + key + '\'.\n')
