@@ -50,6 +50,8 @@ def main():
 
 
 def translate(string):
+    '''Translates the poem (or old english string) and returns the new string
+    and a dictionary of counters for the number of translations made'''
     # counting replacements made
     rep_count = {}
     # replace text in the poem for each word in the translation key
@@ -67,6 +69,7 @@ def translate(string):
 
 
 def correct(string):
+    '''Corrects the poem (or old english string) and returns the new string'''
     # replace text in the poem for each word in the corrections key
     for key, repl in CORRECTION_KEY.items():
         # get new text with replacement
@@ -75,6 +78,7 @@ def correct(string):
 
 
 def header_string():
+    '''Just returns a header string for the program'''
     msg = '''\
 Jeremy Glebe\n
 [Beowulf Translation Program] Translates a few old English words
@@ -85,6 +89,7 @@ the number of replacements made.\n\
 
 
 def translation_key_string():
+    '''Returns a string of the translation key in case you want to print it'''
     msg = '[Translation Key]\n'
     for key, val in TRANSLATION_KEY.items():
         msg += '{0}: {1}\n'.format(key.rjust(10), val)
@@ -92,6 +97,7 @@ def translation_key_string():
 
 
 def correction_key_string():
+    '''Returns a string of the correction key in case you want to print it'''
     msg = '[Correction Key]\n'
     for key, val in CORRECTION_KEY.items():
         msg += '{0}: {1}\n'.format(key.rjust(10), val)
