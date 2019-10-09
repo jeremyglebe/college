@@ -37,6 +37,16 @@ def main():
             open('Beowulf2.txt', 'w', encoding='utf8') as ofile:
         # read text from the file
         text = ifile.read()
+
+
+        notes = re.findall(r'^ {4}\[.*?\].*?\n\n', text, re.DOTALL | re.MULTILINE)
+        for note in notes:
+           print(note)
+
+        # Remove the translation notes and various study notes from the text
+        text = re.sub(r'^ {4}\[.*?\].*?\n\n', ' ', text, 0, re.DOTALL | re.MULTILINE)
+
+
         # The story is between "BEOWULF." and "ADDENDA."
         # findall returns a list, need the first (only) element
         text = re.findall(r'BEOWULF\..*ADDENDA\.', text, re.DOTALL)[0]
@@ -76,7 +86,10 @@ def translate(string):
             rep_count[key] = 0
         # increase the replacement count for the given word
         rep_count[key] += count
-    # returns a tuple containing the translated string and a dictionary of
+    # Find and delete random stupid underscores in the text. No idea why these
+    # are here.
+    string = re.sub(r'_', '', string)
+    # Returns a tuple containing the translated string and a dictionary of
     # counters for the number of translations made
     return string, rep_count
 
