@@ -8,20 +8,24 @@ to more modern language in the UTF-8 text file of "Beowulf". Counts
 the number of replacements made.
 
 [Translation Key]
-     bairn: child
-     bight: bay
-     float: ship
-     carle: hero
+         bairn: child
+         bight: bay
+         float: ship
+         carle: hero
 
 [Correction Key]
-    childs: children
+        childs: children
+     househero: housecarle
+        shiped: floated
+   wave-shiper: ship
 
 [Replacements]
 Replaced 25 instances of 'bairn'.
 Replaced 1 instances of 'bight'.
 Replaced 5 instances of 'float'.
 Replaced 4 instances of 'carle'.
-
+Initial translation generated 10 language errors.
+Second pass corrected 10 language errors.            
 [Translated Poem]
 BEOWULF.
 
@@ -520,7 +524,7 @@ resolves to go to his assistance.}
     accepted, change line 51 above to, _A ring-stemmed vessel hither
     o'ersea_.
 
-    [4] 'Seld-guma' (249) is variously rendered: (1) _househero_; (2)
+    [4] 'Seld-guma' (249) is variously rendered: (1) _housecarle_; (2)
     _home-stayer_; (3) _common man_. Dr. H. Wood suggests _a man-at-arms
     in another's house_.
 
@@ -3491,9 +3495,9 @@ THE HOMEWARD JOURNEY.--THE TWO QUEENS.
        15 To drive on the deep, Dane-country left he.
           Along by the mast then a sea-garment fluttered,
           A rope-fastened sail. The sea-boat resounded,
-          The wind o'er the waters the wave-shiper nowise
+          The wind o'er the waters the ship nowise
           Kept from its journey; the sea-goer traveled,
-       20 The foamy-necked shiped forth o'er the currents,
+       20 The foamy-necked floated forth o'er the currents,
           The well-fashioned vessel o'er the ways of the ocean,
 
 {The Geats see their own land again.}

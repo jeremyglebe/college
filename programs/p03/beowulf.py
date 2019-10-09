@@ -24,7 +24,10 @@ TRANSLATION_KEY = {
 
 # Corrections to be performed after translation
 CORRECTION_KEY = {
-    'childs': 'children'
+    'childs': 'children',
+    'househero': 'housecarle',
+    'shiped': 'floated',
+    'wave-shiper': 'ship'
 }
 
 
@@ -40,7 +43,7 @@ def main():
         # Translate and then correct the text
         # counters keeps track of how many replacements have occured
         text, counters = translate(text)
-        text = correct(text)
+        text, errors = correct(text)
         # write out general header stuff
         ofile.write(header_string() + '\n')
         ofile.write(translation_key_string() + '\n')
@@ -50,6 +53,10 @@ def main():
         for key, num in counters.items():
             line = 'Replaced {0} instances of \'{1}\'.\n'.format(num, key)
             ofile.write(line)
+        ofile.write(dedent('''\
+            Initial translation generated {0} language errors.
+            Second pass corrected {0} language errors.\
+            ''').format(errors))
         # write the modified poem to the output file
         ofile.write('\n[Translated Poem]\n')
         ofile.write(text)
@@ -76,11 +83,14 @@ def translate(string):
 
 def correct(string):
     '''Corrects the poem (or old english string) and returns the new string'''
+    # keep track of how many corrections we've made
+    num_corrections = 0
     # replace text in the poem for each word in the corrections key
     for key, repl in CORRECTION_KEY.items():
         # get new text with replacement
-        string = re.sub(key, repl, string, flags=re.IGNORECASE)
-        return string
+        string, num = re.subn(key, repl, string, flags=re.IGNORECASE)
+        num_corrections += num
+    return string, num_corrections
 
 
 def header_string():
@@ -102,7 +112,7 @@ def translation_key_string():
     '''Returns a string of the translation key in case you want to print it'''
     msg = '[Translation Key]\n'
     for key, val in TRANSLATION_KEY.items():
-        msg += '{0}: {1}\n'.format(key.rjust(10), val)
+        msg += '{0}: {1}\n'.format(key.rjust(14), val)
     return msg
 
 
@@ -110,7 +120,7 @@ def correction_key_string():
     '''Returns a string of the correction key in case you want to print it'''
     msg = '[Correction Key]\n'
     for key, val in CORRECTION_KEY.items():
-        msg += '{0}: {1}\n'.format(key.rjust(10), val)
+        msg += '{0}: {1}\n'.format(key.rjust(14), val)
     return msg
 
 
