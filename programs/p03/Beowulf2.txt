@@ -25,7 +25,8 @@ Replaced 1 instances of 'bight'.
 Replaced 5 instances of 'float'.
 Replaced 4 instances of 'carle'.
 Initial translation generated 10 language errors.
-Second pass corrected 10 language errors.            
+Second pass corrected 10 language errors.
+
 [Translated Poem]
 BEOWULF.
 

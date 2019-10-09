@@ -55,7 +55,7 @@ def main():
             ofile.write(line)
         ofile.write(dedent('''\
             Initial translation generated {0} language errors.
-            Second pass corrected {0} language errors.\
+            Second pass corrected {0} language errors.\n\
             ''').format(errors))
         # write the modified poem to the output file
         ofile.write('\n[Translated Poem]\n')
