@@ -1,4 +1,7 @@
-Jeremy Glebe
+Author      Jeremy Glebe
+Date        10/9/2019
+Class       CPL: Python & Java
+Instructor  Dr. Tina Johnson
 
 [Beowulf Translation Program] Translates a few old English words
 to more modern language in the UTF-8 text file of "Beowulf". Counts
@@ -13,13 +16,13 @@ the number of replacements made.
 [Correction Key]
     childs: children
 
-[REPLACEMENTS]
+[Replacements]
 Replaced 25 instances of 'bairn'.
 Replaced 1 instances of 'bight'.
 Replaced 5 instances of 'float'.
 Replaced 4 instances of 'carle'.
 
-[TRANSLATED POEM]
+[Translated Poem]
 BEOWULF.
 
 

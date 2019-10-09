@@ -1,15 +1,20 @@
 '''
 Beowulf Translation Program
-Author: Jeremy Glebe
-Date: 9/25/2019
+Author      Jeremy Glebe
+Date        10/9/2019
+Class       CPL: Python & Java
+Instructor  Dr. Tina Johnson
 
 Translates a few old English words to more modern language in the UTF-8 text
 file of "Beowulf". Translated words are defined in the translation key at the
-top of the program.
+top of the program. Further corrections are defined in the corrections key
+immediately afterwards.
 '''
 
 import re
+from textwrap import dedent
 
+# Translations to be performed on the text
 TRANSLATION_KEY = {
     'bairn': 'child',
     'bight': 'bay',
@@ -17,6 +22,7 @@ TRANSLATION_KEY = {
     'carle': 'hero',
 }
 
+# Corrections to be performed after translation
 CORRECTION_KEY = {
     'childs': 'children'
 }
@@ -40,12 +46,12 @@ def main():
         ofile.write(translation_key_string() + '\n')
         ofile.write(correction_key_string() + '\n')
         # write the number of replacements to the output file
-        ofile.write('[REPLACEMENTS]\n')
+        ofile.write('[Replacements]\n')
         for key, num in counters.items():
             line = 'Replaced {0} instances of \'{1}\'.\n'.format(num, key)
             ofile.write(line)
         # write the modified poem to the output file
-        ofile.write('\n[TRANSLATED POEM]\n')
+        ofile.write('\n[Translated Poem]\n')
         ofile.write(text)
 
 
@@ -79,12 +85,16 @@ def correct(string):
 
 def header_string():
     '''Just returns a header string for the program'''
-    msg = '''\
-Jeremy Glebe\n
-[Beowulf Translation Program] Translates a few old English words
-to more modern language in the UTF-8 text file of "Beowulf". Counts
-the number of replacements made.\n\
-'''
+    # It's literally just a string, used dedent for formatting
+    msg = dedent('''\
+        Author      Jeremy Glebe
+        Date        10/9/2019
+        Class       CPL: Python & Java
+        Instructor  Dr. Tina Johnson\n
+        [Beowulf Translation Program] Translates a few old English words
+        to more modern language in the UTF-8 text file of "Beowulf". Counts
+        the number of replacements made.\n\
+        ''')
     return msg
 
 
