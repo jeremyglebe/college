@@ -1,6 +1,5 @@
 import java.util.Scanner;
 import java.io.IOException;
-import java.lang.Runtime;
 import java.lang.Process;
 import java.lang.ProcessBuilder;
 
@@ -22,6 +21,8 @@ public class SumNum {
         if (isWindows()) {
             winStop();
         }
+
+        input.close();
 
     }
 
