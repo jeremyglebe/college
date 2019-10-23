@@ -1,12 +1,21 @@
+
+/**
+ * Program 4: Java Number Guessing Game
+ * Author: Jeremy Glebe
+ * Date: 10/23/2019
+ * Professor: Dr. Johnson
+ * Description: Plays a number guessing game with the user. Key is between
+ * 1 & 100. The program tracks how many guesses user has made.
+ */
+
 import java.util.Random;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JTextField;
-
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -24,6 +33,11 @@ public class guessGame {
     private static JTextField input;
     private static JButton submit;
 
+    /**
+     * Main driver of the program. Calls everything else.
+     * 
+     * @param args command line arguments, nothing from this is used.
+     */
     public static void main(String args[]) {
 
         // handles all the logic of initially drawing the frame and components
@@ -31,6 +45,7 @@ public class guessGame {
         // submitHandler
         initFrame();
 
+        // random number generator
         Random rnd = new Random();
         key = rnd.nextInt(100) + 1;
 
@@ -48,6 +63,12 @@ public class guessGame {
         });
     }
 
+    /**
+     * submitHandler Functionality for the submit button when it is clicked.
+     * Determines if user wins & what kind of hint to provide user.
+     * 
+     * @return void
+     */
     private static void submitHandler() {
         // print the guess to the game log in the console for anyone that wants
         // to see a detailed guess-by-guess log of the game
@@ -84,6 +105,12 @@ public class guessGame {
         }
     }
 
+    /**
+     * initFrame Creates the initial frame object and adds all of the components to
+     * it. (without functionality) Sets size and general display properties.
+     * 
+     * @return void
+     */
     private static void initFrame() {
         // create a frame and its title
         frame = new JFrame("Guess-Me");
