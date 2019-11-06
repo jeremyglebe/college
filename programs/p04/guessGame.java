@@ -1,4 +1,3 @@
-
 /**
  * Program 4: Java Number Guessing Game
  * Author: Jeremy Glebe
