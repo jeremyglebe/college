@@ -1,6 +1,6 @@
-# introalg-pseudo README
+# ls-for-psualg README
 
-This is the README for your extension "introalg-pseudo". After writing up a brief description, we recommend including the following sections.
+This is the README for your extension "ls-for-psualg". After writing up a brief description, we recommend including the following sections.
 
 ## Features
 

@@ -1,6 +1,6 @@
 {
 	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
-	"name": "IntroAlg Pseudo",
+	"name": "PsuAlg",
 	"patterns": [
 		{
 			"include": "#keywords"
@@ -21,8 +21,8 @@
 					"match": "\\b(if|while|for|do|return)\\b"
 				},
 				{
-					"name": "keyword.operator.pseudo",
-					"match": "\\+"
+					"name": "keyword.operator.new",
+					"match": "(\\$|\\.|←|&|\\||>|<|\\?|\\^|\\*|/|\\+|-|\\(|\\)|\\[|\\])"
 				}
 			]
 		},
