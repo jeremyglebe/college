@@ -1,0 +1,25 @@
+{
+    "name": "introalg-pseudo",
+    "displayName": "IntroAlg Pseudo",
+    "description": "Language Support for a pseudo-code language found in Introduction To Algorithms 2nd Ed.",
+    "version": "0.0.1",
+    "engines": {
+        "vscode": "^1.41.0"
+    },
+    "categories": [
+        "Programming Languages"
+    ],
+    "contributes": {
+        "languages": [{
+            "id": "pseudo",
+            "aliases": ["IntroAlg Pseudo", "pseudo"],
+            "extensions": ["psu","pseudo"],
+            "configuration": "./language-configuration.json"
+        }],
+        "grammars": [{
+            "language": "pseudo",
+            "scopeName": "source.pseudo",
+            "path": "./syntaxes/pseudo.tmLanguage.json"
+        }]
+    }
+}

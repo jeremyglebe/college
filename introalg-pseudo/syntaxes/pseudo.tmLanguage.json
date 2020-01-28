@@ -1,0 +1,42 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "IntroAlg Pseudo",
+	"patterns": [
+		{
+			"include": "#keywords"
+		},
+		{
+			"include": "#strings"
+		},
+		{
+			"name": "comment.line.pseudo",
+			"match": "▷.*"
+		}
+	],
+	"repository": {
+		"keywords": {
+			"patterns": [
+				{
+					"name": "keyword.control.pseudo",
+					"match": "\\b(if|while|for|do|return)\\b"
+				},
+				{
+					"name": "keyword.operator.pseudo",
+					"match": "\\+"
+				}
+			]
+		},
+		"strings": {
+			"name": "string.quoted.double.pseudo",
+			"begin": "\"",
+			"end": "\"",
+			"patterns": [
+				{
+					"name": "constant.character.escape.pseudo",
+					"match": "\\\\."
+				}
+			]
+		}
+	},
+	"scopeName": "source.pseudo"
+}
