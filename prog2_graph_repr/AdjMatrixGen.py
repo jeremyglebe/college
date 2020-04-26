@@ -13,9 +13,10 @@ Algorithm:
         * Initialize the array with 'False' in each slot
     7) For each line of input, for vertices U and V, assign Matrix[U][V] to
        True and Matrix[V][U] to true.
-    8) Output each vertex and it's list of adjacent vertices
+    8) Output each vertex and it's adjacent vertices
         * Output to file in append mode for multiple outputs in one file
 """
+
 # Prompt user for input file to be read on this run
 InputFileName = input('Input file: ')
 # 1) Read contents of file into a string
@@ -26,8 +27,12 @@ with open(InputFileName, 'r') as infile:
 # to unique vertex identifiers only (sets do not contain repeats), cast back
 # to list because sets are unordered and thus can't be sorted
 Vertices = list(set(InputString.split()))
-# 3) Sort the set of vertices
-Vertices.sort()
+# 3) Sort the set of vertices, compares strings using integer representation
+# where applicable and normal string comparison elsewhere
+try:
+    Vertices.sort(key=lambda vertex: int(vertex))
+except ValueError:
+    Vertices.sort()
 # 4) Assign corresponding indices to each vertex (keep a map for lookup)
 # The corresponding index will simply be the items position in the sorted list
 # of vertices
@@ -45,7 +50,7 @@ for line in InputString.splitlines():
     U, V = tuple(line.split())
     Matrix[Lookup[U]][Lookup[V]] = True
     Matrix[Lookup[V]][Lookup[U]] = True
-# 8) Output each vertex and it's list of adjacent vertices
+# 8) Output each vertex and it's adjacent vertices
 # Open a file in append mode
 with open('OutputAdjMatrix.txt', 'a') as outfile:
     # Output labels for the table
