@@ -1,4 +1,12 @@
-"""Creates an adjacency matrix from a file with a list of edges.
+"""Creates an adjacency matrix from an input file of edges.
+
+Author: Jeremy Glebe
+Project: Adjacency Matrix Generator
+Course: 5243 Algorithm Analysis
+Due: 4/26/2020
+Receives an input file containing a list of edges between vertices. Parses the
+input to determine what unique vertices are present in the graph and what edges
+exist in the graph. Then constructs the graph in the form of Adjacency Matrix.
 
 Algorithm:
     1) Read contents of file into a string

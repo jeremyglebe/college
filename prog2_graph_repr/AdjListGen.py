@@ -1,5 +1,13 @@
 """Creates an adjacency list from an input file of edges.
 
+Author: Jeremy Glebe
+Project: Adjacency List Generator
+Course: 5243 Algorithm Analysis
+Due: 4/26/2020
+Receives an input file containing a list of edges between vertices. Parses the
+input to determine what unique vertices are present in the graph and what edges
+exist in the graph. Then constructs the graph in the form of an Adjacency List.
+
 Algorithm:
     1) Read contents of file into a string
     2) Create an array of all the unique vertices (as Nodes)
