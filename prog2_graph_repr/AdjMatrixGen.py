@@ -21,7 +21,7 @@ Algorithm:
         * Initialize the array with 'False' in each slot
     7) For each line of input, for vertices U and V, assign Matrix[U][V] to
        True and Matrix[V][U] to true.
-    8) Output each vertex and it's adjacent vertices
+    8) Output the adjacency matrix
         * Output to file in append mode for multiple outputs in one file
 """
 
@@ -58,20 +58,23 @@ for line in InputString.splitlines():
     U, V = tuple(line.split())
     Matrix[Lookup[U]][Lookup[V]] = True
     Matrix[Lookup[V]][Lookup[U]] = True
-# 8) Output each vertex and it's adjacent vertices
+# 8) Output the adjacency matrix
 # Open a file in append mode
 with open('OutputAdjMatrix.txt', 'a') as outfile:
     # Output labels for the table
-    outfile.write('Vertices*    Adjacent^\n')
+    # Print the vertex labels at the top
+    outfile.write('   ')
+    for vertex in range(Size):
+        outfile.write(Vertices[vertex].center(3))
+    outfile.write('\n')
     # Loop through all rows (vertices, sorted) of the Matrix
     for row in range(Size):
         # Output the vertex represented by the current row's index
-        outfile.write(Vertices[row].center(8) + '     ')
+        outfile.write(Vertices[row].center(3))
         for col in range(Size):
             # If there is edge between two vertices (signifed by True value) then
             # print adjacent vertex represented by current column's index
-            if Matrix[row][col]:
-                outfile.write(Vertices[col] + ' ')
+            outfile.write(str(int(Matrix[row][col])).center(3))
         # Go to a new line between outputting vertices
         outfile.write('\n')
     # One last new line to separate outputs
