@@ -42,4 +42,4 @@ Windows 10 and Ubuntu 20
 
 **Any know issues or flaws**
 
-I haven't added multiple client strategies yet. But once I'd finished all the client/server connections and the locking strategy, I felt that I should upload my current progress. Multiple client guessing strategies will come soon.
+The strategies aren't varied in a way that makes choosing between them interesting. Binary is clearly superior and Brute Force is the worst thing you could ever experience. (It would take years, YEARS, to guess the highest possible vallue that the server might generate) I'd like to come up with multiple good strategies that have tradeoffs.
