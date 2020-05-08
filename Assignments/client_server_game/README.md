@@ -27,6 +27,10 @@ To run the client, execute this command:
 `python client/Client.py` (or just `python Client.py` from the same folder)
 When you run the client it will ask for an host address and port. If you are running client and server on the same machine for testing, then "localhost" as the host and "8080" as the port will work just fine.
 
+To change the guess mode you need to pass in an integer to the command line args.
+* `python Client.py 0` utilizes *Bounded Random Guessing*
+* `python Client.py 1` utilizes *Binary Search Guessing*
+
 Trying to make a webpage (with GUI!) to connect to for testing client. If I do I will link it right here.
 
 **The platform it was developed on**
