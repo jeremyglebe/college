@@ -6,46 +6,51 @@ from pprint import pprint
 
 SUBREDDIT_POST_LIMIT = 100
 
+
 def rcomm2obj(comm):
-    ret = {
-        "score": comm.score,
-        "id": comm.id,
-        "created": comm.created_utc,
-        "body": comm.body
-    }
-    if comm.author:
-        ret["author"] = {
-            "name": comm.author.name,
-            "id": comm.author.id
+    try:
+        return {
+            "score": comm.score,
+            "id": comm.id,
+            "created": comm.created_utc,
+            "body": comm.body,
+            "author": {
+                "name": comm.author.name,
+                "id": comm.author.id
+            }
         }
-    return ret
+    except:
+        return None
 
 
 def rpost2obj(post):
     '''Creates a dictionary object out of a single reddit submission'''
-    return {
-        "title": post.title,
-        "score": post.score,
-        "id": post.id,
-        "url": post.url,
-        "num_comments": post.num_comments,
-        "created": post.created,
-        "body": post.selftext,
-        "author": {
-            "name": post.author.name,
-            "id": post.author.id
+    try:
+        return {
+            "title": post.title,
+            "score": post.score,
+            "id": post.id,
+            "url": post.url,
+            "num_comments": post.num_comments,
+            "created": post.created,
+            "body": post.selftext,
+            "author": {
+                "name": post.author.name,
+                "id": post.author.id
+            }
         }
-    }
+    except:
+        return None
 
 
 def reddit2dict(submissions):
     '''Creates a dictionary out of a set of reddit submissions'''
-    i = 1
-    dictionary = {}
+    i= 1
+    dictionary= {}
     for post in submissions:
-        print(f"\rProcessing post #{i}/1000", end="")
+        print(f"\rProcessing post #{i}/{SUBREDDIT_POST_LIMIT}", end="")
         if not post.id in dictionary:
-            dictionary[post.id] = rpost2obj(post)
+            dictionary[post.id]= rpost2obj(post)
         i += 1
     print()
     return dictionary
@@ -53,25 +58,27 @@ def reddit2dict(submissions):
 
 def reddit2files(submissions, dir):
     '''Creates files out of a set of reddit submissions'''
-    i = 1
+    i= 1
     for post in submissions:
-        print(f"\rProcessing post #{i}.0/1000", end="")
+        print(f"\rProcessing post #{i}.0/{SUBREDDIT_POST_LIMIT}", end="")
         # We can further specify things to only save posts with a text body
         # Uncomment the next two lines to use this filtering
         # if post.selftext == '':
         #     continue
         # If a file corresponding with this post does not already exist
         if not os.path.isfile(os.path.join(dir, f'{post.id}.json')):
-            post_obj = rpost2obj(post)
-            with open(os.path.join(dir, f'{post.id}.json'), 'w') as f:
-                f.write(json.dumps(post_obj))
-        j = 1
+            post_obj= rpost2obj(post)
+            if post_obj:
+                with open(os.path.join(dir, f'{post.id}.json'), 'w') as f:
+                    f.write(json.dumps(post_obj))
+        j= 1
         for comment in post.comments:
-            print(f"\rProcessing post #{i}.{j}/1000", end="")
+            print(f"\rProcessing post #{i}.{j}/{SUBREDDIT_POST_LIMIT}", end="")
             if not os.path.isfile(os.path.join(dir, f'{comment.id}.json')):
-                comm_obj = rcomm2obj(comment)
-                with open(os.path.join(dir, f'{comment.id}.json'), 'w') as f:
-                    f.write(json.dumps(comm_obj))
+                comm_obj= rcomm2obj(comment)
+                if comm_obj:
+                    with open(os.path.join(dir, f'{comment.id}.json'), 'w') as f:
+                        f.write(json.dumps(comm_obj))
             j += 1
         i += 1
     print()
@@ -79,11 +86,11 @@ def reddit2files(submissions, dir):
 
 # Get client's info to connect to Reddit
 with open('client_info.json', 'r') as f:
-    client_info = json.loads(f.read())
+    client_info= json.loads(f.read())
 
 # Reddit API instance
 print("Connecting to Reddit...")
-reddit = praw.Reddit(client_id=client_info['client_id'],
+reddit= praw.Reddit(client_id=client_info['client_id'],
                      client_secret=client_info['client_secret'],
                      user_agent=client_info['user_agent'],
                      username=client_info['username'],
@@ -91,25 +98,25 @@ reddit = praw.Reddit(client_id=client_info['client_id'],
 
 # Subreddits for American politics
 print("Establishing subreddits...")
-subreddit_democrats = reddit.subreddit('democrats')
-subreddit_republicans = reddit.subreddit('republicans')
+subreddit_democrats= reddit.subreddit('democrats')
+subreddit_republicans= reddit.subreddit('republicans')
 
 # Get most recent data from each
 print("Pulling recent posts from r/democrats...")
-recent_democrats = subreddit_democrats.new(limit=SUBREDDIT_POST_LIMIT)
+recent_democrats= subreddit_democrats.new(limit=SUBREDDIT_POST_LIMIT)
 print("Pulling recent posts from r/republicans...")
-recent_republicans = subreddit_republicans.new(limit=SUBREDDIT_POST_LIMIT)
+recent_republicans= subreddit_republicans.new(limit=SUBREDDIT_POST_LIMIT)
 
 # Get "hot" posts from each subreddit
 print("Pulling hot posts from r/democrats...")
-hot_democrats = subreddit_democrats.hot(limit=SUBREDDIT_POST_LIMIT)
+hot_democrats= subreddit_democrats.hot(limit=SUBREDDIT_POST_LIMIT)
 print("Pulling hot posts from r/republicans...")
-hot_republicans = subreddit_republicans.hot(limit=SUBREDDIT_POST_LIMIT)
+hot_republicans= subreddit_republicans.hot(limit=SUBREDDIT_POST_LIMIT)
 
 # Dump all the data to files
 reddit2files(recent_democrats, 'democrats')
-reddit2files(hot_democrats, 'democrats')
 reddit2files(recent_republicans, 'republicans')
+reddit2files(hot_democrats, 'democrats')
 reddit2files(hot_republicans, 'republicans')
 
 # ------------------------------------------------------------------------------
