@@ -4,6 +4,7 @@ import praw
 import datetime as dt
 from pprint import pprint
 
+SUBREDDIT_POST_LIMIT = 100
 
 def rcomm2obj(comm):
     ret = {
@@ -95,15 +96,15 @@ subreddit_republicans = reddit.subreddit('republicans')
 
 # Get most recent data from each
 print("Pulling recent posts from r/democrats...")
-recent_democrats = subreddit_democrats.new(limit=1000)
+recent_democrats = subreddit_democrats.new(limit=SUBREDDIT_POST_LIMIT)
 print("Pulling recent posts from r/republicans...")
-recent_republicans = subreddit_republicans.new(limit=1000)
+recent_republicans = subreddit_republicans.new(limit=SUBREDDIT_POST_LIMIT)
 
 # Get "hot" posts from each subreddit
 print("Pulling hot posts from r/democrats...")
-hot_democrats = subreddit_democrats.hot(limit=1000)
+hot_democrats = subreddit_democrats.hot(limit=SUBREDDIT_POST_LIMIT)
 print("Pulling hot posts from r/republicans...")
-hot_republicans = subreddit_republicans.hot(limit=1000)
+hot_republicans = subreddit_republicans.hot(limit=SUBREDDIT_POST_LIMIT)
 
 # Dump all the data to files
 reddit2files(recent_democrats, 'democrats')
