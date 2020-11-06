@@ -5,6 +5,21 @@ import datetime as dt
 from pprint import pprint
 
 
+def rcomm2obj(comm):
+    ret = {
+        "score": comm.score,
+        "id": comm.id,
+        "created": comm.created_utc,
+        "body": comm.body
+    }
+    if comm.author:
+        ret["author"] = {
+            "name": comm.author.name,
+            "id": comm.author.id
+        }
+    return ret
+
+
 def rpost2obj(post):
     '''Creates a dictionary object out of a single reddit submission'''
     return {
@@ -14,7 +29,11 @@ def rpost2obj(post):
         "url": post.url,
         "num_comments": post.num_comments,
         "created": post.created,
-        "selftext": post.selftext
+        "body": post.selftext,
+        "author": {
+            "name": post.author.name,
+            "id": post.author.id
+        }
     }
 
 
@@ -35,7 +54,7 @@ def reddit2files(submissions, dir):
     '''Creates files out of a set of reddit submissions'''
     i = 1
     for post in submissions:
-        print(f"\rProcessing post #{i}/1000", end="")
+        print(f"\rProcessing post #{i}.0/1000", end="")
         # We can further specify things to only save posts with a text body
         # Uncomment the next two lines to use this filtering
         # if post.selftext == '':
@@ -45,6 +64,14 @@ def reddit2files(submissions, dir):
             post_obj = rpost2obj(post)
             with open(os.path.join(dir, f'{post.id}.json'), 'w') as f:
                 f.write(json.dumps(post_obj))
+        j = 1
+        for comment in post.comments:
+            print(f"\rProcessing post #{i}.{j}/1000", end="")
+            if not os.path.isfile(os.path.join(dir, f'{comment.id}.json')):
+                comm_obj = rcomm2obj(comment)
+                with open(os.path.join(dir, f'{comment.id}.json'), 'w') as f:
+                    f.write(json.dumps(comm_obj))
+            j += 1
         i += 1
     print()
 
