@@ -4,7 +4,7 @@ import praw
 import datetime as dt
 from pprint import pprint
 
-SUBREDDIT_POST_LIMIT = 100
+SUBREDDIT_POST_LIMIT = 200
 
 
 def rcomm2obj(comm):
