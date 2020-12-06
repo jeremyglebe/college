@@ -4,7 +4,7 @@ import praw
 import datetime as dt
 from pprint import pprint
 
-SUBREDDIT_POST_LIMIT = 200
+SUBREDDIT_POST_LIMIT = 1000
 
 
 def rcomm2obj(comm):
@@ -13,6 +13,7 @@ def rcomm2obj(comm):
             "score": comm.score,
             "id": comm.id,
             "created": comm.created_utc,
+            "num_comments": post.num_comments,
             "body": comm.body,
             "author": {
                 "name": comm.author.name,
@@ -99,25 +100,41 @@ reddit= praw.Reddit(client_id=client_info['client_id'],
 # Subreddits for American politics
 print("Establishing subreddits...")
 subreddit_democrats= reddit.subreddit('democrats')
+subreddit_liberal = reddit.subreddit('liberal')
 subreddit_republicans= reddit.subreddit('republicans')
+subreddit_conservative = reddit.subreddit('conservative')
 
 # Get most recent data from each
 print("Pulling recent posts from r/democrats...")
 recent_democrats= subreddit_democrats.new(limit=SUBREDDIT_POST_LIMIT)
+print("Pulling recent posts from r/liberal...")
+recent_liberal= subreddit_liberal.new(limit=SUBREDDIT_POST_LIMIT)
+
 print("Pulling recent posts from r/republicans...")
 recent_republicans= subreddit_republicans.new(limit=SUBREDDIT_POST_LIMIT)
+print("Pulling recent posts from r/conservative...")
+recent_conservative= subreddit_conservative.new(limit=SUBREDDIT_POST_LIMIT)
 
 # Get "hot" posts from each subreddit
 print("Pulling hot posts from r/democrats...")
 hot_democrats= subreddit_democrats.hot(limit=SUBREDDIT_POST_LIMIT)
+print("Pulling hot posts from r/liberal...")
+hot_liberal= subreddit_liberal.hot(limit=SUBREDDIT_POST_LIMIT)
+
 print("Pulling hot posts from r/republicans...")
 hot_republicans= subreddit_republicans.hot(limit=SUBREDDIT_POST_LIMIT)
+print("Pulling hot posts from r/conservative...")
+hot_conservative= subreddit_conservative.hot(limit=SUBREDDIT_POST_LIMIT)
 
 # Dump all the data to files
 reddit2files(recent_democrats, 'democrats')
+reddit2files(recent_liberal, 'democrats')
 reddit2files(recent_republicans, 'republicans')
+reddit2files(recent_conservative, 'republicans')
 reddit2files(hot_democrats, 'democrats')
+reddit2files(hot_liberal, 'democrats')
 reddit2files(hot_republicans, 'republicans')
+reddit2files(hot_conservative, 'republicans')
 
 # ------------------------------------------------------------------------------
 # This block of code compiles each set of submissions into python dictionaries
