@@ -83,13 +83,13 @@ def get_unique_words(democrat, republican):
 			if word[0] == word1[0]:
 				duplicate = True
 				num = word[1]/word1[1]
-				if num > 1.25 or num < 0.8:
+				if num > 1.25 or num < 0.5:
 					word_list.append(word[0])
 					#if democrats used more frequently
 					if num > 1.25:
 						democrat_list.append(word[0])
 					#if republicans used the word more frequently
-					if num < 0.8:
+					if num < 0.5:
 						republican_list.append(word1[0])
 		if duplicate == False:
 			#append back the words only frequently used by Democrats
@@ -133,8 +133,8 @@ def convert_to_data_points(post_array, keyword_list):
 	return data_points_array
 
 # Find all *.txt files in the directory
-path = 'c:/Users/jerem/Repos/Data Science/reddit-realtime-data/democrat_users/*.json'  
-path1 = 'c:/Users/jerem/Repos/Data Science/reddit-realtime-data/republican_users/*.json' 
+path = '/Users/phaiy/democrat_users/*.json'  
+path1 = '/Users/phaiy/republican_users/*.json' 
 file_name_list = glob.glob(path)
 file_name_list1 = glob.glob(path1)
  
@@ -243,11 +243,24 @@ try:
 	#print(len(classifyarr_2test))
 
 	correct_count = 0
+	wrong_democrat = 0
+	wrong_republican = 0
 	for i in range(len(test_result)):
 		if test_result[i] == classifyarr_2test[i]:
 			correct_count +=1
+		else:
+			#if the label says the post belongs to Republican while the testing says it belongs to Democrat, we count how many republican got wrong prediction result
+			if test_result[i] == 1:
+				wrong_republican +=1
+			#if the other way, the labels says the post belongs to Democrat while the testing says it belongs to Republican
+			elif test_result[i] == 0:
+				wrong_democrat +=1
 
-	print("Testing correct %: " + str(correct_count*100/len(test_result)))
+	print("Number of Democrat/Liberal posts the learning machine predicted correctly: " + str(len(democrat_stemmed_posts) - wrong_democrat) )
+	print("Number of Republican/Conservative posts the learning machine predicted correctly: " + str(len(republican_stemmed_posts) - wrong_republican) )
+	print("Prediction accuracy % of Democrat/Liberal posts: " + str( (len(democrat_stemmed_posts) - wrong_democrat)*100/len(democrat_stemmed_posts) ) )
+	print("Prediction accuracy % of Republican/Conservative posts: " + str( (len(republican_stemmed_posts) - wrong_republican)*100/len(republican_stemmed_posts) ) )
+	print("Overall testing prediction accuracy %: " + str(correct_count*100/len(test_result)))
 
 except: 
 	raise 
