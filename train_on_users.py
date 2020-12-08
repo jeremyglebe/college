@@ -255,12 +255,38 @@ try:
 			#if the other way, the labels says the post belongs to Democrat while the testing says it belongs to Republican
 			elif test_result[i] == 0:
 				wrong_democrat +=1
+	#Question: Is the post Democrat?
+	TP = len(democrat_stemmed_posts) - wrong_democrat
+	FP = wrong_republican
+	FN = wrong_democrat
+	precision = TP/(TP+FP)
+	recall = TP/(TP+FN)
+	F1 = (2*precision*recall)/(precision + recall)
+
+	#Question: Is the post Republican?
+	TP_1 = len(republican_stemmed_posts) - wrong_republican
+	FP_1 = wrong_democrat
+	FN_1 = wrong_republican
+	precision_1 = TP_1/(TP_1+FP_1)
+	recall_1 = TP_1/(TP_1+FN_1)
+	F1_1 = (2*precision_1*recall_1)/(precision_1 + recall_1)
 
 	print("Number of Democrat/Liberal posts the learning machine predicted correctly: " + str(len(democrat_stemmed_posts) - wrong_democrat) )
 	print("Number of Republican/Conservative posts the learning machine predicted correctly: " + str(len(republican_stemmed_posts) - wrong_republican) )
 	print("Prediction accuracy % of Democrat/Liberal posts: " + str( (len(democrat_stemmed_posts) - wrong_democrat)*100/len(democrat_stemmed_posts) ) )
 	print("Prediction accuracy % of Republican/Conservative posts: " + str( (len(republican_stemmed_posts) - wrong_republican)*100/len(republican_stemmed_posts) ) )
 	print("Overall testing prediction accuracy %: " + str(correct_count*100/len(test_result)))
+	print("\nTake Democrat as positive class: ")
+	print("Precision: " + str(precision) )
+	print("Recall: " + str(recall) )
+	print("F-1 score: " + str(F1) )
+
+	print("\nTake Republican as positive class: ")
+	print("Precision: " + str(precision_1) )
+	print("Recall: " + str(recall_1) )
+	print("F-1 score: " + str(F1_1) )
+
+
 
 except: 
 	raise 
