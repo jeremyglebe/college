@@ -83,10 +83,10 @@ def get_unique_words(democrat, republican):
 			if word[0] == word1[0]:
 				duplicate = True
 				num = word[1]/word1[1]
-				if num > 1.25 or num < 0.5:
+				if num > 1.2 or num < 0.5:
 					word_list.append(word[0])
 					#if democrats used more frequently
-					if num > 1.25:
+					if num > 1.2:
 						democrat_list.append(word[0])
 					#if republicans used the word more frequently
 					if num < 0.5:
@@ -217,7 +217,7 @@ try:
 	#randomly take 20% for training, 80% posts for testing
 	for i in range(len(classify_array)):
 		rand_num = random.randint(1,10)
-		if rand_num <= 2:
+		if rand_num <= 8:
 			data_point_2train.append(temp_arr[i][0])
 			classifyarr_2train.append(temp_arr[i][1])
 		else:
@@ -242,6 +242,14 @@ try:
 	#print(len(test_result))
 	#print(len(classifyarr_2test))
 
+	test_democrat_count = 0
+	test_republican_count = 0
+	for i in range(len(classifyarr_2test)):
+		if classifyarr_2test[i] == 1:
+			test_democrat_count += 1
+		else:
+			test_republican_count += 1
+
 	correct_count = 0
 	wrong_democrat = 0
 	wrong_republican = 0
@@ -256,34 +264,40 @@ try:
 			elif test_result[i] == 0:
 				wrong_democrat +=1
 	#Question: Is the post Democrat?
-	TP = len(democrat_stemmed_posts) - wrong_democrat
+	TP = test_democrat_count - wrong_democrat
+	TN = test_republican_count - wrong_republican
 	FP = wrong_republican
 	FN = wrong_democrat
 	precision = TP/(TP+FP)
 	recall = TP/(TP+FN)
+	specificity =  TN / test_republican_count
 	F1 = (2*precision*recall)/(precision + recall)
 
 	#Question: Is the post Republican?
-	TP_1 = len(republican_stemmed_posts) - wrong_republican
+	TP_1 = test_republican_count - wrong_republican
+	TN_1 = test_democrat_count - wrong_democrat
 	FP_1 = wrong_democrat
 	FN_1 = wrong_republican
 	precision_1 = TP_1/(TP_1+FP_1)
 	recall_1 = TP_1/(TP_1+FN_1)
+	specificity_1 =  TN_1 / test_democrat_count
 	F1_1 = (2*precision_1*recall_1)/(precision_1 + recall_1)
 
-	print("Number of Democrat/Liberal posts the learning machine predicted correctly: " + str(len(democrat_stemmed_posts) - wrong_democrat) )
-	print("Number of Republican/Conservative posts the learning machine predicted correctly: " + str(len(republican_stemmed_posts) - wrong_republican) )
-	print("Prediction accuracy % of Democrat/Liberal posts: " + str( (len(democrat_stemmed_posts) - wrong_democrat)*100/len(democrat_stemmed_posts) ) )
-	print("Prediction accuracy % of Republican/Conservative posts: " + str( (len(republican_stemmed_posts) - wrong_republican)*100/len(republican_stemmed_posts) ) )
+	print("Out of " + str(test_democrat_count) + " Democrat/Liberals posts being tested, number of Democrat/Liberal posts was predicted correctly: " + str(TP) )
+	print("Out of " + str(test_republican_count) + " Republican/Conservative posts being tested, number of Republican/Conservative posts was predicted correctly: " + str(TP_1) )
+	print("Prediction accuracy % of Democrat/Liberal posts: " + str(TP*100/test_democrat_count) )
+	print("Prediction accuracy % of Republican/Conservative posts: " + str( TP_1*100/test_republican_count ) )
 	print("Overall testing prediction accuracy %: " + str(correct_count*100/len(test_result)))
 	print("\nTake Democrat as positive class: ")
 	print("Precision: " + str(precision) )
 	print("Recall: " + str(recall) )
+	print("Specificity: " + str(specificity))
 	print("F-1 score: " + str(F1) )
 
 	print("\nTake Republican as positive class: ")
 	print("Precision: " + str(precision_1) )
 	print("Recall: " + str(recall_1) )
+	print("Specificity: " + str(specificity_1))
 	print("F-1 score: " + str(F1_1) )
 
 
