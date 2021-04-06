@@ -4,7 +4,7 @@ This module demonstrates multiple inheritance, at a basic level, via classes
 representing quadrilateral shapes. It shows each shape as a figure, and also
 saves the shapes to appropriately named image files.
 
-Authors: Jeremy Glebe, Julie Germaine
+Authors: Jeremy Glebe, Julie Germain
 Date: 4/6/2021
 """
 
