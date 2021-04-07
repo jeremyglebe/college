@@ -137,7 +137,6 @@ def ClientHandler(client: socket.socket, address):
             # Send the message to the intended client
             found = False
             for user in database.values():
-                print(user[0], target)
                 if user[0] == target:
                     found = True
                     user[1].send(f"FROM {username} {text}\n".encode())
