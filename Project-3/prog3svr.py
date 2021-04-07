@@ -44,6 +44,8 @@ def Server(host, port):
 
 
 def ClientHandler(client: socket.socket, address):
+    # Username of the client
+    username = "ERR_NO_NAME"
     # Socket file descriptor
     fd = client.fileno()
     # Variable to mark if the client has quit
@@ -117,6 +119,9 @@ def ClientHandler(client: socket.socket, address):
             text = ' '.join(message.split(' ')[1:])
             # Print server update
             print(f"Client ({fd}): {message}")
+            # Send the broadcast to all clients
+            for user in database.values():
+                user[1].send(f"FROM {username} {text}\n".encode())
         else:
             # Unknown command
             # Reset noRespond
