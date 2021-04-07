@@ -60,9 +60,10 @@ def ClientHandler(client: socket.socket, address):
         # Get message data from the client
         message = client.recv(256)
         # Change the message data into text
-        message = message.decode()
+        message = message.decode('ASCII')
         # Remove the newline from the message
         message = message.replace("\n", "")
+        message = message.replace("\r", "")
         # Extract the base command
         command = message.split(' ')[0]
         # Check what the message/command is
@@ -83,7 +84,7 @@ def ClientHandler(client: socket.socket, address):
                 # Store the user in the database
                 database[fd] = (username, client)
                 # Feedback to client
-                client.send(f"JOIN {username} Request Accepted\n".encode())
+                client.send(f"JOIN {username} Request Accepted\n".encode('ASCII'))
                 # Feedback to server
                 print(f"Client ({fd}): JOIN {username}")
             elif fd in database:
@@ -91,11 +92,11 @@ def ClientHandler(client: socket.socket, address):
                 print(
                     f"Client ({fd}): User Already Registered. Discarding JOIN.")
                 client.send(
-                    f"User Already Registered: Username ({database[fd]}), FD ({fd})\n".encode())
+                    f"User Already Registered: Username ({database[fd]}), FD ({fd})\n".encode('ASCII'))
             elif len(database) >= MAX_CONNECTIONS:
                 # If the database is full
                 print(f"Client ({fd}): Database Full. Disconnecting User.")
-                client.send("Too Many Users. Disconnecting User.\n".encode())
+                client.send("Too Many Users. Disconnecting User.\n".encode('ASCII'))
                 quitReceived = True
 
         elif not fd in database:
@@ -105,7 +106,7 @@ def ClientHandler(client: socket.socket, address):
             print(
                 f"Unable to Locate Client ({fd}) in Database. Discarding: {message}")
             client.send(
-                'Unregistered User. Use "JOIN <username>" to Register.\n'.encode())
+                'Unregistered User. Use "JOIN <username>" to Register.\n'.encode('ASCII'))
         elif command == "LIST":
             # List command, generate a list of names
             names = [f'{v[0]},{k}' for k, v in database.items()]
@@ -114,7 +115,7 @@ def ClientHandler(client: socket.socket, address):
             text += names
             text += "\n--------------------\n"
             # Send the client the list of names
-            client.send(text.encode())
+            client.send(text.encode('ASCII'))
             # Print the client's command
             print(f"Client ({fd}): LIST")
         elif command == "BCST":
@@ -125,7 +126,7 @@ def ClientHandler(client: socket.socket, address):
             print(f"Client ({fd}): BCST {message}")
             # Send the broadcast to all clients
             for user in database.values():
-                user[1].send(f"FROM {username} {text}\n".encode())
+                user[1].send(f"FROM {username} {text}\n".encode('ASCII'))
         elif command == "MESG":
             # Message command
             # Get the target user
@@ -139,13 +140,13 @@ def ClientHandler(client: socket.socket, address):
             for user in database.values():
                 if user[0] == target:
                     found = True
-                    user[1].send(f"FROM {username} {text}\n".encode())
+                    user[1].send(f"FROM {username} {text}\n".encode('ASCII'))
             # Handle if the username was invalid
             if not found:
                 print(
                     f"Unable to Locate Recipient ({target}) in Database. Discarding MESG.")
                 client.send(
-                    f"Unknown Recipient ({target}). MESG Discarded.\n".encode())
+                    f"Unknown Recipient ({target}). MESG Discarded.\n".encode('ASCII'))
         else:
             # Unknown command
             # Reset noRespond
@@ -154,7 +155,7 @@ def ClientHandler(client: socket.socket, address):
             print(
                 f"Client ({fd}): Unrecognizable Message. Discarding UNKNOWN Message.")
             client.send(
-                "Unknown Message. Discarding UNKNOWN Message.\n".encode())
+                "Unknown Message. Discarding UNKNOWN Message.\n".encode('ASCII'))
     # Close the client connection
     client.close()
     # Might print an unknown user message
