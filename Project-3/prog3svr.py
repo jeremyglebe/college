@@ -3,6 +3,7 @@ import sys
 import threading
 
 MAX_CONNECTIONS = 10
+KILL_THREADS = False
 HOST = 'localhost'
 PORT = int(sys.argv[1])
 
@@ -23,18 +24,21 @@ def Server(host, port):
     # Listen for connections
     svr.listen()
     print("Waiting for Incoming Connections...")
-    # Wait on and accept client connections
-    while True:
-        cliSocket, cliAddress = svr.accept()
-        fd = cliSocket.fileno()
-        print(f"Client ({fd}): Connection Accepted")
-        # Python's "threading" module uses pthread on non-windows systems
-        # (So it meets the pthread requirement)
-        cliThread = threading.Thread(
-            target=ClientHandler, args=(cliSocket, cliAddress))
-        # Start the thread
-        cliThread.start()
-        print(f"Client ({fd}): Connection Handler Assigned")
+    try:
+        # Wait on and accept client connections
+        while True:
+            cliSocket, cliAddress = svr.accept()
+            fd = cliSocket.fileno()
+            print(f"Client ({fd}): Connection Accepted")
+            # Python's "threading" module uses pthread on non-windows systems
+            # (So it meets the pthread requirement)
+            cliThread = threading.Thread(
+                target=ClientHandler, args=(cliSocket, cliAddress), daemon=True)
+            # Start the thread
+            cliThread.start()
+            print(f"Client ({fd}): Connection Handler Assigned")
+    except KeyboardInterrupt:
+        KILL_THREADS = True
     # Close the server
     svr.close()
 
@@ -46,7 +50,7 @@ def ClientHandler(client: socket.socket, address):
     quitReceived = False
     # After 3 "blank" responses, we should assume the client disconnected
     noRespond = 0
-    while not quitReceived and noRespond < 3:
+    while not quitReceived and noRespond < 3 and (not KILL_THREADS):
         # Get message data from the client
         message = client.recv(256)
         # Change the message data into text
@@ -72,6 +76,10 @@ def ClientHandler(client: socket.socket, address):
                 username = message.split(' ')[1]
                 # Store the user in the database
                 database[fd] = username
+                # Feedback to client
+                client.send(f"JOIN {username} Request Accepted\n".encode())
+                # Feedback to server
+                print(f"Client ({fd}): JOIN {username}")
             elif fd in database:
                 # If the user has already joined
                 print(
@@ -93,9 +101,13 @@ def ClientHandler(client: socket.socket, address):
             client.send(
                 'Unregistered User. Use "JOIN <username>" to Register.\n'.encode())
         elif command == "LIST":
-            names = [v for _,v in database.items()]
+            # List command, generate a list of names
+            names = [v for _, v in database.items()]
             names = '\n'.join(names) + '\n'
+            # Send the client the list of names
             client.send(names.encode())
+            # Print the client's command
+            print(f"Client ({fd}): LIST")
         else:
             # Unknown command
             # Reset noRespond
