@@ -75,7 +75,7 @@ def ClientHandler(client: socket.socket, address):
                 # Extract the username
                 username = message.split(' ')[1]
                 # Store the user in the database
-                database[fd] = username
+                database[fd] = (username, client)
                 # Feedback to client
                 client.send(f"JOIN {username} Request Accepted\n".encode())
                 # Feedback to server
@@ -102,7 +102,7 @@ def ClientHandler(client: socket.socket, address):
                 'Unregistered User. Use "JOIN <username>" to Register.\n'.encode())
         elif command == "LIST":
             # List command, generate a list of names
-            names = [f'{v},{k}' for k, v in database.items()]
+            names = [f'{v[0]},{k}' for k, v in database.items()]
             names = '\n'.join(names)
             text = "USERNAME,FD\n--------------------\n"
             text += names
@@ -111,6 +111,12 @@ def ClientHandler(client: socket.socket, address):
             client.send(text.encode())
             # Print the client's command
             print(f"Client ({fd}): LIST")
+        elif command == "BCST":
+            # Broadcast command
+            # Get the text of the message
+            text = ' '.join(message.split(' ')[1:])
+            # Print server update
+            print(f"Client ({fd}): {message}")
         else:
             # Unknown command
             # Reset noRespond
