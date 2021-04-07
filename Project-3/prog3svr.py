@@ -102,10 +102,13 @@ def ClientHandler(client: socket.socket, address):
                 'Unregistered User. Use "JOIN <username>" to Register.\n'.encode())
         elif command == "LIST":
             # List command, generate a list of names
-            names = [v for _, v in database.items()]
-            names = '\n'.join(names) + '\n'
+            names = [f'{v},{k}' for k, v in database.items()]
+            names = '\n'.join(names)
+            text = "USERNAME,FD\n--------------------\n"
+            text += names
+            text += "\n--------------------\n"
             # Send the client the list of names
-            client.send(names.encode())
+            client.send(text.encode())
             # Print the client's command
             print(f"Client ({fd}): LIST")
         else:
