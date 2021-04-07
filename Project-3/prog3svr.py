@@ -7,7 +7,7 @@ MAX_CONNECTIONS = 10
 # Global variable to let all threads know to terminate
 KILL_THREADS = False
 # Host is always localhost for now
-HOST = 'localhost'
+HOST = '0.0.0.0'
 # Port is retrieved from command line
 PORT = int(sys.argv[1])
 # Global database keeps track of who is registered
