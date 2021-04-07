@@ -60,7 +60,7 @@ def ClientHandler(client: socket.socket, address):
         # Get message data from the client
         message = client.recv(256)
         # Change the message data into text
-        message = message.decode("UTF-8")
+        message = message.decode()
         # Remove the newline from the message
         message = message.replace("\n", "")
         # Extract the base command
