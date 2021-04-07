@@ -2,11 +2,15 @@ import socket
 import sys
 import threading
 
+# Maximum number of connections
 MAX_CONNECTIONS = 10
+# Global variable to let all threads know to terminate
 KILL_THREADS = False
+# Host is always localhost for now
 HOST = 'localhost'
+# Port is retrieved from command line
 PORT = int(sys.argv[1])
-
+# Global database keeps track of who is registered
 database = {}
 
 
@@ -118,10 +122,31 @@ def ClientHandler(client: socket.socket, address):
             # Get the text of the message
             text = ' '.join(message.split(' ')[1:])
             # Print server update
-            print(f"Client ({fd}): {message}")
+            print(f"Client ({fd}): BCST {message}")
             # Send the broadcast to all clients
             for user in database.values():
                 user[1].send(f"FROM {username} {text}\n".encode())
+        elif command == "MESG":
+            # Message command
+            # Get the target user
+            target = message.split(' ')[1]
+            # Get the text of the message
+            text = ' '.join(message.split(' ')[2:])
+            # Print server update
+            print(f"Client ({fd}): MESG {target} {text}")
+            # Send the message to the intended client
+            found = False
+            for user in database.values():
+                print(user[0], target)
+                if user[0] == target:
+                    found = True
+                    user[1].send(f"FROM {username} {text}\n".encode())
+            # Handle if the username was invalid
+            if not found:
+                print(
+                    f"Unable to Locate Recipient ({target}) in Database. Discarding MESG.")
+                client.send(
+                    f"Unknown Recipient ({target}). MESG Discarded.\n".encode())
         else:
             # Unknown command
             # Reset noRespond
@@ -145,4 +170,5 @@ def ClientHandler(client: socket.socket, address):
     print(f"Client ({fd}): Disconnecting User.")
 
 
+# Start the server
 Server(HOST, PORT)
