@@ -2,6 +2,7 @@ import socket
 import sys
 import threading
 
+MAX_CONNECTIONS = 10
 HOST = 'localhost'
 PORT = int(sys.argv[1])
 
@@ -25,7 +26,7 @@ def Server(host, port):
     # Wait on and accept client connections
     while True:
         cliSocket, cliAddress = svr.accept()
-        fd = cliSocket.fileno
+        fd = cliSocket.fileno()
         print(f"Client ({fd}): Connection Accepted")
         # Python's "threading" module uses pthread on non-windows systems
         # (So it meets the pthread requirement)
@@ -62,29 +63,56 @@ def ClientHandler(client: socket.socket, address):
             # User is quitting
             quitReceived = True
         elif command == "JOIN":
+            # Reset noRespond
+            noRespond = 0
             # The user is attempting to join
-            # Check that they have no already joined
-            if not fd in database:
+            # Check that they have no already joined and that there aren't too many users
+            if (not fd in database) and len(database) < MAX_CONNECTIONS:
                 # Extract the username
                 username = message.split(' ')[1]
                 # Store the user in the database
                 database[fd] = username
+            elif fd in database:
+                # If the user has already joined
+                print(
+                    f"Client ({fd}): User Already Registered. Discarding JOIN.")
+                client.send(
+                    f"User Already Registered: Username ({database[fd]}), FD ({fd})\n".encode())
+            elif len(database) >= MAX_CONNECTIONS:
+                # If the database is full
+                print(f"Client ({fd}): Database Full. Disconnecting User.")
+                client.send("Too Many Users. Disconnecting User.\n".encode())
+                quitReceived = True
+
         elif not fd in database:
+            # Reset noRespond
+            noRespond = 0
             # User is not registered
-            print(f"Unable to Locate Client ({fd}) in Database. Discarding: {message}")
-            client.send('Unregistered User. Use "JOIN <username>" to Register.\n'.encode())
+            print(
+                f"Unable to Locate Client ({fd}) in Database. Discarding: {message}")
+            client.send(
+                'Unregistered User. Use "JOIN <username>" to Register.\n'.encode())
+        elif command == "LIST":
+            names = [v for _,v in database.items()]
+            names = '\n'.join(names) + '\n'
+            client.send(names.encode())
         else:
             # Unknown command
             # Reset noRespond
             noRespond = 0
             # Print status and send message to client
-            print(f"Client ({fd}): Unrecognizable Message. Discarding UNKNOWN Message.")
-            client.send("Unknown Message. Discarding UNKNOWN Message.\n".encode())
+            print(
+                f"Client ({fd}): Unrecognizable Message. Discarding UNKNOWN Message.")
+            client.send(
+                "Unknown Message. Discarding UNKNOWN Message.\n".encode())
     # Close the client connection
     client.close()
     # Might print an unknown user message
     if not fd in database:
-        print(f"Unable to Locate Client ({fd}) in Database.", end=" ")
+        if command == "QUIT":
+            print(f"Unable to Locate Client ({fd}) in Database.", end=" ")
+        elif command == "JOIN":
+            print(f"Database full.", end=" ")
     # Remove the client from the database, or None if it isn't there
     database.pop(fd, None)
     # Print the client disconnecting message
