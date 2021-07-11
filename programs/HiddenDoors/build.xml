@@ -1,0 +1,59 @@
+<project name="HiddenDoors" basedir="." default="main">
+
+    <!-- declare paths and main class -->
+    <property name="src.dir"     value="src"/>
+    <property name="build.dir"   value="build"/>
+    <property name="classes.dir" value="${build.dir}/classes"/>
+    <property name="resources.dir" value="${build.dir}/resources"/>
+    <property name="jar.dir"     value="dist"/>
+    <property name="main-class"  value="hiddendoors.HiddenDoors"/>
+
+
+    <!-- "ant clean" command -->
+    <target name="clean">
+        <!-- delete the build director -->
+        <delete dir="${build.dir}"/>
+    </target>
+
+    <!-- "ant compile" command -->
+    <target name="compile">
+        <!-- make sure the build directories exist -->
+        <mkdir dir="${classes.dir}"/>
+        <mkdir dir="${resources.dir}"/>
+        <!-- compile java files from src to build/classes -->
+        <javac srcdir="${src.dir}" destdir="${classes.dir}"/>
+        <!-- copy all non-java files from src to build/resources -->
+        <copy todir="${resources.dir}">
+            <fileset dir="${src.dir}" excludes="**/*.java"/>
+        </copy>
+    </target>
+
+    <!-- "ant jar" command -->
+    <!-- executes "ant compile" first -->
+    <target name="jar" depends="compile">
+        <!-- make sure the dist folder exists -->
+        <mkdir dir="${jar.dir}"/>
+        <jar destfile="${jar.dir}/${ant.project.name}.jar">
+            <!-- Build these file sets into the jar -->
+            <fileset dir="${classes.dir}"/>
+            <fileset dir="${resources.dir}"/>
+            <!-- Sets the main class (where the program starts) in the jar -->
+            <manifest>
+                <attribute name="Main-Class" value="${main-class}"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <!-- "ant run" command -->
+    <!-- executes "ant jar" first -->
+    <target name="run" depends="jar">
+        <!-- run the jar file -->
+        <java jar="${jar.dir}/${ant.project.name}.jar" fork="true"/>
+    </target>
+
+    <!-- "ant clean-build" command, same as "ant clean jar" -->
+    <target name="clean-build" depends="clean,jar"/>
+    <!-- "ant" command, same as "ant clean run" -->
+    <target name="main" depends="clean,run"/>
+
+</project>
