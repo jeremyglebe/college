@@ -16,8 +16,6 @@ Group members...
 +--------------------------------------+
 |             Jeremy Glebe             |
 +--------------------------------------+
-| Initial GROUP-INFO file creator      |
-+--------------------------------------+
 | Skills:                              |
 |   * Web development (incl modern js) |
 |   * Mobile porting/web views         |
@@ -25,4 +23,6 @@ Group members...
 |   * NodeJS/build tools               |
 |   * Database systems                 |
 |   * Object oriented design           |
++--------------------------------------+
+| Created GROUP-INFO file              |
 +--------------------------------------+
