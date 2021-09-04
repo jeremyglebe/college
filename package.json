@@ -2,9 +2,12 @@
   "name": "5430-web-game-project",
   "version": "0.0.1",
   "description": "Web game project for CSCE 5430",
-  "main": "index.js",
+  "main": "src/start.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npm run serve",
+    "serve": "webpack && webpack serve --mode development --open",
+    "serve:lan": "webpack && webpack serve --mode development --host 0.0.0.0",
+    "build": "webpack --mode production"
   },
   "repository": {
     "type": "git",
@@ -27,6 +30,7 @@
     "@babel/core": "^7.15.5",
     "@babel/preset-env": "^7.15.4",
     "babel-loader": "^8.2.2",
+    "clean-webpack-plugin": "^4.0.0",
     "copy-webpack-plugin": "^9.0.1",
     "source-map-loader": "^3.0.0",
     "webpack": "^5.52.0",
