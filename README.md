@@ -3,7 +3,25 @@ Wizard Monkeys' project for 5430 Software Engineering at University of North Tex
 mobile-friendly web game coded using modern (ES6) JavaScript.
 
 ## File Structure
-
+📦5430-Software-Engineering
+ ┣ 📂assets
+ ┃ ┗ 📜README.md
+ ┣ 📂meetings
+ ┃ ┗ 📜README.MD
+ ┣ 📂plans
+ ┃ ┗ 📜README.MD
+ ┣ 📂reports
+ ┃ ┗ 📜README.MD
+ ┣ 📂src
+ ┃ ┣ 📜README.md
+ ┃ ┣ 📜index.html
+ ┃ ┗ 📜start.js
+ ┣ 📜.gitignore
+ ┣ 📜GROUP-INFO
+ ┣ 📜README.md
+ ┣ 📜package-lock.json
+ ┣ 📜package.json
+ ┗ 📜webpack.config.js
 
 ## Information for Contributors
 ### Commands
