@@ -4,25 +4,23 @@ mobile-friendly web game coded using modern (ES6) JavaScript.
 
 ## File Structure
 ```
-📦5430-Software-Engineering
+ 📦5430-Software-Engineering
  ┣ 📂assets
- ┃ ┗ 📜README.md
+ ┃ ┣ 📂html
+ ┃ ┣ 📂images
+ ┃ ┃ ┗ 📂tiles
+ ┃ ┣ 📂sounds
  ┣ 📂meetings
- ┃ ┗ 📜README.MD
  ┣ 📂plans
- ┃ ┗ 📜README.MD
  ┣ 📂reports
- ┃ ┗ 📜README.MD
  ┣ 📂src
- ┃ ┣ 📜README.md
+ ┃ ┣ 📂scenes
  ┃ ┣ 📜index.html
  ┃ ┗ 📜start.js
- ┣ 📜.gitignore
+ ┣ 📂www
  ┣ 📜GROUP-INFO
- ┣ 📜README.md
- ┣ 📜package-lock.json
- ┣ 📜package.json
- ┗ 📜webpack.config.js
+ ┣ 📜Note-deliverable-1.md
+ ┗ 📜README.md
  ```
 
 ## Information for Contributors
