@@ -1,0 +1,13 @@
+Met with code geeks discussed on their project (sports management system)
+It is a web application with admin and user pages
+As part of the frontend; login and registration pages are created
+There will be a discussion portal and calendar to show ongoing and upcoming events
+HTML, CSS, and javascript are being used for the development
+backed will be java spring-boot and MySQL
+planning to deploy it on cloud
+Improvements suggested by wizard monkeys:
+         To add a portal that helps users to look for personal trainers and coaches 
+         To use microservices which makes it easy to scale the application 
+Improvements suggested by code geeks:
+          To use buttons and give full controls to users so that user can experience the game at its best 
+          
