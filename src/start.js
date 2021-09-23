@@ -1,19 +1,24 @@
 import * as Phaser from 'phaser';
 import { BoardScene } from './scenes/Board';
+import { LevelEditorScene } from './scenes/LevelEditor';
+import { ScreenScale } from './utils/ScreenScale';
+
+let res_scaler = ScreenScale(1080);
 
 /**
  * @type {Phaser.Types.Core.GameConfig}
  */
 const config = {
-    width: 800,
-    height: 600,
+    width: res_scaler.scaled.width,
+    height: res_scaler.scaled.height,
     scale: {
         mode: Phaser.Scale.ScaleModes.FIT
     },
     scene: [
+        LevelEditorScene,
         BoardScene
     ],
-    backgroundColor: 0xFFFFFF 
+    backgroundColor: 0xFFFFFF
 };
 
 let game = new Phaser.Game(config);
