@@ -1,39 +1,58 @@
+import { Hex, HexMap } from "../objects/HexMap";
+
 export class BoardScene extends Phaser.Scene {
     constructor() {
         super("Board");
-        this.hexes = [
-            [0, 1, 2, 3],
-            [4, 5, 6, 7],
-            [8, 9, 10, 11],
-            [12, 13, 14, 15]
-        ];
     }
     preload() {
-        this.load.spritesheet('tile', './assets/images/tiles/tiles.png', {
+        this.load.spritesheet('hex', './assets/images/tiles/tiles.png', {
             frameWidth: 330,
             frameHeight: 330
         });
     }
     create() {
-        this.placeTiles();
+        const hexes = [
+            [0, 1, 2, 3],
+            [4, 5, 6, 7],
+            [8, 9, 10, 11],
+            [12, 13, 14, 15]
+        ];
+        let map = new HexMap(this, hexes, {
+            height: 4,
+            width: 4,
+            hex_height: 220,
+            hex_width: 260,
+            odd_x_offset: 130
+        });
         this.cameras.main.setZoom(0.5);
-    }
-    placeTiles() {
-        const hex_width = 260;
-        const hex_height = 220;
-        const odd_x_offset = 130; // expected: hex_width / 2
-        for (let r = 0; r < this.hexes.length; r++) {
-            for (let c = 0; c < this.hexes[r].length; c++) {
-                // Odd row
-                if (r % 2) {
-                    this.add.sprite(hex_width * c + odd_x_offset, hex_height * r, 'tile', this.hexes[r][c])
-                        // .setOrigin(0);
-                }
-                // Even row
-                else {
-                    this.add.sprite(hex_width * c, hex_height * r, 'tile', this.hexes[r][c])
-                        // .setOrigin(0);
-                }
+
+        // Testing the map origin position
+        this.add.circle(0, 0, 35, 0x0000FF, 0.2);
+        // Just some test stuff with hexes
+        for (let row of map.hexes) {
+            for (let hex of row) {
+                // Testing showing coordinate numbers
+                hex.debug();
+                // Testing showing neighbors when hovering
+                hex.setInteractive();
+                hex.on('pointerover', () => {
+                    const adjacents = hex.adjacent();
+                    for (let coord of Object.values(adjacents)) {
+                        const adj_hex = map.at(coord.row, coord.column);
+                        if (adj_hex) {
+                            adj_hex.setTintFill(0x00FF00);
+                        }
+                    }
+                });
+                hex.on('pointerout', () => {
+                    const adjacents = hex.adjacent();
+                    for (let coord of Object.values(adjacents)) {
+                        const adj_hex = map.at(coord.row, coord.column);
+                        if (adj_hex) {
+                            adj_hex.clearTint();
+                        }
+                    }
+                });
             }
         }
     }
