@@ -1,4 +1,4 @@
-import { Hex, HexMap } from "../objects/HexMap";
+import { HexMap } from "../objects/HexMap";
 
 export class BoardScene extends Phaser.Scene {
     constructor() {

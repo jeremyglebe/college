@@ -1,6 +1,6 @@
 import * as Phaser from 'phaser';
 import { BoardScene } from './scenes/Board';
-import { LevelEditorScene } from './scenes/LevelEditor';
+import { LevelEditorHUDScene, LevelEditorScene } from './scenes/LevelEditor';
 import { ScreenScale } from './utils/ScreenScale';
 
 let res_scaler = ScreenScale(1080);
@@ -16,6 +16,7 @@ const config = {
     },
     scene: [
         LevelEditorScene,
+        LevelEditorHUDScene,
         BoardScene
     ],
     backgroundColor: 0xFFFFFF
