@@ -1,5 +1,6 @@
 import { HexMap } from "../objects/HexMap";
 import { ScreenScale } from '../utils/ScreenScale';
+import { SignalManager } from '../utils/SignalManager';
 
 const RES_SCALER = ScreenScale(1080);
 const GAME_SCALE = RES_SCALER.scaled;
@@ -8,6 +9,7 @@ const TOOLBOX = ['⬢', '✢'];
 export class LevelEditorScene extends Phaser.Scene {
     constructor() {
         super("LevelEditor");
+        this.signals = SignalManager.get();
         this.editMap = null;
         this.activeTool = TOOLBOX[0];
         this.moveStart = {
@@ -26,6 +28,9 @@ export class LevelEditorScene extends Phaser.Scene {
     create() {
         this.scene.launch('LevelEditorHUD');
         this.createEditMap();
+        this.signals.on('set active tool', (i) => {
+            this.activeTool = TOOLBOX[i];
+        });
         this.input.on('pointerdown', (ptr) => {
             this.moveStart = {
                 x: ptr.x,
@@ -72,6 +77,7 @@ export class LevelEditorScene extends Phaser.Scene {
 export class LevelEditorHUDScene extends Phaser.Scene {
     constructor() {
         super("LevelEditorHUD");
+        this.signals = SignalManager.get();
         this.toolIndex = 0;
         this.activeToolIcon = null;
         this.leftToolIcon = null;
@@ -86,6 +92,7 @@ export class LevelEditorHUDScene extends Phaser.Scene {
             this.toolIndex = this.toolIndex > 0 ? this.toolIndex-- : TOOLBOX.length - 1;
             this.updateToolIcons();
             event.stopPropagation();
+            this.signals.emit('set active tool', this.toolIndex);
         });
         // Listener for clicking the right tool icon
         this.rightToolIcon.on('pointerdown', (...args) => {
@@ -93,6 +100,7 @@ export class LevelEditorHUDScene extends Phaser.Scene {
             this.toolIndex = (this.toolIndex + 1) % TOOLBOX.length;
             this.updateToolIcons();
             event.stopPropagation();
+            this.signals.emit('set active tool', this.toolIndex);
         });
     }
 
