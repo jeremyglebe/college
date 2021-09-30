@@ -1,4 +1,4 @@
-Inital Implementation for Hex army game:
+Initial Implementation for Hex army game:
         - creating the menu using HTML.
         - Create 20*20 hexagonal grid tiles.
         - create a hero character and move the character.
