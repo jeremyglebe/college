@@ -1,144 +1,149 @@
-import { HexMap } from "../objects/HexMap";
-import { ScreenScale } from '../utils/ScreenScale';
 import { SignalManager } from '../utils/SignalManager';
+import { HexMap } from '../objects/HexMap';
+import { CONFIGS } from '../utils/Configs';
+import { ScreenScale } from '../utils/ScreenScale';
+import { webDownload } from '../utils/Downloads';
 
-const RES_SCALER = ScreenScale(1080);
-const GAME_SCALE = RES_SCALER.scaled;
-const TOOLBOX = ['⬢', '✢'];
+const LEVEL_EDITOR_FRAME_MIN = 0;
+const LEVEL_EDITOR_FRAME_MAX = 15;
+const DEFAULT_FRAME = 8;
+const GAME_SCALE = ScreenScale(1080).scaled;
 
 export class LevelEditorScene extends Phaser.Scene {
     constructor() {
         super("LevelEditor");
+        this.keys = { up: null, down: null, left: null, right: null, in: null, out: null };
+        this.index = LEVEL_EDITOR_FRAME_MIN;
         this.signals = SignalManager.get();
-        this.editMap = null;
-        this.activeTool = TOOLBOX[0];
-        this.moveStart = {
-            x: 0,
-            y: 0
-        };
     }
-
     preload() {
         this.load.spritesheet('hex', './assets/images/tiles/tiles.png', {
             frameWidth: 330,
             frameHeight: 330
         });
     }
-
     create() {
+        this.createMap();
+        this.createKeyControls();
+        this.createHexListeners();
         this.scene.launch('LevelEditorHUD');
-        this.createEditMap();
-        this.signals.on('set active tool', (i) => {
-            this.activeTool = TOOLBOX[i];
-        });
-        this.input.on('pointerdown', (ptr) => {
-            this.moveStart = {
-                x: ptr.x,
-                y: ptr.y
+        this.signals.on('leveledit-update-index', (index) => { this.index = index; });
+        this.input.keyboard.on('keydown-L', () => {
+            let result = [];
+            for (let row of this.map.hexes) {
+                let row_arr = [];
+                for (let hex of row) {
+                    row_arr.push(hex.id);
+                }
+                result.push(row_arr);
             }
-        });
-        this.input.on('pointermove', (ptr) => {
-            if (this.activeTool == '✢' && ptr.isDown) {
-                const dx = ptr.x - this.moveStart.x;
-                const dy = ptr.y - this.moveStart.y;
-                let cam = this.cameras.main;
-                cam.setScroll(cam.scrollX - dx, cam.scrollY - dy);
-                this.moveStart = {
-                    x: ptr.x,
-                    y: ptr.y
-                };
-            }
+            console.log(`Logging Map...\n${JSON.stringify(result)}`);
+            webDownload(JSON.stringify(result), 'map.json');
         });
     }
 
-    createEditMap() {
-        const config = {
-            height: 4,
-            width: 4,
-            hex_height: 220,
-            hex_width: 260,
-            odd_x_offset: 130
-        }
-        let hexes = [];
-        for (let r = 0; r < config.height; r++) {
-            hexes.push([]);
-            for (let c = 0; c < config.width; c++) {
-                hexes[r].push(14);
-            }
-        }
-        this.editMap = new HexMap(this, hexes, config);
-        this.editMap.group.getChildren().forEach((obj) => {
-            obj.setTint(0xFF0000, 0x00FF00, 0x000000, 0x0000FF);
-        });
+    update() {
+        this.scroll();
     }
 
+    createHexListeners() {
+        for (let row of this.map.hexes) {
+            for (let hex of row) {
+                hex.setInteractive(this.input.makePixelPerfect());
+                hex.on('pointerdown', () => {
+                    hex.setFrame(this.index);
+                    hex.id = this.index;
+                });
+                hex.on('pointerover', (ptr) => {
+                    if (ptr.isDown) {
+                        hex.setFrame(this.index);
+                        hex.id = this.index;
+                    }
+                });
+            }
+        }
+    }
+
+    createKeyControls() {
+        this.keys.up = this.input.keyboard.addKey('UP');
+        this.keys.down = this.input.keyboard.addKey('DOWN');
+        this.keys.left = this.input.keyboard.addKey('LEFT');
+        this.keys.right = this.input.keyboard.addKey('RIGHT');
+        this.keys.in = this.input.keyboard.addKey('W');
+        this.keys.out = this.input.keyboard.addKey('S');
+    }
+
+    createMap() {
+        const tiles = Array(CONFIGS.mapConfig.height).fill(Array(CONFIGS.mapConfig.width).fill(DEFAULT_FRAME));
+        this.map = new HexMap(this, tiles, CONFIGS.mapConfig);
+    }
+
+    debugMapHexes() {
+        for (let row of this.map.hexes) {
+            for (let hex of row) {
+                hex.debug();
+            }
+        }
+    }
+
+    scroll() {
+        const SCROLL_SPEED = 20;
+        if (this.keys.up.isDown) {
+            this.cameras.main.scrollY -= SCROLL_SPEED;
+        }
+        if (this.keys.down.isDown) {
+            this.cameras.main.scrollY += SCROLL_SPEED;
+        }
+        if (this.keys.left.isDown) {
+            this.cameras.main.scrollX -= SCROLL_SPEED;
+        }
+        if (this.keys.right.isDown) {
+            this.cameras.main.scrollX += SCROLL_SPEED;
+        }
+        if (this.keys.in.isDown) {
+            this.cameras.main.zoom += .01;
+        }
+        if (this.keys.out.isDown) {
+            this.cameras.main.zoom -= .01;
+        }
+    }
 }
 
 export class LevelEditorHUDScene extends Phaser.Scene {
     constructor() {
         super("LevelEditorHUD");
         this.signals = SignalManager.get();
-        this.toolIndex = 0;
-        this.activeToolIcon = null;
-        this.leftToolIcon = null;
-        this.rightToolIcon = null;
+        this.index = LEVEL_EDITOR_FRAME_MIN;
+        this.hex = null;
+        this.signals = SignalManager.get();
     }
 
     create() {
-        this.createTextObjects();
-        // Listener for clicking the left tool icon
-        this.leftToolIcon.on('pointerdown', (...args) => {
-            const event = args[3];
-            this.toolIndex = this.toolIndex > 0 ? this.toolIndex-- : TOOLBOX.length - 1;
-            this.updateToolIcons();
-            event.stopPropagation();
-            this.signals.emit('set active tool', this.toolIndex);
+        this.hex = this.add.sprite(180, 62, 'hex', this.index).setScale(0.4);
+        this.input.keyboard.on('keydown-A', () => {
+            this.index > LEVEL_EDITOR_FRAME_MIN ? this.index-- : this.index = LEVEL_EDITOR_FRAME_MAX;
+            this.hex.setFrame(this.index);
+            this.signals.emit('leveledit-update-index', this.index);
         });
-        // Listener for clicking the right tool icon
-        this.rightToolIcon.on('pointerdown', (...args) => {
-            const event = args[3];
-            this.toolIndex = (this.toolIndex + 1) % TOOLBOX.length;
-            this.updateToolIcons();
-            event.stopPropagation();
-            this.signals.emit('set active tool', this.toolIndex);
+        this.input.keyboard.on('keydown-D', () => {
+            this.index < LEVEL_EDITOR_FRAME_MAX ? this.index++ : this.index = LEVEL_EDITOR_FRAME_MIN;
+            this.hex.setFrame(this.index);
+            this.signals.emit('leveledit-update-index', this.index);
         });
+        this.createTextPrompts();
     }
 
-    createTextObjects() {
-        // Active tool icon
-        this.activeToolIcon = this.add.text(GAME_SCALE.center.x, GAME_SCALE.height - 128,
-            TOOLBOX[0],
-            {
-                fontSize: '128px',
-                stroke: 'black',
-                strokeThickness: 16
-            }
-        ).setOrigin(0.5);
-
-        // Tool to the left in the toolbox
-        this.leftToolIcon = this.add.text(GAME_SCALE.center.x - 128, GAME_SCALE.height - 128,
-            TOOLBOX[TOOLBOX.length - 1],
-            {
-                fontSize: '64px',
-                stroke: 'black',
-                strokeThickness: 8
-            }
-        ).setOrigin(0.5).setInteractive();
-
-        // Tool to the right in the toolbox
-        this.rightToolIcon = this.add.text(GAME_SCALE.center.x + 128, GAME_SCALE.height - 128,
-            TOOLBOX[1],
-            {
-                fontSize: '64px',
-                stroke: 'black',
-                strokeThickness: 8
-            }
-        ).setOrigin(0.5).setInteractive();
+    createTextPrompts() {
+        this.add.text(0, 20, '<<A)          (D>>', {
+            font: '48px Arial',
+            strokeThickness: 12,
+            stroke: 'black'
+        });
+        this.add.text(GAME_SCALE.width - 30, 0, 'Use  arrow  keys  to  pan  camera\nSave  map  w/  L  key\nW/S  to  zoom  camera', {
+            font: '36px Arial',
+            strokeThickness: 8,
+            stroke: 'black'
+        }).setOrigin(1, 0).setLineSpacing(0);
     }
 
-    updateToolIcons() {
-        this.activeToolIcon.setText(TOOLBOX[this.toolIndex]);
-        this.leftToolIcon.setText(this.toolIndex > 0 ? TOOLBOX[this.toolIndex - 1] : TOOLBOX[TOOLBOX.length - 1]);
-        this.rightToolIcon.setText(TOOLBOX[(this.toolIndex + 1) % TOOLBOX.length]);
-    }
 }

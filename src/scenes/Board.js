@@ -1,4 +1,5 @@
 import { HexMap } from "../objects/HexMap";
+import { CONFIGS } from "../utils/Configs";
 
 export class BoardScene extends Phaser.Scene {
     constructor() {
@@ -45,20 +46,14 @@ export class BoardScene extends Phaser.Scene {
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 8, 4, 0, 0, 0, 0, 0, 0]
         ];
         // Configure and create the hex map
-        this.map = new HexMap(this, hexes, {
-            height: 20,
-            width: 20,
-            hex_height: 220,
-            hex_width: 260,
-            odd_x_offset: 130
-        });
+        this.map = new HexMap(this, hexes, CONFIGS.mapConfig);
         // Zoom the camera out a bit because it looks nicer
         this.cameras.main.setZoom(0.5);
     }
 
-    createPanControls(){
+    createPanControls() {
         // Update the position we are panning from
-        const setPanningPoint = (ptr)=>{
+        const setPanningPoint = (ptr) => {
             ptr.panX = ptr.x;
             ptr.panY = ptr.y;
         };

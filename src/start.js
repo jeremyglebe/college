@@ -15,8 +15,8 @@ const config = {
         mode: Phaser.Scale.ScaleModes.FIT
     },
     scene: [
-        BoardScene,
         LevelEditorScene,
+        BoardScene,
         LevelEditorHUDScene
     ],
     backgroundColor: 0xFFFFFF
