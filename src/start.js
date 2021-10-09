@@ -1,6 +1,7 @@
 import * as Phaser from 'phaser';
 import { BoardScene } from './scenes/Board';
 import { LevelEditorHUDScene, LevelEditorScene } from './scenes/LevelEditor';
+import { MainMenuScene } from './scenes/MainMenu';
 import { ScreenScale } from './utils/ScreenScale';
 
 let res_scaler = ScreenScale(1080);
@@ -15,6 +16,7 @@ const config = {
         mode: Phaser.Scale.ScaleModes.FIT
     },
     scene: [
+        MainMenuScene,
         LevelEditorScene,
         BoardScene,
         LevelEditorHUDScene
