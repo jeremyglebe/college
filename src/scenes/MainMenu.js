@@ -1,21 +1,27 @@
+import { ScreenScale } from '../utils/ScreenScale';
+const GAME_SCALE = ScreenScale(1080).scaled;
 export class MainMenuScene extends Phaser.Scene {
     constructor() {
         super("MainMenu");
+        this.menuObj = null;
+        this.menuEle = null;
+    }
+
+    preload() {
+        this.load.html('title-menu', './assets/html/title-menu.html');
     }
 
     create() {
-        this.add.rectangle(15, 15, 300, 100, 0x0000FF)
-            .setInteractive()
-            .on('pointerdown', () => {
-                this.scene.start('Board');
-            });
-        this.add.text(15, 15, "Play").setOrigin(0.5);
-
-        this.add.rectangle(15, 415, 300, 100, 0x00FF00)
-            .setInteractive()
-            .on('pointerdown', () => {
-                this.scene.start('LevelEditor');
-            });
-        this.add.text(15, 415, "Level Editor").setOrigin(0.5);
+        // Create the title menu using an HTML asset
+        this.menuObj = this.add.dom(GAME_SCALE.center.x, GAME_SCALE.center.y).createFromCache('title-menu');
+        /** @type {HTMLDivElement} The menu div inside the HTML menu doc */
+        this.menuEle = this.menuObj.node.querySelector('#menu');
+        // Add functionality to buttons
+        this.menuEle.querySelector('#play-button').onclick = () => {
+            this.scene.start('Board');
+        }
+        this.menuEle.querySelector('#edit-button').onclick = () => {
+            this.scene.start('LevelEditor');
+        }
     }
 }

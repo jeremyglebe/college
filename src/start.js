@@ -25,6 +25,10 @@ const config = {
     render: {
         pixelArt: true,
         roundPixels: true
+    },
+    parent: 'game',
+    dom: {
+        createContainer: true
     }
 };
 
