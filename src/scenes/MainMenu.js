@@ -1,25 +1,41 @@
 import { ScreenScale } from '../utils/ScreenScale';
+
+// ScreenScale provides some useful coordinates, such as the center of the
+// screen, without needing to worry about aspect ratio.
 const GAME_SCALE = ScreenScale(1080).scaled;
+
 export class MainMenuScene extends Phaser.Scene {
     constructor() {
         super("MainMenu");
+        /** @type {Phaser.GameObjects.DOMElement} Phaser object container for the HTML doc */
         this.menuObj = null;
+        /** @type {HTMLDivElement} Actual HTML div element inside the document */
         this.menuEle = null;
     }
 
+    /**
+     * Preload is where a scene loads assets which it will need later
+     */
     preload() {
+        // HTML documents can be loaded to be used as menus/ui in the game
         this.load.html('title-menu', './assets/html/title-menu.html');
     }
 
+    /**
+     * Phaser scenes all have a create() method where objects are first added to the scene.
+     * This is different from the constructor, which prepares all internal logic, member
+     * variables, and methods of the scene.
+     */
     create() {
         // Create the title menu using an HTML asset
         this.menuObj = this.add.dom(GAME_SCALE.center.x, GAME_SCALE.center.y).createFromCache('title-menu');
-        /** @type {HTMLDivElement} The menu div inside the HTML menu doc */
         this.menuEle = this.menuObj.node.querySelector('#menu');
-        // Add functionality to buttons
-        this.menuEle.querySelector('#play-button').onclick = () => {
-            this.scene.start('Board');
-        }
+        // Add functionality to buttons, querySelector gets a specific element
+        this.menuEle.querySelector('#play-button')
+            // Buttons have a property "onclick" which should be assigned to a function
+            .onclick = () => {
+                this.scene.start('Board');
+            }
         this.menuEle.querySelector('#edit-button').onclick = () => {
             this.scene.start('LevelEditor');
         }
