@@ -1,20 +1,28 @@
 import { HexMap } from "../objects/HexMap";
+import { PlayerUnit } from "../objects/PlayerUnit";
 import { CONFIGS } from "../utils/Configs";
 
 export class BoardScene extends Phaser.Scene {
     constructor() {
         super("Board");
         this.map = null;
+        this.unit = null;
     }
     preload() {
         this.load.spritesheet('hex', './assets/images/tiles/tiles.png', {
             frameWidth: 330,
             frameHeight: 330
         });
+        this.load.spritesheet('Townsfolk', './assets/images/minifantasy/creatures/Townsfolk.png', {
+            frameWidth: 32,
+            frameHeight: 32
+        });
     }
     create() {
         // Create the actual map on the screen
         this.createMap();
+        // Create a player unit to test
+        this.unit = new PlayerUnit(this, 5, 3, 'Townsfolk');
         // Create controls to pan the camera across the map
         this.createPanControls();
         // Make sure hexagons are interactive and add highlighting listeners
@@ -95,7 +103,7 @@ export class BoardScene extends Phaser.Scene {
                     // Set the current hexagon to be highlighted
                     hex.setTintFill(0x00FF00);
                     // Set depth, tiles slightly overlap and it may look weird without
-                    hex.setDepth(1);
+                    hex.setDepth(0.1);
                 });
                 hex.on('pointerout', () => {
                     // Reset highlighted hexagons

@@ -21,7 +21,11 @@ const config = {
         BoardScene,
         LevelEditorHUDScene
     ],
-    backgroundColor: 0xFFFFFF
+    backgroundColor: 0xFFFFFF,
+    render: {
+        pixelArt: true,
+        roundPixels: true
+    }
 };
 
 let game = new Phaser.Game(config);
