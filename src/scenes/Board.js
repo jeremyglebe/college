@@ -1,3 +1,4 @@
+import { EnemyUnit } from "../objects/EnemyUnit";
 import { HexMap } from "../objects/HexMap";
 import { PlayerUnit } from "../objects/PlayerUnit";
 import { UNITS } from "../objects/Units";
@@ -7,7 +8,8 @@ export class BoardScene extends Phaser.Scene {
     constructor() {
         super("Board");
         this.map = null;
-        this.unit = null;
+        this.Playunit = null;
+        this.Enemyunit = null;
     }
     preload() {
         this.load.spritesheet('hex', './assets/images/tiles/tiles.png', {
@@ -22,12 +24,17 @@ export class BoardScene extends Phaser.Scene {
             frameWidth: 32,
             frameHeight: 32
         });
+        this.load.spritesheet('Wolf','./assets/images/minifantasy/creatures/Wolf.png',{
+            frameWidth: 32,
+            frameHeight: 32
+        });
     }
     create() {
         // Create the actual map on the screen
         this.createMap();
         // Create a player unit to test
         this.unit = new PlayerUnit(this, 5, 3, UNITS.Amazon);
+        this.Enemyunit = new EnemyUnit(this,10,9,'Wolf');
         // Create controls to pan the camera across the map
         this.createPanControls();
         // Make sure hexagons are interactive and add highlighting listeners
