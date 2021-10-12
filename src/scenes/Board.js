@@ -1,6 +1,7 @@
 import { EnemyUnit } from "../objects/EnemyUnit";
 import { HexMap } from "../objects/HexMap";
 import { PlayerUnit } from "../objects/PlayerUnit";
+import { UNITS } from "../objects/Units";
 import { CONFIGS } from "../utils/Configs";
 
 export class BoardScene extends Phaser.Scene {
@@ -14,6 +15,10 @@ export class BoardScene extends Phaser.Scene {
         this.load.spritesheet('hex', './assets/images/tiles/tiles.png', {
             frameWidth: 330,
             frameHeight: 330
+        });
+        this.load.spritesheet('Amazon', './assets/images/minifantasy/creatures/Amazon.png', {
+            frameWidth: 32,
+            frameHeight: 32
         });
         this.load.spritesheet('Townsfolk', './assets/images/minifantasy/creatures/Townsfolk.png', {
             frameWidth: 32,
@@ -34,8 +39,7 @@ export class BoardScene extends Phaser.Scene {
         // Create the actual map on the screen
         this.createMap();
         // Create a player unit to test
-        this.Playerunit = new PlayerUnit(this, 5, 3, 'Townsfolk');
-        // Create a player unit to test
+        this.unit = new PlayerUnit(this, 5, 3, UNITS.Amazon);
         this.Enemyunit = new EnemyUnit(this,10,9,'Wolf');
         // Create animation of the enemy
         /*this.add.sprite(8,8,'why')
