@@ -34,6 +34,7 @@ export class BoardScene extends Phaser.Scene {
             frameHeight: 32
         });
         this.load.audio('background','./assets/sounds/background3.mp3');
+        
     }
     create() {
         // Create the actual map on the screen
@@ -62,7 +63,7 @@ export class BoardScene extends Phaser.Scene {
         this.background = this.sound.add('background');
         var musicConfig = {
             mute: false,
-            volume: 0.5,
+            volume: 0.2,
             rate: 1,
             detune: 0,
             seek: 0,
@@ -71,6 +72,8 @@ export class BoardScene extends Phaser.Scene {
         }
 
         this.background.play(musicConfig);
+
+    
 
         // Create controls to pan the camera across the map
         this.createPanControls();
