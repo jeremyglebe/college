@@ -19,6 +19,7 @@ export class MainMenuScene extends Phaser.Scene {
     preload() {
         // HTML documents can be loaded to be used as menus/ui in the game
         this.load.html('title-menu', './assets/html/title-menu.html');
+        this.load.audio("click",'./assets/sounds/mouse-click-single.mp3');
     }
 
     /**
@@ -30,14 +31,18 @@ export class MainMenuScene extends Phaser.Scene {
         // Create the title menu using an HTML asset
         this.menuObj = this.add.dom(GAME_SCALE.center.x, GAME_SCALE.center.y).createFromCache('title-menu');
         this.menuEle = this.menuObj.node.querySelector('#menu');
+        //Add click sound
+        this.clickSound = this.sound.add('click');
         // Add functionality to buttons, querySelector gets a specific element
         this.menuEle.querySelector('#play-button')
             // Buttons have a property "onclick" which should be assigned to a function
             .onclick = () => {
                 this.scene.start('Board');
+                this.clickSound.play();
             }
         this.menuEle.querySelector('#edit-button').onclick = () => {
             this.scene.start('LevelEditor');
+            this.clickSound.play();
         }
     }
 }
