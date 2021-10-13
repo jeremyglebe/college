@@ -1,5 +1,5 @@
 export const UNIT_DEPTH = 1;
-export const UNIT_SCALE = 15;
+export const UNIT_SCALE = 24;
 
 /**
  * @typedef IAnimationDirectFrames

@@ -21,6 +21,8 @@ export class PlayerUnit extends Phaser.GameObjects.Sprite {
         this.setDepth(UNIT_DEPTH);
         // Scale the characters b/c they are VERY small
         this.setScale(UNIT_SCALE);
+        // Set the unit origin point for movement
+        this.setOrigin(0.5, 0.55);
         // Add this character to the scene once they are constructed
         this.scene.add.existing(this);
     }
