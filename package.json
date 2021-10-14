@@ -7,6 +7,7 @@
     "test": "npm run serve",
     "serve": "webpack && webpack serve --mode development --open",
     "serve:lan": "webpack && webpack serve --mode development --host 0.0.0.0",
+    "serve:repl": "webpack && webpack serve --allowed-hosts all --mode development",
     "build": "webpack --mode production"
   },
   "repository": {
