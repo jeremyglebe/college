@@ -41,10 +41,10 @@ export class BoardScene extends Phaser.Scene {
         this.createMap();
         // Create a player unit to test
         this.playerUnit = new Unit(this, 5, 3, UNITS.Amazon);
-        this.playerUnit.moveQueue.push({row:5, column:4});
-        this.playerUnit.moveQueue.push({row:6, column:5});
-        this.playerUnit.moveQueue.push({row:6, column:6});
-        this.playerUnit.move();
+        // this.playerUnit.moveQueue.push({row:5, column:4});
+        // this.playerUnit.moveQueue.push({row:6, column:5});
+        // this.playerUnit.moveQueue.push({row:6, column:6});
+        // this.playerUnit.move();
         this.enemyUnit = new EnemyUnit(this,10,9,'Wolf');
 
        
@@ -150,6 +150,10 @@ export class BoardScene extends Phaser.Scene {
                     // Reset highlighted hexagons
                     hex.clearTint();
                     hex.setDepth(0);
+                });
+                hex.on('pointerdown', ()=>{
+                    this.playerUnit.path(hex.row, hex.column);
+                    this.playerUnit.move();
                 });
             }
         }

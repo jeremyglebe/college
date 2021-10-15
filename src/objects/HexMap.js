@@ -47,6 +47,12 @@ export class HexMap {
 
     }
 
+    /**
+     * 
+     * @param {number} row 
+     * @param {number} column 
+     * @returns {Hex}
+     */
     at(row, column) {
         // Validate the coordinates
         if (row >= 0

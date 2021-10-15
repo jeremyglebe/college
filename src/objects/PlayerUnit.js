@@ -3,7 +3,6 @@ import { UNIT_DEPTH, UNIT_SCALE } from "./Units";
 
 export class PlayerUnit extends Phaser.GameObjects.Sprite {
     /**
-     * 
      * @param {BoardScene} scene Scene to attach this character to, must be a BoardScene
      * @param {number} row
      * @param {number} column

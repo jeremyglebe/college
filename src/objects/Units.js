@@ -1,3 +1,5 @@
+import { HexMap } from "./HexMap";
+
 export const UNIT_DEPTH = 1;
 export const UNIT_SCALE = 24;
 
@@ -71,7 +73,7 @@ export class Unit extends Phaser.GameObjects.Sprite {
         this.moveQueue = [];
         // Flag whether the unit has been selected
         this.selected = false;
-        // Additional, easier reference to map
+        /** @type {HexMap} Additional, easier reference to map */
         this.map = scene.map;
         // Show the sprite over the tiles
         this.setDepth(UNIT_DEPTH);
@@ -85,6 +87,10 @@ export class Unit extends Phaser.GameObjects.Sprite {
 
     move() {
         let toHex = this.map.at(this.moveQueue[0].row, this.moveQueue[0].column);
+        // Update the row/column number of the unit
+        this.row = toHex.row;
+        this.column = toHex.column;
+        // Create movement animation
         this.scene.tweens.add({
             targets: [this],
             x: toHex.x,
@@ -103,5 +109,56 @@ export class Unit extends Phaser.GameObjects.Sprite {
                 }
             }
         });
+    }
+
+    path(row, column) {
+        let hex = this.map.at(this.row, this.column);
+        // First get on either the same row or column as the objective
+        while (hex.row != row && hex.column != column) {
+            let neighbors = hex.neighbors();
+            // If hex is southeast of goal, go northwest
+            if (hex.row > row && hex.column > column) {
+                hex = neighbors.nw;
+                this.moveQueue.push(hex);
+            }
+            // Else if hex is southwest of goal, go northeast
+            else if (hex.row > row && hex.column < column) {
+                hex = neighbors.ne;
+                this.moveQueue.push(hex);
+            }
+            // Else if hex is northeast of goal, go southwest
+            else if (hex.row < row && hex.column > column) {
+                hex = neighbors.sw;
+                this.moveQueue.push(hex);
+            }
+            // Else if hex is northwest of goal, go southeast
+            else if (hex.row < row && hex.column < column) {
+                hex = neighbors.se;
+                this.moveQueue.push(hex);
+            }
+        }
+        // Eventually, either a row or a column will ine up
+        if (hex.row == row) {
+            // If the row lines up, go either left or right
+            while (hex.column < column) {
+                hex = this.map.at(hex.row, hex.column + 1);
+                this.moveQueue.push(hex);
+            }
+            while (hex.column > column) {
+                hex = this.map.at(hex.row, hex.column - 1);
+                this.moveQueue.push(hex);
+            }
+        }
+        if (hex.column == column) {
+            // If the columns lines up, go either up or down
+            while (hex.row < row) {
+                hex = this.map.at(hex.row + 1, hex.column);
+                this.moveQueue.push(hex);
+            }
+            while (hex.row > row) {
+                hex = this.map.at(hex.row - 1, hex.column);
+                this.moveQueue.push(hex);
+            }
+        }
     }
 }
