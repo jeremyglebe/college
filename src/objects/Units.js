@@ -53,8 +53,15 @@ export const UNITS = {
     }
 }
 
-export class Unit extends Phaser.GameObjects.Sprite{
-        constructor(scene, row, column, unit) {
+export class Unit extends Phaser.GameObjects.Sprite {
+    /**
+     * 
+     * @param {BoardScene} scene Scene to attach this character to, must be a BoardScene
+     * @param {number} row
+     * @param {number} column
+     * @param {IUnitConfig} unit Unit configuration object
+     */
+    constructor(scene, row, column, unit) {
         // Place player at the same coordinates as the hexagon they start on
         super(scene, scene.map.at(row, column).x, scene.map.at(row, column).y, unit.key);
         // Store position in the hex map
@@ -76,38 +83,25 @@ export class Unit extends Phaser.GameObjects.Sprite{
         this.scene.add.existing(this);
     }
 
-    move(){
+    move() {
         let toHex = this.map.at(this.moveQueue[0].row, this.moveQueue[0].column);
         this.scene.tweens.add({
             targets: [this],
             x: toHex.x,
             y: toHex.y,
             duration: 500,
-            onComplete: ()=>{
+            onComplete: () => {
                 // Remove first item from queue
                 this.moveQueue.shift();
                 // Move again if there are more movements in the queue
-                if(this.moveQueue.length > 0){
+                if (this.moveQueue.length > 0) {
                     this.move();
                 }
                 // Otherwise, fire the 'moved' signal
-                else{   
+                else {
                     this.emit('unit-moved');
                 }
             }
-        });
-    }
-
-    _move1(direction) {
-        let neighbors = this.map.at(this.row, this.column).adjacent();
-        let toRow = neighbors[direction].row;
-        let toCol = neighbors[direction].column;
-        let toHex = this.map.at(toRow, toCol);
-        return this.scene.tweens.add({
-            targets: [this],
-            x: toHex.x,
-            y: toHex.y,
-            duration: 500,
         });
     }
 }

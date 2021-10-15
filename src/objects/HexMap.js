@@ -146,6 +146,11 @@ export class Hex extends Phaser.GameObjects.Sprite {
         const adj = this.adjacent();
         return {
             nw: this.map.at(adj.nw.row, adj.nw.column),
+            w: this.map.at(adj.w.row, adj.w.column),
+            sw: this.map.at(adj.sw.row, adj.sw.column),
+            ne: this.map.at(adj.ne.row, adj.ne.column),
+            e: this.map.at(adj.e.row, adj.e.column),
+            se: this.map.at(adj.se.row, adj.se.column)
         }
     }
 
