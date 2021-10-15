@@ -52,3 +52,62 @@ export const UNITS = {
         }
     }
 }
+
+export class Unit extends Phaser.GameObjects.Sprite{
+        constructor(scene, row, column, unit) {
+        // Place player at the same coordinates as the hexagon they start on
+        super(scene, scene.map.at(row, column).x, scene.map.at(row, column).y, unit.key);
+        // Store position in the hex map
+        this.row = row;
+        this.column = column;
+        // Queue of grid locations to move to
+        this.moveQueue = [];
+        // Flag whether the unit has been selected
+        this.selected = false;
+        // Additional, easier reference to map
+        this.map = scene.map;
+        // Show the sprite over the tiles
+        this.setDepth(UNIT_DEPTH);
+        // Scale the characters b/c they are VERY small
+        this.setScale(UNIT_SCALE);
+        // Set the unit origin point for movement
+        this.setOrigin(0.5, 0.55);
+        // Add this character to the scene once they are constructed
+        this.scene.add.existing(this);
+    }
+
+    move(){
+        let toHex = this.map.at(this.moveQueue[0].row, this.moveQueue[0].column);
+        this.scene.tweens.add({
+            targets: [this],
+            x: toHex.x,
+            y: toHex.y,
+            duration: 500,
+            onComplete: ()=>{
+                // Remove first item from queue
+                this.moveQueue.shift();
+                // Move again if there are more movements in the queue
+                if(this.moveQueue.length > 0){
+                    this.move();
+                }
+                // Otherwise, fire the 'moved' signal
+                else{   
+                    this.emit('unit-moved');
+                }
+            }
+        });
+    }
+
+    _move1(direction) {
+        let neighbors = this.map.at(this.row, this.column).adjacent();
+        let toRow = neighbors[direction].row;
+        let toCol = neighbors[direction].column;
+        let toHex = this.map.at(toRow, toCol);
+        return this.scene.tweens.add({
+            targets: [this],
+            x: toHex.x,
+            y: toHex.y,
+            duration: 500,
+        });
+    }
+}

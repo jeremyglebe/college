@@ -1,15 +1,15 @@
 import { EnemyUnit } from "../objects/EnemyUnit";
 import { HexMap } from "../objects/HexMap";
 import { PlayerUnit } from "../objects/PlayerUnit";
-import { UNITS } from "../objects/Units";
+import { UNITS, Unit } from "../objects/Units";
 import { CONFIGS } from "../utils/Configs";
 
 export class BoardScene extends Phaser.Scene {
     constructor() {
         super("Board");
         this.map = null;
-        this.Playunit = null;
-        this.Enemyunit = null;
+        this.playerUnit = null;
+        this.enemyUnit = null;
     }
     preload() {
         this.load.spritesheet('hex', './assets/images/tiles/tiles.png', {
@@ -40,24 +40,13 @@ export class BoardScene extends Phaser.Scene {
         // Create the actual map on the screen
         this.createMap();
         // Create a player unit to test
-        this.unit = new PlayerUnit(this, 5, 3, UNITS.Amazon);
-        this.Enemyunit = new EnemyUnit(this,10,9,'Wolf');
-        // Create animation of the enemy
-        /*this.add.sprite(8,8,'why')
-        let why = this.add.sprite(6,3,'why')
-        //let enemy = this.add.sprite(10,9,'wolf');
-        why.anims.create({
-            key:'idle',
-            frames: [
-                { key: 'why', frame: 0 },
-                { key: 'why', frame: 1 },
-                { key: 'why', frame: 2 },
-                { key: 'why', frame: 3 }
-            ],
-            repeat: -1,
-            frameRate: 16
-        });
-        why.anims.play('idle');*/
+        this.playerUnit = new Unit(this, 5, 3, UNITS.Amazon);
+        this.playerUnit.moveQueue.push({row:5, column:4});
+        this.playerUnit.moveQueue.push({row:6, column:5});
+        this.playerUnit.moveQueue.push({row:6, column:6});
+        this.playerUnit.move();
+        this.enemyUnit = new EnemyUnit(this,10,9,'Wolf');
+
        
         //create blackground music
         this.background = this.sound.add('background');

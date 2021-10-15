@@ -142,6 +142,13 @@ export class Hex extends Phaser.GameObjects.Sprite {
         }
     }
 
+    neighbors(){
+        const adj = this.adjacent();
+        return {
+            nw: this.map.at(adj.nw.row, adj.nw.column),
+        }
+    }
+
     debug() {
         // Shows the row/column of the hexagon as text over the hexagon
         if (!this.debugText) {
