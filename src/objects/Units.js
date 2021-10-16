@@ -34,10 +34,10 @@ export const UNITS = {
         key: 'Amazon',
         animations: {
             idle: {
-                nw: [],
-                ne: [],
-                sw: [],
-                se: []
+                nw: { start: 240, end: 255 },
+                ne: [224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239],
+                sw: [208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223],
+                se: [192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207]
             },
             move: {
                 nw: [],
@@ -83,11 +83,27 @@ export class Unit extends Phaser.GameObjects.Sprite {
         this.setScale(UNIT_SCALE);
         // Set the unit origin point for movement
         this.setOrigin(0.5, 0.55);
+        // Create animations for the character
+        this.createAnimations(unit);
         // Add this character to the scene once they are constructed
         this.scene.add.existing(this);
     }
 
-    deselect(){
+    createAnimations(unit) {
+        this.anims.create({
+            key: 'idle-nw',
+            frames: this.anims.generateFrameNumbers(unit.key, {
+                start: unit.animations.idle.nw.start,
+                end: unit.animations.idle.nw.end
+            }),
+            repeat: -1
+        });
+        // Start default animation
+        this.anims.play('idle-nw');
+        console.log(this)
+    }
+
+    deselect() {
         this.clearTint();
         this.selected = false;
     }
@@ -169,7 +185,7 @@ export class Unit extends Phaser.GameObjects.Sprite {
         }
     }
 
-    select(){
+    select() {
         this.setTint(0x00FF00);
         this.selected = true;
     }
