@@ -63,12 +63,14 @@ export class Unit extends Phaser.GameObjects.Sprite {
      * @param {number} column
      * @param {IUnitConfig} unit Unit configuration object
      */
-    constructor(scene, row, column, unit) {
+    constructor(scene, row, column, owner, unit) {
         // Place player at the same coordinates as the hexagon they start on
         super(scene, scene.map.at(row, column).x, scene.map.at(row, column).y, unit.key);
         // Store position in the hex map
         this.row = row;
         this.column = column;
+        // The owner of the unit
+        this.owner = owner;
         // Queue of grid locations to move to
         this.moveQueue = [];
         // Flag whether the unit has been selected
@@ -83,6 +85,11 @@ export class Unit extends Phaser.GameObjects.Sprite {
         this.setOrigin(0.5, 0.55);
         // Add this character to the scene once they are constructed
         this.scene.add.existing(this);
+    }
+
+    deselect(){
+        this.clearTint();
+        this.selected = false;
     }
 
     move() {
@@ -160,5 +167,10 @@ export class Unit extends Phaser.GameObjects.Sprite {
                 this.moveQueue.push(hex);
             }
         }
+    }
+
+    select(){
+        this.setTint(0x00FF00);
+        this.selected = true;
     }
 }

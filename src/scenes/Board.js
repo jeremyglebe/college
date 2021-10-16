@@ -2,15 +2,19 @@ import { EnemyUnit } from "../objects/EnemyUnit";
 import { HexMap } from "../objects/HexMap";
 import { PlayerUnit } from "../objects/PlayerUnit";
 import { UNITS, Unit } from "../objects/Units";
+import { CloudManager } from "../utils/CloudManager";
 import { CONFIGS } from "../utils/Configs";
 
 export class BoardScene extends Phaser.Scene {
     constructor() {
         super("Board");
+        this.cloud = CloudManager.get();
         this.map = null;
-        this.playerUnit = null;
+        this.units = [];
+        this.selectedUnit = null;
         this.enemyUnit = null;
     }
+
     preload() {
         this.load.spritesheet('hex', './assets/images/tiles/tiles.png', {
             frameWidth: 330,
@@ -24,30 +28,30 @@ export class BoardScene extends Phaser.Scene {
             frameWidth: 32,
             frameHeight: 32
         });
-        this.load.spritesheet('Wolf','./assets/images/minifantasy/creatures/Wolf.png',{
+        this.load.spritesheet('Wolf', './assets/images/minifantasy/creatures/Wolf.png', {
             frameWidth: 32,
             frameHeight: 32
         });
 
-        this.load.spritesheet('why','./assets/images/minifantasy/creatures/why.png',{
+        this.load.spritesheet('why', './assets/images/minifantasy/creatures/why.png', {
             frameWidth: 32,
             frameHeight: 32
         });
-        this.load.audio('background','./assets/sounds/background3.mp3');
-        
+        this.load.audio('background', './assets/sounds/background3.mp3');
+
     }
+
     create() {
         // Create the actual map on the screen
         this.createMap();
         // Create a player unit to test
-        this.playerUnit = new Unit(this, 5, 3, UNITS.Amazon);
-        // this.playerUnit.moveQueue.push({row:5, column:4});
-        // this.playerUnit.moveQueue.push({row:6, column:5});
-        // this.playerUnit.moveQueue.push({row:6, column:6});
-        // this.playerUnit.move();
-        this.enemyUnit = new EnemyUnit(this,10,9,'Wolf');
+        this.createPlayerUnit(5, 3, UNITS.Amazon);
+        this.createPlayerUnit(1, 6, UNITS.Amazon);
+        this.createPlayerUnit(3, 2, UNITS.Amazon);
 
-       
+        this.enemyUnit = new EnemyUnit(this, 10, 9, 'Wolf');
+
+
         //create blackground music
         this.background = this.sound.add('background');
         var musicConfig = {
@@ -59,11 +63,8 @@ export class BoardScene extends Phaser.Scene {
             loop: true,
             delay: 0
         }
-
+        // Play background music
         this.background.play(musicConfig);
-
-    
-
         // Create controls to pan the camera across the map
         this.createPanControls();
         // Make sure hexagons are interactive and add highlighting listeners
@@ -134,6 +135,15 @@ export class BoardScene extends Phaser.Scene {
         });
     }
 
+    createPlayerUnit(row, column, unitConfig) {
+        let unit = new Unit(this, row, column, this.cloud.user.id, unitConfig);
+        unit.setInteractive(this.input.makePixelPerfect());
+        unit.on('pointerdown', () => {
+            this.onSelectUnit(unit);
+        });
+        this.units.push(unit);
+    }
+
     prepareHexagons() {
         for (let row of this.map.hexes) {
             for (let hex of row) {
@@ -142,7 +152,7 @@ export class BoardScene extends Phaser.Scene {
                 // Listeners for hexagon highlighting
                 hex.on('pointerover', () => {
                     // Set the current hexagon to be highlighted
-                    hex.setTintFill(0x00FF00);
+                    hex.setTintFill(0x00FF55);
                     // Set depth, tiles slightly overlap and it may look weird without
                     hex.setDepth(0.1);
                 });
@@ -151,15 +161,31 @@ export class BoardScene extends Phaser.Scene {
                     hex.clearTint();
                     hex.setDepth(0);
                 });
-                hex.on('pointerdown', ()=>{
-                    this.playerUnit.path(hex.row, hex.column);
-                    this.playerUnit.move();
+                // Control player unit movements
+                hex.on('pointerdown', () => {
+                    if (this.selectedUnit) {
+                        // Determine the path to the clicked location
+                        this.selectedUnit.path(hex.row, hex.column);
+                        // Move to the location
+                        this.selectedUnit.move();
+                        // Deselect the unit
+                        this.selectedUnit.deselect();
+                        this.selectedUnit = null;
+                    }
                 });
             }
         }
     }
-    update() {
 
+    onSelectUnit(unit) {
+        // Deselect any previous selected units
+        for (let u of this.units) {
+            if (u.selected) u.deselect();
+        }
+        // Toggle the selection status of this unit
+        unit.selected ? unit.deselect() : unit.select();
+        // Set the Board's selected unit
+        this.selectedUnit = unit.selected ? unit : null;
     }
 
 }

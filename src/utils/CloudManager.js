@@ -19,6 +19,10 @@ export class CloudManager extends Phaser.Events.EventEmitter {
     /** DO NOT CONSTRUCT THIS OBJECT DIRECTLY, USE CloudManager.get() */
     constructor() {
         super();
+        // User object of the currently logged in user
+        this.user = {
+            id: 'player'
+        };
     }
     /**
      * @returns the single instance of the CloudManager, shared globally
@@ -26,27 +30,27 @@ export class CloudManager extends Phaser.Events.EventEmitter {
     static get() {
         //if an instance has not been made yet, create one
         if (instance == null) {
-            instance = new SignalManager;
+            instance = new CloudManager;
         }
         //as long as we have an instance, return it
         return instance;
     }
 
-    async createGameState(game_state){
+    // async createGameState(game_state){
         
-    }
+    // }
 
-    async onGameStateUpdate(game_state){
+    // async onGameStateUpdate(game_state){
 
-    }
+    // }
 
-    async readGameState(){
+    // async readGameState(){
 
-    }
+    // }
 
-    async updateGameState(game_state){
+    // async updateGameState(game_state){
         
-    }
+    // }
 
 
 }
