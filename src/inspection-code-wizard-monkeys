@@ -1,0 +1,42 @@
+##start.js 
+import * as Phaser from 'phaser';
+#importing phaser module for making HTML5 games for desktop and mobile 
+import { BoardScene } from './scenes/Board';
+#from local path Boards for hexagonal  grid
+import { LevelEditorHUDScene, LevelEditorScene } from './scenes/LevelEditor';
+#To add click sound and levelEditor background sound
+import { MainMenuScene } from './scenes/MainMenu';
+import { ScreenScale } from './utils/ScreenScale';
+#to add placeholder tiles and dragging to move
+let res_scaler = ScreenScale(1080);
+/**
+ * @type {Phaser.Types.Core.GameConfig}
+ */
+#creating a config object to add it to phaser instance 
+const config = {
+    width: res_scaler.scaled.width,
+    height: res_scaler.scaled.height,
+    scale: {
+        mode: Phaser.Scale.ScaleModes.FIT
+    },
+    scene: [
+        MainMenuScene,
+        LevelEditorScene,
+        BoardScene,
+        LevelEditorHUDScene
+    ],
+    backgroundColor: 0xFFFFFF,
+    render: {
+        pixelArt: true,
+        roundPixels: true
+    },
+    parent: 'game',
+    dom: {
+        createContainer: true
+    }
+};
+
+let game = new Phaser.Game(config);
+
+
+###
