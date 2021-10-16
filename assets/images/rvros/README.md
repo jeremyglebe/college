@@ -14,3 +14,8 @@ You cannot do:
 
 - Resell/redistribute this asset.
 ```
+
+Slime.png
+Credit: Itch.Io user **rvros**
+https://rvros.itch.io/pixel-art-animated-slime
+License: Creative Commons Zero v1.0 Universal

@@ -29,6 +29,14 @@ export const UNITS = {
             move: [58, 63],
             attack: [2, 13],
         }
+    },
+    Slime: {
+        key: 'Slime',
+        animations: {
+            idle: [4, 7],
+            move: [0, 3],
+            attack: [12, 15]
+        }
     }
 }
 
@@ -66,6 +74,15 @@ export class Unit extends Phaser.GameObjects.Sprite {
         this.scene.add.existing(this);
     }
 
+    attack(target) {
+        this.deselect();
+        this.anims.play('attack');
+        this.on('animationcomplete-attack', () => {
+            this.anims.play('idle');
+            this.off('animationcomplete-attack');
+        });
+    }
+
     /**
      * Creates and attaches animations to the Phaser Sprite based on the unit
      * config it is using.
@@ -91,6 +108,15 @@ export class Unit extends Phaser.GameObjects.Sprite {
                 end: unit.animations.move[1]
             }),
             repeat: -1,
+            frameRate: 8
+        });
+        // Create the attack animation
+        this.anims.create({
+            key: 'attack',
+            frames: this.anims.generateFrameNumbers(unit.key, {
+                start: unit.animations.attack[0],
+                end: unit.animations.attack[1]
+            }),
             frameRate: 8
         });
         // Start default animation

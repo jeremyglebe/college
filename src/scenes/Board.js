@@ -1,6 +1,4 @@
-import { EnemyUnit } from "../objects/EnemyUnit";
 import { HexMap } from "../objects/HexMap";
-import { PlayerUnit } from "../objects/PlayerUnit";
 import { UNITS, Unit } from "../objects/Units";
 import { CloudManager } from "../utils/CloudManager";
 import { CONFIGS } from "../utils/Configs";
@@ -20,21 +18,13 @@ export class BoardScene extends Phaser.Scene {
             frameWidth: 330,
             frameHeight: 330
         });
-        this.load.spritesheet('Amazon', './assets/images/minifantasy/creatures/Amazon.png', {
-            frameWidth: 32,
-            frameHeight: 32
-        });
-        this.load.spritesheet('Townsfolk', './assets/images/minifantasy/creatures/Townsfolk.png', {
-            frameWidth: 32,
-            frameHeight: 32
-        });
-        this.load.spritesheet('Wolf', './assets/images/minifantasy/creatures/Wolf.png', {
-            frameWidth: 32,
-            frameHeight: 32
-        });
         this.load.spritesheet('Adventurer', './assets/images/rvros/Adventurer.png', {
             frameWidth: 50,
             frameHeight: 37
+        });
+        this.load.spritesheet('Slime', './assets/images/rvros/Slime.png', {
+            frameWidth: 32,
+            frameHeight: 25
         });
         this.load.audio('background', './assets/sounds/background3.mp3');
 
@@ -47,9 +37,9 @@ export class BoardScene extends Phaser.Scene {
         this.createPlayerUnit(5, 3, UNITS.Adventurer);
         this.createPlayerUnit(1, 6, UNITS.Adventurer);
         this.createPlayerUnit(3, 2, UNITS.Adventurer);
-
-        this.enemyUnit = new EnemyUnit(this, 10, 9, 'Wolf');
-
+        this.createOtherUnit(9, 9, 'bot-1', UNITS.Slime);
+        this.createOtherUnit(2, 11, 'bot-1', UNITS.Slime);
+        this.createOtherUnit(5, 10, 'bot-1', UNITS.Slime);
 
         //create blackground music
         this.background = this.sound.add('background');
@@ -98,6 +88,18 @@ export class BoardScene extends Phaser.Scene {
         this.map = new HexMap(this, hexes, CONFIGS.mapConfig);
         // Zoom the camera out a bit because it looks nicer
         this.cameras.main.setZoom(0.5);
+    }
+
+    createOtherUnit(row, column, owner, unitConfig) {
+        let unit = new Unit(this, row, column, owner, unitConfig);
+        unit.setInteractive(this.input.makePixelPerfect());
+        unit.on('pointerdown', () => {
+            if (this.selectedUnit) {
+                this.selectedUnit.attack(unit);
+                this.selectedUnit = null;
+            }
+        });
+        this.units.push(unit);
     }
 
     createPanControls() {
