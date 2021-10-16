@@ -66,6 +66,12 @@ export class Unit extends Phaser.GameObjects.Sprite {
         this.scene.add.existing(this);
     }
 
+    /**
+     * Creates and attaches animations to the Phaser Sprite based on the unit
+     * config it is using.
+     * @param {IUnitConfig} unit Configuration for the unit. Contains
+     * animation details.
+     */
     createAnimations(unit) {
         // Create the idle animation
         this.anims.create({
@@ -91,11 +97,18 @@ export class Unit extends Phaser.GameObjects.Sprite {
         this.anims.play('idle');
     }
 
+    /**
+     * Removes highlight and sets the unit as not selected. Mostly for
+     * external use.
+     */
     deselect() {
         this.clearTint();
         this.selected = false;
     }
 
+    /**
+     * Moves the unit across all tiles in it's movement queue
+     */
     move() {
         // Start the movement animation on the first call
         if (this.anims.currentAnim.key != 'move')
@@ -129,6 +142,16 @@ export class Unit extends Phaser.GameObjects.Sprite {
         });
     }
 
+    /**
+     * Creates a path (stored in the unit's movement queue) towards a specific
+     * row and column. This is not the shortest path nor is it even necessarily
+     * a possible path. (If there are tiles that should be ignored, this will
+     * not do so) Instead, you should interrupt this path when obstructive
+     * tiles are encountered. Bots will likely need to use more complex
+     * pathing. This is just meant to help users skip some steps when moving.
+     * @param {number} row The row to path towards
+     * @param {number} column The column to path towards
+     */
     path(row, column) {
         let hex = this.map.at(this.row, this.column);
         // First get on either the same row or column as the objective
@@ -180,11 +203,20 @@ export class Unit extends Phaser.GameObjects.Sprite {
         }
     }
 
+    /**
+     * Highlights the unit and sets them as selected. Mostly for external
+     * use.
+     */
     select() {
         this.setTint(0x00FF00);
         this.selected = true;
     }
 
+    /**
+     * Faces the unit towards a neighboring hex. If a hex is passed in that is
+     * not a neighbor, the unit will not adjust direction.
+     * @param {Hex} hex The neighboring hex that the unit should face towards
+     */
     setDirectionByNeighbor(hex) {
         let myTile = this.map.at(this.row, this.column);
         let neighbors = myTile.neighbors()
