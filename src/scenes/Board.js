@@ -32,10 +32,9 @@ export class BoardScene extends Phaser.Scene {
             frameWidth: 32,
             frameHeight: 32
         });
-
-        this.load.spritesheet('why', './assets/images/minifantasy/creatures/why.png', {
-            frameWidth: 32,
-            frameHeight: 32
+        this.load.spritesheet('Adventurer', './assets/images/rvros/Adventurer.png', {
+            frameWidth: 50,
+            frameHeight: 37
         });
         this.load.audio('background', './assets/sounds/background3.mp3');
 
@@ -45,9 +44,9 @@ export class BoardScene extends Phaser.Scene {
         // Create the actual map on the screen
         this.createMap();
         // Create a player unit to test
-        this.createPlayerUnit(5, 3, UNITS.Amazon);
-        this.createPlayerUnit(1, 6, UNITS.Amazon);
-        this.createPlayerUnit(3, 2, UNITS.Amazon);
+        this.createPlayerUnit(5, 3, UNITS.Adventurer);
+        this.createPlayerUnit(1, 6, UNITS.Adventurer);
+        this.createPlayerUnit(3, 2, UNITS.Adventurer);
 
         this.enemyUnit = new EnemyUnit(this, 10, 9, 'Wolf');
 

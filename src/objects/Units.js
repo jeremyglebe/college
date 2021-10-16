@@ -1,23 +1,15 @@
 import { HexMap } from "./HexMap";
 
 export const UNIT_DEPTH = 1;
-export const UNIT_SCALE = 24;
-
-/**
- * @typedef IAnimationDirectFrames
- * @type {object}
- * @property {number[]} nw - List of frames for the northwest animation
- * @property {number[]} ne - List of frames for the northeast animation
- * @property {number[]} sw - List of frames for the southwest animation
- * @property {number[]} se - List of frames for the southeast animation
- */
+export const UNIT_SCALE = 10;
+export const UNIT_ORIGIN_Y = .9;
 
 /**
  * @typedef IUnitAnimationConfig
  * @type {object}
- * @property {IAnimationDirectFrames} idle - Frame number definition for idle animation
- * @property {IAnimationDirectFrames} move - Frame number definition for movement animation
- * @property {IAnimationDirectFrames} attack - Frame number definition for attack animation
+ * @property {number[]} idle - Frame number definition for idle animation
+ * @property {number[]} move - Frame number definition for movement animation
+ * @property {number[]} attack - Frame number definition for attack animation
  */
 
 /**
@@ -30,27 +22,12 @@ export const UNIT_SCALE = 24;
 
 export const UNITS = {
     /** @type {IUnitConfig} */
-    Amazon: {
-        key: 'Amazon',
+    Adventurer: {
+        key: 'Adventurer',
         animations: {
-            idle: {
-                nw: { start: 240, end: 255 },
-                ne: [224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239],
-                sw: [208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223],
-                se: [192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207]
-            },
-            move: {
-                nw: [],
-                ne: [],
-                sw: [],
-                se: []
-            },
-            attack: {
-                nw: [0, 1, 2, 3],
-                ne: [16, 17, 18, 19],
-                sw: [32, 33, 34, 35],
-                se: [48, 49, 50, 51]
-            },
+            idle: [0, 1],
+            move: [58, 63],
+            attack: [2, 13],
         }
     }
 }
@@ -82,7 +59,7 @@ export class Unit extends Phaser.GameObjects.Sprite {
         // Scale the characters b/c they are VERY small
         this.setScale(UNIT_SCALE);
         // Set the unit origin point for movement
-        this.setOrigin(0.5, 0.55);
+        this.setOrigin(0.5, UNIT_ORIGIN_Y);
         // Create animations for the character
         this.createAnimations(unit);
         // Add this character to the scene once they are constructed
@@ -90,17 +67,28 @@ export class Unit extends Phaser.GameObjects.Sprite {
     }
 
     createAnimations(unit) {
+        // Create the idle animation
         this.anims.create({
-            key: 'idle-nw',
+            key: 'idle',
             frames: this.anims.generateFrameNumbers(unit.key, {
-                start: unit.animations.idle.nw.start,
-                end: unit.animations.idle.nw.end
+                start: unit.animations.idle[0],
+                end: unit.animations.idle[1]
             }),
-            repeat: -1
+            repeat: -1,
+            frameRate: 8
+        });
+        // Create the movement animation
+        this.anims.create({
+            key: 'move',
+            frames: this.anims.generateFrameNumbers(unit.key, {
+                start: unit.animations.move[0],
+                end: unit.animations.move[1]
+            }),
+            repeat: -1,
+            frameRate: 8
         });
         // Start default animation
-        this.anims.play('idle-nw');
-        console.log(this)
+        this.anims.play('idle');
     }
 
     deselect() {
@@ -109,7 +97,13 @@ export class Unit extends Phaser.GameObjects.Sprite {
     }
 
     move() {
+        // Start the movement animation on the first call
+        if (this.anims.currentAnim.key != 'move')
+            this.anims.play('move');
+        // Get the hex tile to move to
         let toHex = this.map.at(this.moveQueue[0].row, this.moveQueue[0].column);
+        // Set the direction of the unit when moving
+        this.setDirectionByNeighbor(toHex);
         // Update the row/column number of the unit
         this.row = toHex.row;
         this.column = toHex.column;
@@ -128,6 +122,7 @@ export class Unit extends Phaser.GameObjects.Sprite {
                 }
                 // Otherwise, fire the 'moved' signal
                 else {
+                    this.anims.play('idle');
                     this.emit('unit-moved');
                 }
             }
@@ -188,5 +183,23 @@ export class Unit extends Phaser.GameObjects.Sprite {
     select() {
         this.setTint(0x00FF00);
         this.selected = true;
+    }
+
+    setDirectionByNeighbor(hex) {
+        let myTile = this.map.at(this.row, this.column);
+        let neighbors = myTile.neighbors()
+        let direction = '';
+        for (let key in neighbors) {
+            if (hex == neighbors[key]) {
+                direction = key;
+            }
+        }
+        // Determine the character's direction based on hex moving to
+        if (direction.includes('e')) {
+            this.setFlipX(false);
+        }
+        else if (direction.includes('w')) {
+            this.setFlipX(true);
+        }
     }
 }
