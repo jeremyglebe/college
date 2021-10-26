@@ -2,6 +2,9 @@ import { HexMap } from "../objects/HexMap";
 import { UNITS, Unit } from "../objects/Units";
 import { CloudManager } from "../utils/CloudManager";
 import { CONFIGS } from "../utils/Configs";
+import { ScreenScale } from '../utils/ScreenScale';
+
+const GAME_SCALE = ScreenScale(1080).scaled;
 
 export class BoardScene extends Phaser.Scene {
     constructor() {
@@ -27,6 +30,7 @@ export class BoardScene extends Phaser.Scene {
             frameHeight: 25
         });
         this.load.audio('background', './assets/sounds/background3.mp3');
+        this.load.bitmapFont("pixelFont","assets/font/font.png","assets/font/font.xml")
 
     }
 
@@ -54,10 +58,35 @@ export class BoardScene extends Phaser.Scene {
         }
         // Play background music
         this.background.play(musicConfig);
+
+        this.createscore();
+
+
+
         // Create controls to pan the camera across the map
         this.createPanControls();
         // Make sure hexagons are interactive and add highlighting listeners
         this.prepareHexagons();
+    }
+
+ 
+
+    createscore(){
+
+        this.score = 10;
+
+        this.scoreLabel = this.add.bitmapText(0,0,"pixelFont","SCORE:",150).setDepth(1).setScale(1.5);
+        
+        this.scoreLabel.text = "SCORE:  " + this.zeroPad(this.score,5);
+    }
+
+    zeroPad(number,size){
+        var stringNumber = String(number);
+        console.log(stringNumber);
+        while(stringNumber.length <(size||2)){
+            stringNumber = "0" + stringNumber;
+        }
+        return stringNumber;
     }
 
     createMap() {
@@ -67,7 +96,11 @@ export class BoardScene extends Phaser.Scene {
         this.map = new HexMap(this, hexes, CONFIGS.mapConfig);
         // Zoom the camera out a bit because it looks nicer
         this.cameras.main.setZoom(0.5);
+
+        
     }
+
+
 
     createOtherUnit(row, column, owner, unitConfig) {
         let unit = new Unit(this, row, column, owner, unitConfig);
@@ -168,4 +201,30 @@ export class BoardScene extends Phaser.Scene {
         this.selectedUnit = unit.selected ? unit : null;
     }
 
+}
+
+export class BoardScene1 extends Phaser.Scene {
+    constructor() {
+        super("BoardScene1");
+
+    }
+
+    create() {
+        this.createTextPrompts();
+        this.scoreLabel = this.add.bitmapText(0,20,"pixelFont","SCORE",16);
+
+    }
+
+    createTextPrompts() {
+        this.add.text(0, 20, '<<A)     dkahdhkashdkjahdjkahkjdhajkdhakjhjkdhjkahdjkhjdasdas     (D>>', {
+            font: '48px Arial',
+            strokeThickness: 12,
+            stroke: 'black'
+        });
+        this.add.text(GAME_SCALE.width - 30, 0, 'Use  arrow  keys  to  pan  camera\nSave  map  w/  L  key\nW/S  to  zoom  camera', {
+            font: '36px Arial',
+            strokeThickness: 8,
+            stroke: 'black'
+        }).setOrigin(1, 0).setLineSpacing(0);
+    }
 }
