@@ -44,5 +44,9 @@ export class MainMenuScene extends Phaser.Scene {
             this.scene.start('LevelEditor');
             this.clickSound.play();
         }
+        this.menuEle.querySelector('#setup-button').onclick = () => {
+            this.scene.start('levelchoose.html');
+            this.clickSound.play();
+        }
     }
 }
