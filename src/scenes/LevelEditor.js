@@ -21,7 +21,7 @@ export class LevelEditorScene extends Phaser.Scene {
             frameWidth: 330,
             frameHeight: 330
         });
-        this.load.audio('background','./assets/sounds/background4.mp3')
+        this.load.audio('level_editor_background','./assets/sounds/level_editor_background.mp3')
     }
     create() {
         this.createMap();
@@ -41,8 +41,8 @@ export class LevelEditorScene extends Phaser.Scene {
             console.log(`Logging Map...\n${JSON.stringify(result)}`);
             webDownload(JSON.stringify(result), 'map.json');
         });
-        this.background = this.sound.add('background');
-        var musicConfig = {
+        this.background = this.sound.add('level_editor_background');
+        let musicConfig = {
             mute: false,
             volume: 0.2,
             rate: 1,

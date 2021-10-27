@@ -29,7 +29,7 @@ export class BoardScene extends Phaser.Scene {
             frameWidth: 32,
             frameHeight: 25
         });
-        this.load.audio('background', './assets/sounds/background3.mp3');
+        this.load.audio('level1_background', './assets/sounds/level1_background.mp3');
         this.load.bitmapFont("pixelFont","assets/font/font.png","assets/font/font.xml")
 
     }
@@ -49,7 +49,7 @@ export class BoardScene extends Phaser.Scene {
         this.createOtherUnit(5, 10, 'bot-1', UNITS.Slime);
 
         //create blackground music
-        this.background = this.sound.add('background');
+        this.background = this.sound.add('level1_background');
         var musicConfig = {
             mute: false,
             volume: 0.2,
