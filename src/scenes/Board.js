@@ -75,7 +75,7 @@ export class BoardScene extends Phaser.Scene {
         let healthbarborder = this.add.rectangle(530, 10, 850, 150, 0xFF5757).setDepth(1).setScale(1.2);
         let healthbar = this.add.rectangle(530, 10, 830, 135, 0x6666ff).setDepth(1).setScale(1.2);
     }
-    
+
     createscore(){
         this.score = 10;
         this.scoreLabel = this.add.bitmapText(10,130,"pixelFont","SCORE:",150).setDepth(1).setScale(1.5);

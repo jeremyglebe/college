@@ -3,6 +3,7 @@ import { BoardScene } from './scenes/Board';
 import { LevelEditorHUDScene, LevelEditorScene } from './scenes/LevelEditor';
 import { MainMenuScene } from './scenes/MainMenu';
 import { ScreenScale } from './utils/ScreenScale';
+import { LevelChooseScene} from './scenes/LevelChoose';
 
 let res_scaler = ScreenScale(1080);
 
@@ -19,7 +20,8 @@ const config = {
         MainMenuScene,
         LevelEditorScene,
         BoardScene,
-        LevelEditorHUDScene
+        LevelEditorHUDScene,
+        LevelChooseScene
     ],
     backgroundColor: 0xFFFFFF,
     render: {
