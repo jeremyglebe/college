@@ -35,9 +35,6 @@ export class BoardScene extends Phaser.Scene {
     }
 
     create() {
-
-        // Creat the healthbar on the screen
-        this.createhealthbar();
         // Create the actual map on the screen
         this.createMap();
         // Create a player unit to test
@@ -68,12 +65,6 @@ export class BoardScene extends Phaser.Scene {
         this.createPanControls();
         // Make sure hexagons are interactive and add highlighting listeners
         this.prepareHexagons();
-    }
-
- 
-    createhealthbar(){
-        let healthbarborder = this.add.rectangle(530, 10, 850, 150, 0xFF5757).setDepth(1).setScale(1.2);
-        let healthbar = this.add.rectangle(530, 10, 830, 135, 0x6666ff).setDepth(1).setScale(1.2);
     }
 
     createscore(){

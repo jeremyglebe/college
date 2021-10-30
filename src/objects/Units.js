@@ -3,6 +3,7 @@ import { HexMap } from "./HexMap";
 export const UNIT_DEPTH = 1;
 export const UNIT_SCALE = 10;
 export const UNIT_ORIGIN_Y = .9;
+export const UNIT_HPBAR_OFFSET = 45;
 
 /**
  * @typedef IUnitAnimationConfig
@@ -62,6 +63,10 @@ export class Unit extends Phaser.GameObjects.Sprite {
         this.selected = false;
         /** @type {HexMap} Additional, easier reference to map */
         this.map = scene.map;
+        /** @type {Phaser.GameObjects.Rectangle} The Unit's health bar border */
+        this.healthbarborder = this.scene.add.rectangle(this.x, this.y + UNIT_HPBAR_OFFSET, 145, 30, 0xFF5757).setDepth(1);
+        /** @type {Phaser.GameObjects.Rectangle} The Unit's health bar */
+        this.healthbar = this.scene.add.rectangle(this.x, this.y + UNIT_HPBAR_OFFSET, 140, 25, 0x6666ff).setDepth(1);
         // Show the sprite over the tiles
         this.setDepth(UNIT_DEPTH);
         // Scale the characters b/c they are VERY small
@@ -74,6 +79,19 @@ export class Unit extends Phaser.GameObjects.Sprite {
         this.scene.add.existing(this);
     }
 
+    /**
+     * Runs before every frame update
+     */
+    preUpdate(time, delta) {
+        super.preUpdate(time, delta);
+        this.healthbarborder.setPosition(this.x, this.y + UNIT_HPBAR_OFFSET);
+        this.healthbar.setPosition(this.x, this.y + UNIT_HPBAR_OFFSET);
+    }
+
+    /**
+     * Plays the attack animation and damages a selected target
+     * @param {Unit} target The target who should take damage when attacking
+     */
     attack(target) {
         this.deselect();
         this.anims.play('attack');
