@@ -99,6 +99,21 @@ export class Unit extends Phaser.GameObjects.Sprite {
             this.anims.play('idle');
             this.off('animationcomplete-attack');
         });
+        // Make the unit face towards its target
+        this.setDirectionByHex(target);
+        // Lower the targets health
+        target.healthbar.scaleX -= .5;
+        if(target.healthbar.scaleX <= 0){
+            target.healthbar.scaleX = 0;
+            this.scene.tweens.add({
+                targets: [target],
+                alpha: 0,
+                duration: 300,
+                onComplete: ()=>{
+                    target.destroy();
+                }
+            });
+        }
     }
 
     /**
@@ -148,6 +163,12 @@ export class Unit extends Phaser.GameObjects.Sprite {
     deselect() {
         this.clearTint();
         this.selected = false;
+    }
+
+    destroy(){
+        this.healthbar.destroy();
+        this.healthbarborder.destroy();
+        super.destroy();
     }
 
     /**

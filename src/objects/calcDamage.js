@@ -5,7 +5,7 @@
 //if the damage is negative,it means enemy wins,the player will lose its health.
 
 
-function calcDamage(player_attack,player_attackpro,enemy_attack,enemy_attackpro){
+export function calcDamage(player_attack,player_attackpro,enemy_attack,enemy_attackpro){
     let damage = 0;
     for(let i=0;i<player_attack;i++){
         let randNum1 = attackPro(player_attackpro);
@@ -20,7 +20,7 @@ function calcDamage(player_attack,player_attackpro,enemy_attack,enemy_attackpro)
     return damage;
 } 
 
-function attackPro(attackpro){
+export function attackPro(attackpro){
     let list1=[];
     for(let i = 0;i<attackpro*10;i++){
         list1.push('1')
