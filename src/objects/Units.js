@@ -160,7 +160,7 @@ export class Unit extends Phaser.GameObjects.Sprite {
         // Get the hex tile to move to
         let toHex = this.map.at(this.moveQueue[0].row, this.moveQueue[0].column);
         // Set the direction of the unit when moving
-        this.setDirectionByNeighbor(toHex);
+        this.setDirectionByHex(toHex);
         // Update the row/column number of the unit
         this.row = toHex.row;
         this.column = toHex.column;
@@ -257,24 +257,14 @@ export class Unit extends Phaser.GameObjects.Sprite {
     }
 
     /**
-     * Faces the unit towards a neighboring hex. If a hex is passed in that is
-     * not a neighbor, the unit will not adjust direction.
-     * @param {Hex} hex The neighboring hex that the unit should face towards
+     * Faces the unit towards a hex.
+     * @param {Hex} hex The hex that the unit should face towards
      */
-    setDirectionByNeighbor(hex) {
-        let myTile = this.map.at(this.row, this.column);
-        let neighbors = myTile.neighbors()
-        let direction = '';
-        for (let key in neighbors) {
-            if (hex == neighbors[key]) {
-                direction = key;
-            }
-        }
-        // Determine the character's direction based on hex moving to
-        if (direction.includes('e')) {
+    setDirectionByHex(hex) {
+        if(hex.x > this.x){
             this.setFlipX(false);
         }
-        else if (direction.includes('w')) {
+        else if(hex.x < this.x){
             this.setFlipX(true);
         }
     }
