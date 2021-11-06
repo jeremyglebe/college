@@ -100,8 +100,8 @@ export class Hex extends Phaser.GameObjects.Sprite {
         /** @type {string} The texture key the hex should use for rendering */
         this.key = key || 'hex';
 
-        // Configure hex tile sprite
-        // this.setOrigin(0);
+        /** @type {any} Object which occupies this space. Used by game logic */
+        this.object = null;
 
         // Might show text later for debugging purposes
         this.debugText = null;

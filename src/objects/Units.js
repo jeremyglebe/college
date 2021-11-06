@@ -6,6 +6,8 @@ export const UNIT_SCALE = 10;
 export const UNIT_ORIGIN_Y = .9;
 export const UNIT_HPBAR_OFFSET = 45;
 export const UNIT_STD_ANIM_DURATION = 2000;
+export const DAMAGE_DIE_CHANCE = 0.5;
+export const DEFEND_DIE_CHANCE = 0.33;
 
 /**
  * @typedef IUnitAnimationConfig
@@ -74,6 +76,10 @@ export class Unit extends Phaser.GameObjects.Sprite {
         this.selected = false;
         /** @type {HexMap} Additional, easier reference to map */
         this.map = scene.map;
+        /** @type {Hex} Store a reference to the actual hex this unit occupies */
+        this.hex = this.map.at(this.row, this.column);
+        // And store a backwards reference on the hex
+        this.hex.object = this;
         /** @type {Phaser.GameObjects.Rectangle} The Unit's health bar border */
         this.healthbarborder = this.scene.add.rectangle(this.x, this.y + UNIT_HPBAR_OFFSET, 145, 30, 0x000000).setDepth(1);
         /** @type {Phaser.GameObjects.Rectangle} The Unit's health bar */
@@ -96,6 +102,17 @@ export class Unit extends Phaser.GameObjects.Sprite {
         }
         // Remaining health of the unit
         this.health = this.stats.health;
+    }
+
+    destroy() {
+        // Destroy the health bar
+        this.healthbar.destroy();
+        this.healthbarborder.destroy();
+        // Destroy this unit
+        super.destroy();
+        // Remove reference to this unit from its hex space
+        let fromHex = this.map.at(this.row, this.column);
+        fromHex.object = null;
     }
 
     /**
@@ -128,8 +145,6 @@ export class Unit extends Phaser.GameObjects.Sprite {
     }
 
     static calcDamage(attack, targetDefense) {
-        const DAMAGE_DIE_CHANCE = 0.5;
-        const DEFEND_DIE_CHANCE = 0.33;
         // Sum of all damage die and defend die results
         let totalDamage = 0;
         // Roll a number of damage dice equal to attack stat
@@ -222,10 +237,17 @@ export class Unit extends Phaser.GameObjects.Sprite {
         this.selected = false;
     }
 
-    destroy() {
-        this.healthbar.destroy();
-        this.healthbarborder.destroy();
-        super.destroy();
+    /**
+     * Faces the unit towards a coordinate.
+     * @param coordinate The coordinate that the unit should face towards
+     */
+    facePosition(coordinate) {
+        if (coordinate.x > this.x) {
+            this.setFlipX(false);
+        }
+        else if (coordinate.x < this.x) {
+            this.setFlipX(true);
+        }
     }
 
     harm(damage) {
@@ -267,7 +289,8 @@ export class Unit extends Phaser.GameObjects.Sprite {
     }
 
     /**
-     * Moves the unit across all tiles in it's movement queue
+     * Attempts to move the unit to the next space in its queue. Failed moves
+     * result in the queue being cleared.
      */
     move() {
         // Start the movement animation on the first call
@@ -277,29 +300,84 @@ export class Unit extends Phaser.GameObjects.Sprite {
         let toHex = this.map.at(this.moveQueue[0].row, this.moveQueue[0].column);
         // Set the direction of the unit when moving
         this.facePosition(toHex);
+        // Verify that the hex is not occupied
+        if (!toHex.object) {
+            // Set the internal position of this unit
+            this.setHexPosition(toHex.row, toHex.column);
+            // Animate the movement to that position
+            this.scene.tweens.add({
+                targets: [this],
+                x: toHex.x,
+                y: toHex.y,
+                duration: UNIT_STD_ANIM_DURATION / 6,
+                onComplete: () => {
+                    // Remove first item from queue
+                    this.moveQueue.shift();
+                    // Move again if there are more movements in the queue
+                    if (this.moveQueue.length > 0) {
+                        this.emit('unit-path-moved');
+                    }
+                    else {
+                        this.anims.play('idle');
+                        this.emit('unit-path-complete');
+                    }
+                }
+            });
+        }
+        // If the space is occupied, cancel the move
+        else {
+            // Cancelled moves clear the queue
+            this.moveQueue = [];
+            // Cancelled moves send a signal
+            this.emit('unit-path-cancelled');
+            // Stop animation of movement
+            this.anims.play('idle');
+        }
+    }
+
+    /**
+     * Moves the unit across all tiles in it's movement queue
+     */
+    moveThroughQueue() {
+        // Create event temporary event listeners to execute the move
+        this.on('unit-path-moved', this.move, this);
+        // Listener to remove the listeners once we've moved the whole path
+        let pathListener = () => {
+            this.off('unit-path-moved', this.move, this);
+            this.off('unit-path-complete', pathListener, this);
+            this.off('unit-path-cancelled', pathListener, this);
+        }
+        // Add the path listener to completion and cancel events
+        this.on('unit-path-complete', pathListener, this);
+        this.on('unit-path-cancelled', pathListener, this);
+        // Start the movement
+        this.move();
+    }
+
+    /**
+     * Highlights the unit and sets them as selected. Mostly for external
+     * use.
+     */
+    select() {
+        this.setTint(0x00FF00);
+        this.selected = true;
+    }
+
+    setHexPosition(row, column) {
+        // Get the hex tile to move from
+        let fromHex = this.map.at(this.row, this.column);
+        // Get the hex tile to move to
+        let toHex = this.map.at(row, column);
+        // Fail if the hex in question is occupied
+        if(toHex.object){
+            throw 'Unit Error: setHexPosition() called on occupied hex';
+        }
+        // Update the object of the hexes being moved from/to
+        fromHex.object = null;
+        toHex.object = this;
         // Update the row/column number of the unit
         this.row = toHex.row;
         this.column = toHex.column;
-        // Create movement animation
-        this.scene.tweens.add({
-            targets: [this],
-            x: toHex.x,
-            y: toHex.y,
-            duration: UNIT_STD_ANIM_DURATION / 6,
-            onComplete: () => {
-                // Remove first item from queue
-                this.moveQueue.shift();
-                // Move again if there are more movements in the queue
-                if (this.moveQueue.length > 0) {
-                    this.move();
-                }
-                // Otherwise, fire the 'moved' signal
-                else {
-                    this.anims.play('idle');
-                    this.emit('unit-moved');
-                }
-            }
-        });
     }
 
     /**
@@ -312,7 +390,7 @@ export class Unit extends Phaser.GameObjects.Sprite {
      * @param {number} row The row to path towards
      * @param {number} column The column to path towards
      */
-    path(row, column) {
+    setPathNaive(row, column) {
         let hex = this.map.at(this.row, this.column);
         // First get on either the same row or column as the objective
         while (hex.row != row && hex.column != column) {
@@ -360,28 +438,6 @@ export class Unit extends Phaser.GameObjects.Sprite {
                 hex = this.map.at(hex.row - 1, hex.column);
                 this.moveQueue.push(hex);
             }
-        }
-    }
-
-    /**
-     * Highlights the unit and sets them as selected. Mostly for external
-     * use.
-     */
-    select() {
-        this.setTint(0x00FF00);
-        this.selected = true;
-    }
-
-    /**
-     * Faces the unit towards a coordinate.
-     * @param coordinate The coordinate that the unit should face towards
-     */
-    facePosition(coordinate) {
-        if (coordinate.x > this.x) {
-            this.setFlipX(false);
-        }
-        else if (coordinate.x < this.x) {
-            this.setFlipX(true);
         }
     }
 }

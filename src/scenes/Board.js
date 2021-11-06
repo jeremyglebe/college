@@ -96,7 +96,7 @@ export class BoardScene extends Phaser.Scene {
 
     createOtherUnit(row, column, owner, unitConfig) {
         let unit = new Unit(this, row, column, owner, unitConfig);
-        unit.setInteractive(this.input.makePixelPerfect());
+        unit.setInteractive();
         unit.on('pointerdown', () => {
             if (this.selectedUnit) {
                 this.selectedUnit.attack(unit);
@@ -142,7 +142,7 @@ export class BoardScene extends Phaser.Scene {
 
     createPlayerUnit(row, column, unitConfig) {
         let unit = new Unit(this, row, column, this.cloud.user.id, unitConfig);
-        unit.setInteractive(this.input.makePixelPerfect());
+        unit.setInteractive();
         unit.on('pointerdown', () => {
             this.onSelectUnit(unit);
         });
@@ -154,25 +154,13 @@ export class BoardScene extends Phaser.Scene {
             for (let hex of row) {
                 // Make each hexagon interactive and have perfect overlap detection
                 hex.setInteractive(this.input.makePixelPerfect());
-                // Listeners for hexagon highlighting
-                hex.on('pointerover', () => {
-                    // Set the current hexagon to be highlighted
-                    hex.setTintFill(0x00FF55);
-                    // Set depth, tiles slightly overlap and it may look weird without
-                    hex.setDepth(0.1);
-                });
-                hex.on('pointerout', () => {
-                    // Reset highlighted hexagons
-                    hex.clearTint();
-                    hex.setDepth(0);
-                });
                 // Control player unit movements
                 hex.on('pointerdown', () => {
                     if (this.selectedUnit) {
                         // Determine the path to the clicked location
-                        this.selectedUnit.path(hex.row, hex.column);
+                        this.selectedUnit.setPathNaive(hex.row, hex.column);
                         // Move to the location
-                        this.selectedUnit.move();
+                        this.selectedUnit.moveThroughQueue();
                         // Deselect the unit
                         this.selectedUnit.deselect();
                         this.selectedUnit = null;
