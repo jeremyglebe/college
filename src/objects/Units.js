@@ -74,9 +74,9 @@ export class Unit extends Phaser.GameObjects.Sprite {
         /** @type {HexMap} Additional, easier reference to map */
         this.map = scene.map;
         /** @type {Phaser.GameObjects.Rectangle} The Unit's health bar border */
-        this.healthbarborder = this.scene.add.rectangle(this.x, this.y + UNIT_HPBAR_OFFSET, 145, 30, 0xFF5757).setDepth(1);
+        this.healthbarborder = this.scene.add.rectangle(this.x, this.y + UNIT_HPBAR_OFFSET, 145, 30, 0x000000).setDepth(1);
         /** @type {Phaser.GameObjects.Rectangle} The Unit's health bar */
-        this.healthbar = this.scene.add.rectangle(this.x, this.y + UNIT_HPBAR_OFFSET, 140, 25, 0x6666ff).setDepth(1);
+        this.healthbar = this.scene.add.rectangle(this.x, this.y + UNIT_HPBAR_OFFSET, 140, 25, 0x00FF00).setDepth(1);
         // Show the sprite over the tiles
         this.setDepth(UNIT_DEPTH);
         // Scale the characters b/c they are VERY small
@@ -246,7 +246,7 @@ export class Unit extends Phaser.GameObjects.Sprite {
         // Create some hit text to show damage
         let text = this.scene.add.text(this.x, this.y - 50, `${damage}`, {
             color: critical ? 'red' : 'white',
-            fontSize: critical ? '70px' : '50px',
+            fontSize: critical ? '100px' : '70px',
             stroke: 'black',
             strokeThickness: 15
         }).setDepth(5);
