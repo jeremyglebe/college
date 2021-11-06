@@ -4,6 +4,7 @@ export const UNIT_DEPTH = 1;
 export const UNIT_SCALE = 10;
 export const UNIT_ORIGIN_Y = .9;
 export const UNIT_HPBAR_OFFSET = 45;
+export const UNIT_STD_ANIM_DURATION = 2000;
 
 /**
  * @typedef IUnitAnimationConfig
@@ -19,17 +20,23 @@ export const UNIT_HPBAR_OFFSET = 45;
  * @type {object}
  * @property {string} key - Key of the spritesheet for the unit
  * @property {IUnitAnimationConfig} animations - Config for unit animations
+ * @property {number} attack - Attack stat of the unit
+ * @property {number} health - Health stat of the unit
+ * @property {number} defense - Defense stat of the unit
  */
 
 export const UNITS = {
     /** @type {IUnitConfig} */
-    Adventurer: {
-        key: 'Adventurer',
+    Monk: {
+        key: 'Monk',
         animations: {
             idle: [0, 1],
             move: [58, 63],
             attack: [2, 13],
-        }
+        },
+        health: 10,
+        attack: 2,
+        defense: 4
     },
     Slime: {
         key: 'Slime',
@@ -37,7 +44,10 @@ export const UNITS = {
             idle: [4, 7],
             move: [0, 3],
             attack: [12, 15]
-        }
+        },
+        health: 3,
+        attack: 1,
+        defense: 2
     }
 }
 
@@ -77,6 +87,14 @@ export class Unit extends Phaser.GameObjects.Sprite {
         this.createAnimations(unit);
         // Add this character to the scene once they are constructed
         this.scene.add.existing(this);
+        // Stats of the unit
+        this.stats = {
+            attack: unit.attack,
+            defense: unit.defense,
+            health: unit.health
+        }
+        // Remaining health of the unit
+        this.health = this.stats.health;
     }
 
     /**
@@ -84,6 +102,7 @@ export class Unit extends Phaser.GameObjects.Sprite {
      */
     preUpdate(time, delta) {
         super.preUpdate(time, delta);
+        // Keep the health bar next to the unit
         this.healthbarborder.setPosition(this.x, this.y + UNIT_HPBAR_OFFSET);
         this.healthbar.setPosition(this.x, this.y + UNIT_HPBAR_OFFSET);
     }
@@ -100,20 +119,44 @@ export class Unit extends Phaser.GameObjects.Sprite {
             this.off('animationcomplete-attack');
         });
         // Make the unit face towards its target
-        this.setDirectionByHex(target);
+        this.facePosition(target);
         // Lower the targets health
-        target.healthbar.scaleX -= .5;
-        if(target.healthbar.scaleX <= 0){
-            target.healthbar.scaleX = 0;
-            this.scene.tweens.add({
-                targets: [target],
-                alpha: 0,
-                duration: 300,
-                onComplete: ()=>{
-                    target.destroy();
-                }
-            });
+        target.harm(Unit.calcDamage(this.stats.attack, target.stats.defense));
+    }
+
+    static calcDamage(attack, targetDefense) {
+        const DAMAGE_DIE_CHANCE = 0.5;
+        const DEFEND_DIE_CHANCE = 0.33;
+        // Sum of all damage die and defend die results
+        let totalDamage = 0;
+        // Roll a number of damage dice equal to attack stat
+        for (let i = 0; i < attack; i++) {
+            let rollString = "Rolling Attack: ";
+            if (Math.random() < DAMAGE_DIE_CHANCE) {
+                totalDamage++;
+                rollString += "Hit!";
+            }
+            else {
+                rollString += "Miss!";
+            }
+            console.log(rollString);
         }
+        // Roll a number of defense dice equal to target defense stat
+        for (let i = 0; i < targetDefense; i++) {
+            let rollString = "Rolling Defense: ";
+            if (Math.random() < DEFEND_DIE_CHANCE) {
+                totalDamage--
+                rollString += "Block!";
+            }
+            else {
+                rollString += "Fail!";
+            }
+            console.log(rollString);
+        }
+        // Damage can't be negative
+        if (totalDamage < 0) totalDamage = 0;
+        // Return the final result
+        return totalDamage;
     }
 
     /**
@@ -156,6 +199,17 @@ export class Unit extends Phaser.GameObjects.Sprite {
         this.anims.play('idle');
     }
 
+    die() {
+        this.scene.tweens.add({
+            targets: [this, this.healthbarborder],
+            alpha: 0,
+            duration: UNIT_STD_ANIM_DURATION,
+            onComplete: () => {
+                this.destroy();
+            }
+        });
+    }
+
     /**
      * Removes highlight and sets the unit as not selected. Mostly for
      * external use.
@@ -165,10 +219,48 @@ export class Unit extends Phaser.GameObjects.Sprite {
         this.selected = false;
     }
 
-    destroy(){
+    destroy() {
         this.healthbar.destroy();
         this.healthbarborder.destroy();
         super.destroy();
+    }
+
+    harm(damage) {
+        // Take the damage
+        this.health -= damage;
+        // Don't lower health below 0
+        if (this.health < 0) this.health = 0;
+        // Tween healthbar to show damage
+        this.scene.tweens.add({
+            targets: this.healthbar,
+            scaleX: this.health / this.stats.health,
+            duration: UNIT_STD_ANIM_DURATION / 4,
+            onComplete: () => {
+                if (this.health == 0) {
+                    this.die();
+                }
+            }
+        });
+        // Flag: Is the damage critical?
+        let critical = damage >= this.stats.health / 2;
+        // Create some hit text to show damage
+        let text = this.scene.add.text(this.x, this.y - 50, `${damage}`, {
+            color: critical ? 'red' : 'white',
+            fontSize: critical ? '70px' : '50px',
+            stroke: 'black',
+            strokeThickness: 15
+        }).setDepth(5);
+        // Animate and destroy the text
+        this.scene.tweens.add({
+            targets: text,
+            x: this.x + 100,
+            y: this.y - 130,
+            alpha: 0,
+            duration: UNIT_STD_ANIM_DURATION,
+            onComplete: () => {
+                text.destroy();
+            }
+        });
     }
 
     /**
@@ -181,7 +273,7 @@ export class Unit extends Phaser.GameObjects.Sprite {
         // Get the hex tile to move to
         let toHex = this.map.at(this.moveQueue[0].row, this.moveQueue[0].column);
         // Set the direction of the unit when moving
-        this.setDirectionByHex(toHex);
+        this.facePosition(toHex);
         // Update the row/column number of the unit
         this.row = toHex.row;
         this.column = toHex.column;
@@ -190,7 +282,7 @@ export class Unit extends Phaser.GameObjects.Sprite {
             targets: [this],
             x: toHex.x,
             y: toHex.y,
-            duration: 500,
+            duration: UNIT_STD_ANIM_DURATION / 6,
             onComplete: () => {
                 // Remove first item from queue
                 this.moveQueue.shift();
@@ -278,14 +370,14 @@ export class Unit extends Phaser.GameObjects.Sprite {
     }
 
     /**
-     * Faces the unit towards a hex.
-     * @param {Hex} hex The hex that the unit should face towards
+     * Faces the unit towards a coordinate.
+     * @param coordinate The coordinate that the unit should face towards
      */
-    setDirectionByHex(hex) {
-        if(hex.x > this.x){
+    facePosition(coordinate) {
+        if (coordinate.x > this.x) {
             this.setFlipX(false);
         }
-        else if(hex.x < this.x){
+        else if (coordinate.x < this.x) {
             this.setFlipX(true);
         }
     }

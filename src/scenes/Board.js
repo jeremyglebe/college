@@ -21,7 +21,7 @@ export class BoardScene extends Phaser.Scene {
             frameWidth: 330,
             frameHeight: 330
         });
-        this.load.spritesheet('Adventurer', './assets/images/rvros/Adventurer.png', {
+        this.load.spritesheet('Monk', './assets/images/rvros/Adventurer.png', {
             frameWidth: 50,
             frameHeight: 37
         });
@@ -38,9 +38,9 @@ export class BoardScene extends Phaser.Scene {
         // Create the actual map on the screen
         this.createMap();
         // Create a player unit to test
-        this.createPlayerUnit(5, 3, UNITS.Adventurer);
-        this.createPlayerUnit(1, 6, UNITS.Adventurer);
-        this.createPlayerUnit(3, 2, UNITS.Adventurer);
+        this.createPlayerUnit(5, 3, UNITS.Monk);
+        this.createPlayerUnit(1, 6, UNITS.Monk);
+        this.createPlayerUnit(3, 2, UNITS.Monk);
         this.createOtherUnit(9, 9, 'bot-1', UNITS.Slime);
         this.createOtherUnit(2, 11, 'bot-1', UNITS.Slime);
         this.createOtherUnit(5, 10, 'bot-1', UNITS.Slime);
@@ -75,7 +75,6 @@ export class BoardScene extends Phaser.Scene {
 
     zeroPad(number,size){
         var stringNumber = String(number);
-        console.log(stringNumber);
         while(stringNumber.length <(size||2)){
             stringNumber = "0" + stringNumber;
         }
