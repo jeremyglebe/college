@@ -1,3 +1,4 @@
+import { tweenColor } from "../utils/Color";
 import { HexMap } from "./HexMap";
 
 export const UNIT_DEPTH = 1;
@@ -105,6 +106,8 @@ export class Unit extends Phaser.GameObjects.Sprite {
         // Keep the health bar next to the unit
         this.healthbarborder.setPosition(this.x, this.y + UNIT_HPBAR_OFFSET);
         this.healthbar.setPosition(this.x, this.y + UNIT_HPBAR_OFFSET);
+        // Adjust healthbar color somewhere between green and red
+        this.healthbar.setFillStyle(tweenColor(0x00FF00, 0xFF0000, 1 - this.health / this.stats.health));
     }
 
     /**
