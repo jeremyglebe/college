@@ -3,7 +3,7 @@ var path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
-    entry: './src/start.js',
+    entry: ['@babel/polyfill', './src/start.js'],
     mode: 'development',
     output: {
         filename: 'bundle.js',
@@ -27,7 +27,9 @@ module.exports = {
                     loader: "babel-loader",
                     options:
                     {
-                        presets: ["@babel/preset-env"] 
+                        presets: [
+                            "@babel/preset-env"
+                        ]
                     }
                 }
             }

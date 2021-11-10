@@ -1,3 +1,4 @@
+import { CloudManager } from '../utils/CloudManager';
 import { ScreenScale } from '../utils/ScreenScale';
 
 // ScreenScale provides some useful coordinates, such as the center of the
@@ -7,6 +8,8 @@ const GAME_SCALE = ScreenScale(1080).scaled;
 export class MainMenuScene extends Phaser.Scene {
     constructor() {
         super("MainMenu");
+        // Cloud manager singleton
+        this.cloud = CloudManager.get();
         /** @type {Phaser.GameObjects.DOMElement} Phaser object container for the HTML doc */
         this.menuObj = null;
         /** @type {HTMLDivElement} Actual HTML div element inside the document */
@@ -33,19 +36,14 @@ export class MainMenuScene extends Phaser.Scene {
         this.menuEle = this.menuObj.node.querySelector('#menu');
         //Add click sound
         this.clickSound = this.sound.add('click');
-        // Add functionality to buttons, querySelector gets a specific element
-        this.menuEle.querySelector('#play-button')
-            // Buttons have a property "onclick" which should be assigned to a function
-            .onclick = () => {
-                this.scene.start('Board');
-                this.clickSound.play();
-            }
+        // Level editor button callback
         this.menuEle.querySelector('#edit-button').onclick = () => {
             this.scene.start('LevelEditor');
             this.clickSound.play();
         }
-        this.menuEle.querySelector('#choose-button').onclick = () => {
-            this.scene.start('LevelChoose');
+        // Login button callback
+        this.menuEle.querySelector('#login-button').onclick = () => {
+            this.cloud.login();
             this.clickSound.play();
         }
     }

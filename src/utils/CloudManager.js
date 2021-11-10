@@ -1,7 +1,8 @@
 import { initializeApp } from "firebase/app";
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 
 // Configuration for firebase app
-const firebaseConfig  = {
+const firebaseConfig = {
     apiKey: "AIzaSyDgXMBcZjIYvL6SUWTnTpXJJ2yW7kUMeqw",
     authDomain: "hex-army.firebaseapp.com",
     projectId: "hex-army",
@@ -10,7 +11,9 @@ const firebaseConfig  = {
     appId: "1:614875998821:web:8e46822215a4e41128b48c"
 }
 // Create a firebase app connection
-const app = initializeApp(firebaseConfig);
+const APP = initializeApp(firebaseConfig);
+// Google authentication provider
+const GOOGLE_AUTH = new GoogleAuthProvider();
 
 /**
  * Singleton manager for cloud-based operations (serverless multiplayer)
@@ -36,8 +39,32 @@ export class CloudManager extends Phaser.Events.EventEmitter {
         return instance;
     }
 
+    async login() {
+        const auth = getAuth();
+        try {
+            let result = await signInWithPopup(auth, GOOGLE_AUTH);
+            // This gives you a Google Access Token. You can use it to access the Google API.
+            const credential = GoogleAuthProvider.credentialFromResult(result);
+            const token = credential.accessToken;
+            // The signed-in user info.
+            const user = result.user;
+            console.log("Logged in with Google!");
+        }
+        catch (error) {
+            // Handle Errors here.
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            // The email of the user's account used.
+            const email = error.email;
+            // The AuthCredential type that was used.
+            const credential = GoogleAuthProvider.credentialFromError(error);
+            // ...
+            console.log("Login Failed: ", error);
+        }
+    }
+
     // async createGameState(game_state){
-        
+
     // }
 
     // async onGameStateUpdate(game_state){
@@ -49,7 +76,7 @@ export class CloudManager extends Phaser.Events.EventEmitter {
     // }
 
     // async updateGameState(game_state){
-        
+
     // }
 
 

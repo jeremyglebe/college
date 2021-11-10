@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/jeremyglebe/5430-Web-Game-Project#readme",
   "dependencies": {
+    "@babel/polyfill": "^7.12.1",
     "@capacitor/android": "^3.2.2",
     "@capacitor/cli": "^3.2.2",
     "@capacitor/core": "^3.2.2",
