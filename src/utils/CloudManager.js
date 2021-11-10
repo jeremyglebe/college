@@ -1,7 +1,7 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { getAuth, signInWithPopup, GoogleAuthProvider, User } from "firebase/auth";
 
-// Configuration for firebase app
+/** @type {import("@firebase/app").FirebaseAppSettings} */
 const firebaseConfig = {
     apiKey: "AIzaSyDgXMBcZjIYvL6SUWTnTpXJJ2yW7kUMeqw",
     authDomain: "hex-army.firebaseapp.com",
@@ -10,9 +10,9 @@ const firebaseConfig = {
     messagingSenderId: "614875998821",
     appId: "1:614875998821:web:8e46822215a4e41128b48c"
 }
-// Create a firebase app connection
+/** @type {FirebaseApp} Create a firebase app connection */
 const APP = initializeApp(firebaseConfig);
-// Google authentication provider
+/** @type {GoogleAuthProvider} */
 const GOOGLE_AUTH = new GoogleAuthProvider();
 
 /**
@@ -22,10 +22,8 @@ export class CloudManager extends Phaser.Events.EventEmitter {
     /** DO NOT CONSTRUCT THIS OBJECT DIRECTLY, USE CloudManager.get() */
     constructor() {
         super();
-        // User object of the currently logged in user
-        this.user = {
-            id: 'player'
-        };
+        /** @type {User|null} object of the currently logged in user */
+        this.user = null;
     }
     /**
      * @returns the single instance of the CloudManager, shared globally
@@ -39,26 +37,20 @@ export class CloudManager extends Phaser.Events.EventEmitter {
         return instance;
     }
 
+    /**
+     * Tries to login with Google authentication
+     * @returns {User} The firebase user object of the authenticated user
+     */
     async login() {
         const auth = getAuth();
         try {
             let result = await signInWithPopup(auth, GOOGLE_AUTH);
-            // This gives you a Google Access Token. You can use it to access the Google API.
-            const credential = GoogleAuthProvider.credentialFromResult(result);
-            const token = credential.accessToken;
             // The signed-in user info.
-            const user = result.user;
-            console.log("Logged in with Google!");
+            this.user = result.user;
+            console.log("Logged in with Google! ", this.user);
+            return this.user;
         }
         catch (error) {
-            // Handle Errors here.
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            // The email of the user's account used.
-            const email = error.email;
-            // The AuthCredential type that was used.
-            const credential = GoogleAuthProvider.credentialFromError(error);
-            // ...
             console.log("Login Failed: ", error);
         }
     }
