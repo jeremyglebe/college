@@ -14,6 +14,7 @@ export class LevelEditorScene extends Phaser.Scene {
         super("LevelEditor");
         this.keys = { up: null, down: null, left: null, right: null, in: null, out: null };
         this.index = LEVEL_EDITOR_FRAME_MIN;
+        this.stack_height = 0;
         this.signals = SignalManager.get();
     }
     preload() {
@@ -21,7 +22,7 @@ export class LevelEditorScene extends Phaser.Scene {
             frameWidth: 330,
             frameHeight: 330
         });
-        this.load.audio('level_editor_background','./assets/sounds/level_editor_background.mp3')
+        this.load.audio('level_editor_background', './assets/sounds/level_editor_background.mp3')
     }
     create() {
         this.createMap();
@@ -29,12 +30,16 @@ export class LevelEditorScene extends Phaser.Scene {
         this.createHexListeners();
         this.scene.launch('LevelEditorHUD');
         this.signals.on('leveledit-update-index', (index) => { this.index = index; });
+        this.signals.on('leveledit-update-stack_height', (sh) => { this.stack_height = sh; });
         this.input.keyboard.on('keydown-L', () => {
             let result = [];
             for (let row of this.map.hexes) {
                 let row_arr = [];
                 for (let hex of row) {
-                    row_arr.push(hex.id);
+                    row_arr.push({
+                        id: hex.id,
+                        stack: hex.stack_height
+                    });
                 }
                 result.push(row_arr);
             }
@@ -53,7 +58,7 @@ export class LevelEditorScene extends Phaser.Scene {
         }
 
         this.background.play(musicConfig);
-
+        this.cameras.main.setZoom(0.5);
     }
 
     update() {
@@ -67,11 +72,16 @@ export class LevelEditorScene extends Phaser.Scene {
                 hex.on('pointerdown', () => {
                     hex.setFrame(this.index);
                     hex.id = this.index;
+                    hex.stack_height = this.stack_height;
+                    this.map.refreshShadows();
+                    console.log(hex);
                 });
                 hex.on('pointerover', (ptr) => {
                     if (ptr.isDown) {
                         hex.setFrame(this.index);
                         hex.id = this.index;
+                        hex.stack_height = this.stack_height;
+                        this.map.refreshShadows();
                     }
                 });
             }
@@ -88,7 +98,10 @@ export class LevelEditorScene extends Phaser.Scene {
     }
 
     createMap() {
-        const tiles = Array(CONFIGS.mapConfig.height).fill(Array(CONFIGS.mapConfig.width).fill(DEFAULT_FRAME));
+        const tiles = Array(CONFIGS.mapConfig.height).fill(Array(CONFIGS.mapConfig.width).fill({
+            id: DEFAULT_FRAME,
+            stack: 0
+        }));
         this.map = new HexMap(this, tiles, CONFIGS.mapConfig);
     }
 
@@ -129,7 +142,7 @@ export class LevelEditorHUDScene extends Phaser.Scene {
         this.signals = SignalManager.get();
         this.index = LEVEL_EDITOR_FRAME_MIN;
         this.hex = null;
-        this.signals = SignalManager.get();
+        this.stack_height = 0;
     }
 
     create() {
@@ -145,6 +158,20 @@ export class LevelEditorHUDScene extends Phaser.Scene {
             this.signals.emit('leveledit-update-index', this.index);
         });
         this.createTextPrompts();
+        let stackText = this.add.text(20, GAME_SCALE.height - 68, '0', {
+            font: '48px Arial',
+            strokeThickness: 12,
+            stroke: 'black'
+        });
+        // Create number button listeners
+        const numbers = ["ZERO", "ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE"];
+        for (let i = 0; i < 10; i++) {
+            this.input.keyboard.on(`keydown-${numbers[i]}`, () => {
+                this.stack_height = i;
+                stackText.setText(`${i}`);
+                this.signals.emit('leveledit-update-stack_height', this.stack_height);
+            });
+        }
     }
 
     createTextPrompts() {
@@ -153,7 +180,7 @@ export class LevelEditorHUDScene extends Phaser.Scene {
             strokeThickness: 12,
             stroke: 'black'
         });
-        this.add.text(GAME_SCALE.width - 30, 0, 'Use  arrow  keys  to  pan  camera\nSave  map  w/  L  key\nW/S  to  zoom  camera', {
+        this.add.text(GAME_SCALE.width - 30, 0, 'Use  arrow  keys  to  pan  camera\nSave  map  w/  L  key\nW/S  to  zoom  camera\n0-9 to set hex stack height', {
             font: '36px Arial',
             strokeThickness: 8,
             stroke: 'black'

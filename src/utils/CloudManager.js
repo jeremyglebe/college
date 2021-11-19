@@ -45,7 +45,7 @@ export class CloudManager extends Phaser.Events.EventEmitter {
 
     /**
      * Tries to login with Google authentication
-     * @returns {User} The firebase user object of the authenticated user
+     * @returns {Promise<User>} The firebase user object of the authenticated user
      */
     async login() {
         try {

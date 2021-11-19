@@ -8,7 +8,7 @@ const GAME_SCALE = ScreenScale(1080).scaled;
 export class MainMenuScene extends Phaser.Scene {
     constructor() {
         super("MainMenu");
-        // Cloud manager singleton
+        /** @type {CloudManager} */
         this.cloud = CloudManager.get();
         /** @type {Phaser.GameObjects.DOMElement} Phaser object container for the HTML doc */
         this.menuObj = null;
@@ -36,6 +36,10 @@ export class MainMenuScene extends Phaser.Scene {
         this.menuEle = this.menuObj.node.querySelector('#menu');
         //Add click sound
         this.clickSound = this.sound.add('click');
+        // Hide the buttons
+        this.menuEle.querySelector('#create-button').style.display = 'none';
+        this.menuEle.querySelector('#army-button').style.display = 'none';
+        this.menuEle.querySelector('#join-button').style.display = 'none';
         // Create game button callback
         this.menuEle.querySelector('#create-button').onclick = () => {
             this.scene.start('Board');
@@ -47,9 +51,13 @@ export class MainMenuScene extends Phaser.Scene {
             this.clickSound.play();
         }
         // Login button callback
-        this.menuEle.querySelector('#login-button').onclick = () => {
-            this.cloud.login();
+        this.menuEle.querySelector('#login-button').onclick = async () => {
             this.clickSound.play();
+            await this.cloud.login();
+            this.menuEle.querySelector('#create-button').style.display = 'inline';
+            this.menuEle.querySelector('#army-button').style.display = 'inline';
+            this.menuEle.querySelector('#join-button').style.display = 'inline';
+            this.menuEle.querySelector('#login-button').style.display = 'none';
         }
     }
 }

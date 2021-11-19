@@ -12,10 +12,10 @@
 export class HexMap {
     /**
      * @param {Phaser.Scene} scene Scene that the map should be rendered on
-     * @param {number[][]} tile_map ID of each hex in the map, left to right and top to bottom
+     * @param {number[][]} hex_defs ID of each hex in the map, left to right and top to bottom
      * @param {IHexMapConfig} config Configuration object which defines the general shape of the map
      */
-    constructor(scene, tile_map, config) {
+    constructor(scene, hex_defs, config) {
         /** @type {Phaser.Scene} Scene that the map should be rendered on */
         this.scene = scene;
         /** @type {number} Number of rows in the map */
@@ -33,7 +33,7 @@ export class HexMap {
         this.group = this.scene.add.group();
         /** @type {Hex[][]} Descriptions of each hex in the map, left to right and top to bottom */
         this.hexes = [];
-
+        // Group and array to hold hex shadows
         this.shadow_group = this.scene.add.group();
         this.shadows = [];
 
@@ -43,22 +43,36 @@ export class HexMap {
             this.shadows.push([]);
             // Add a hex for each column in the given row
             for (let c = 0; c < this.width; c++) {
-                let hex = new Hex(this, r, c, tile_map[r][c], 'hex');
+                let hex = new Hex(this, r, c, hex_defs[r][c].id, 'hex');
+                hex.stack_height = hex_defs[r][c].stack;
                 this.hexes[r].push(hex);
                 this.group.add(hex);
+                // Set the height randomly for the tile
+                hex.setDepth(hex.stack_height);
+            }
+        }
+        this.createShadowHexes();
+        this.shadeHexes();
+    }
 
+    createShadowHexes() {
+        this.shadows = [];
+        this.shadow_group.clear(true, true);
+        // Each row of the array
+        for (let r = 0; r < this.height; r++) {
+            this.shadows.push([]);
+            // Each column of each row
+            for (let c = 0; c < this.width; c++) {
+                let hex = this.at(r, c);
                 // Create a shadow hex
                 let shadow = new Hex(this, r, c, 9, 'hex');
                 shadow.setScale(1.25).setTintFill(0x000000).setAlpha(0.5);
                 this.shadows[r].push(shadow);
                 this.shadow_group.add(shadow);
-
                 // Set the height randomly for the tile
-                hex.setDepth(hex.stack_height);
                 shadow.setDepth(hex.stack_height - .5);
             }
         }
-        this.shadeHexes();
     }
 
     /**
@@ -79,6 +93,17 @@ export class HexMap {
         else {
             return null;
         }
+    }
+
+    refreshShadows() {
+        for (let r = 0; r < this.height; r++) {
+            for (let c = 0; c < this.width; c++) {
+                let hex = this.at(r,c);
+                hex.setDepth(hex.stack_height);
+            }
+        }
+        this.createShadowHexes();
+        this.shadeHexes();
     }
 
     shadeHexes() {
@@ -127,7 +152,8 @@ export class Hex extends Phaser.GameObjects.Sprite {
         /** @type {number} The column at which the hex is located */
         this.column = column;
         // Stack height
-        this.stack_height = Math.floor(Math.random() * 5) + 1;
+        // this.stack_height = Math.floor(Math.random() * 5) + 1;
+        this.stack_height = 0;
         /** @type {number} The id/type/frame of the hex */
         this.id = id || 0;
         /** @type {string} The texture key the hex should use for rendering */
