@@ -1,7 +1,7 @@
 import { HexMap } from "../objects/HexMap";
 import { UNITS, Unit } from "../objects/Units";
 import { CloudManager } from "../utils/CloudManager";
-import { CONFIGS } from "../utils/Configs";
+import { CONFIGS } from "../Configs";
 import { ScreenScale } from '../utils/ScreenScale';
 
 const GAME_SCALE = ScreenScale(1080).scaled;
@@ -30,7 +30,7 @@ export class BoardScene extends Phaser.Scene {
             frameHeight: 25
         });
         this.load.audio('level1_background', './assets/sounds/level1_background.mp3');
-        this.load.bitmapFont("pixelFont","assets/font/font.png","assets/font/font.xml")
+        this.load.bitmapFont("pixelFont", "assets/font/font.png", "assets/font/font.xml")
 
     }
 
@@ -67,15 +67,15 @@ export class BoardScene extends Phaser.Scene {
         this.prepareHexagons();
     }
 
-    createscore(){
+    createscore() {
         this.score = 10;
-        this.scoreLabel = this.add.bitmapText(10,130,"pixelFont","SCORE:",150).setDepth(1).setScale(1.5);
-        this.scoreLabel.text = "SCORE:  " + this.zeroPad(this.score,5);
+        this.scoreLabel = this.add.bitmapText(10, 130, "pixelFont", "SCORE:", 150).setDepth(1).setScale(1.5);
+        this.scoreLabel.text = "SCORE:  " + this.zeroPad(this.score, 5);
     }
 
-    zeroPad(number,size){
+    zeroPad(number, size) {
         var stringNumber = String(number);
-        while(stringNumber.length <(size||2)){
+        while (stringNumber.length < (size || 2)) {
             stringNumber = "0" + stringNumber;
         }
         return stringNumber;
@@ -83,16 +83,19 @@ export class BoardScene extends Phaser.Scene {
 
     createMap() {
         // Defines the appearance of the map, which tiles are which
-        const hexes = [[4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4],[4,4,4,4,4,0,0,4,4,4,4,4,4,4,4,4,4,4,4,4],[4,4,4,0,0,0,0,0,0,0,0,0,0,0,4,4,4,4,4,4],[4,4,0,1,1,1,1,1,0,0,0,0,0,4,4,4,4,4,4,4],[4,4,0,1,1,1,1,1,1,0,0,0,0,4,4,4,4,4,4,4],[4,0,1,1,1,1,1,0,0,0,4,4,4,4,4,8,8,8,8,8],[4,4,0,1,1,1,0,0,0,4,4,4,4,4,8,8,8,8,3,3],[4,0,1,1,1,0,0,4,4,4,4,4,4,8,3,8,8,8,3,3],[4,4,0,1,0,0,0,4,4,4,4,4,4,8,8,3,3,3,3,3],[4,0,1,1,0,4,4,4,4,4,8,8,8,3,8,3,3,3,3,3],[4,0,0,1,0,4,4,4,4,8,8,8,8,3,3,3,3,3,3,3],[4,4,0,0,0,4,4,8,8,3,8,3,3,3,3,3,3,3,7,3],[4,4,4,0,0,4,4,8,8,8,3,8,3,3,3,3,3,7,7,7],[4,4,0,0,4,4,8,8,8,3,3,8,3,3,3,3,7,7,7,7],[4,4,0,0,4,4,8,8,3,8,3,3,3,3,3,3,7,7,7,7],[4,4,0,4,4,8,8,8,3,3,3,3,3,3,7,3,7,7,7,2],[4,4,0,0,4,4,8,3,3,3,3,3,3,3,7,7,7,2,2,2],[4,4,0,4,4,8,8,3,3,3,3,7,3,7,7,7,2,2,2,2],[4,4,4,4,4,8,8,3,3,3,3,7,7,7,7,2,2,2,2,5],[4,4,4,4,4,8,8,3,3,3,3,7,7,7,2,2,2,5,5,5]];
+        const hexes = [[4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4], [4, 4, 4, 4, 4, 0, 0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4], [4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4, 4, 4, 4], [4, 4, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 4, 4, 4, 4, 4, 4, 4], [4, 4, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 4, 4, 4, 4, 4, 4, 4], [4, 0, 1, 1, 1, 1, 1, 0, 0, 0, 4, 4, 4, 4, 4, 8, 8, 8, 8, 8], [4, 4, 0, 1, 1, 1, 0, 0, 0, 4, 4, 4, 4, 4, 8, 8, 8, 8, 3, 3], [4, 0, 1, 1, 1, 0, 0, 4, 4, 4, 4, 4, 4, 8, 3, 8, 8, 8, 3, 3], [4, 4, 0, 1, 0, 0, 0, 4, 4, 4, 4, 4, 4, 8, 8, 3, 3, 3, 3, 3], [4, 0, 1, 1, 0, 4, 4, 4, 4, 4, 8, 8, 8, 3, 8, 3, 3, 3, 3, 3], [4, 0, 0, 1, 0, 4, 4, 4, 4, 8, 8, 8, 8, 3, 3, 3, 3, 3, 3, 3], [4, 4, 0, 0, 0, 4, 4, 8, 8, 3, 8, 3, 3, 3, 3, 3, 3, 3, 7, 3], [4, 4, 4, 0, 0, 4, 4, 8, 8, 8, 3, 8, 3, 3, 3, 3, 3, 7, 7, 7], [4, 4, 0, 0, 4, 4, 8, 8, 8, 3, 3, 8, 3, 3, 3, 3, 7, 7, 7, 7], [4, 4, 0, 0, 4, 4, 8, 8, 3, 8, 3, 3, 3, 3, 3, 3, 7, 7, 7, 7], [4, 4, 0, 4, 4, 8, 8, 8, 3, 3, 3, 3, 3, 3, 7, 3, 7, 7, 7, 2], [4, 4, 0, 0, 4, 4, 8, 3, 3, 3, 3, 3, 3, 3, 7, 7, 7, 2, 2, 2], [4, 4, 0, 4, 4, 8, 8, 3, 3, 3, 3, 7, 3, 7, 7, 7, 2, 2, 2, 2], [4, 4, 4, 4, 4, 8, 8, 3, 3, 3, 3, 7, 7, 7, 7, 2, 2, 2, 2, 5], [4, 4, 4, 4, 4, 8, 8, 3, 3, 3, 3, 7, 7, 7, 2, 2, 2, 5, 5, 5]];
+        let random_heights = [];
+        for (let r = 0; r < hexes.length; r++) {
+            random_heights.push([]);
+            for (let c = 0; c < hexes[r].length; c++) {
+                random_heights[r].push(Math.floor(Math.random() * 5) + 1);
+            }
+        }
         // Configure and create the hex map
         this.map = new HexMap(this, hexes, CONFIGS.mapConfig);
         // Zoom the camera out a bit because it looks nicer
         this.cameras.main.setZoom(0.5);
-
-        
     }
-
-
 
     createOtherUnit(row, column, owner, unitConfig) {
         let unit = new Unit(this, row, column, owner, unitConfig);
@@ -191,7 +194,7 @@ export class BoardScene1 extends Phaser.Scene {
 
     create() {
         this.createTextPrompts();
-        this.scoreLabel = this.add.bitmapText(0,20,"pixelFont","SCORE",16);
+        this.scoreLabel = this.add.bitmapText(0, 20, "pixelFont", "SCORE", 16);
 
     }
 

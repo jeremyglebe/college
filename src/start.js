@@ -23,7 +23,7 @@ const config = {
         LevelEditorHUDScene,
         LevelChooseScene
     ],
-    backgroundColor: 0xFFFFFF,
+    backgroundColor: 0x000000,
     render: {
         pixelArt: true,
         roundPixels: true

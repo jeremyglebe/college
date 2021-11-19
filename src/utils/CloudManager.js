@@ -84,24 +84,6 @@ export class CloudManager extends Phaser.Events.EventEmitter {
             });
         }
     }
-
-    // async createGameState(game_state){
-
-    // }
-
-    // async onGameStateUpdate(game_state){
-
-    // }
-
-    // async readGameState(){
-
-    // }
-
-    // async updateGameState(game_state){
-
-    // }
-
-
 }
 /**
  * The instance of the singleton class. (CloudManager) Module level variable

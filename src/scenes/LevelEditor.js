@@ -1,6 +1,6 @@
 import { SignalManager } from '../utils/SignalManager';
 import { HexMap } from '../objects/HexMap';
-import { CONFIGS } from '../utils/Configs';
+import { CONFIGS } from '../Configs';
 import { ScreenScale } from '../utils/ScreenScale';
 import { webDownload } from '../utils/Downloads';
 

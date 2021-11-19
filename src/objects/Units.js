@@ -1,7 +1,7 @@
 import { tweenColor } from "../utils/Color";
 import { HexMap } from "./HexMap";
 
-export const UNIT_DEPTH = 1;
+export const UNIT_DEPTH = 10;
 export const UNIT_SCALE = 10;
 export const UNIT_ORIGIN_Y = .9;
 export const UNIT_HPBAR_OFFSET = 45;
@@ -81,9 +81,9 @@ export class Unit extends Phaser.GameObjects.Sprite {
         // And store a backwards reference on the hex
         this.hex.object = this;
         /** @type {Phaser.GameObjects.Rectangle} The Unit's health bar border */
-        this.healthbarborder = this.scene.add.rectangle(this.x, this.y + UNIT_HPBAR_OFFSET, 145, 30, 0x000000).setDepth(1);
+        this.healthbarborder = this.scene.add.rectangle(this.x, this.y + UNIT_HPBAR_OFFSET, 145, 30, 0x000000).setDepth(UNIT_DEPTH);
         /** @type {Phaser.GameObjects.Rectangle} The Unit's health bar */
-        this.healthbar = this.scene.add.rectangle(this.x, this.y + UNIT_HPBAR_OFFSET, 140, 25, 0x00FF00).setDepth(1);
+        this.healthbar = this.scene.add.rectangle(this.x, this.y + UNIT_HPBAR_OFFSET, 140, 25, 0x00FF00).setDepth(UNIT_DEPTH+1);
         // Show the sprite over the tiles
         this.setDepth(UNIT_DEPTH);
         // Scale the characters b/c they are VERY small
@@ -274,7 +274,7 @@ export class Unit extends Phaser.GameObjects.Sprite {
             fontSize: critical ? '100px' : '70px',
             stroke: 'black',
             strokeThickness: 15
-        }).setDepth(5);
+        }).setDepth(UNIT_DEPTH+2);
         // Animate and destroy the text
         this.scene.tweens.add({
             targets: text,
