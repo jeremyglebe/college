@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithPopup, GoogleAuthProvider, User, signOut } from "firebase/auth";
-import { getFirestore, collection } from 'firebase/firestore';
+import { getFirestore, collection, query, where, addDoc } from 'firebase/firestore';
+import { CONFIGS } from '../Configs';
 
 /** @type {import("@firebase/app").FirebaseAppSettings} */
 const firebaseConfig = {
@@ -27,10 +28,18 @@ export class CloudManager extends Phaser.Events.EventEmitter {
         this.authProvider = new GoogleAuthProvider();
         /** @type {Firestore} The firestore instance (cloud database) */
         this.db = getFirestore(this.app);
+        /** @type {CollectionReference<DocumentData>} Collection containing all pending games */
+        this.collectionGames = collection(this.db, 'Games');
+        /** @type {Query<any>} Query which searches for pending games */
+        this.queryPendingGames = query(this.collectionGames, where('pending', '==', true));
+        /** Function which kills the listener for pending games (defined later with the listener itself) */
+        this.stopPendingGamesListener = null;
         /** @type {User|null} object of the currently logged in user */
         this.user = null;
+        /** @type {null} */
+        this.docActiveGame = null;
     }
-    
+
     /**
      * @returns the single instance of the CloudManager, shared globally
      */
@@ -73,15 +82,21 @@ export class CloudManager extends Phaser.Events.EventEmitter {
      * nothing if no user is logged in.
      */
     async createGame() {
-        if (this.user) {
-            await this.games_collection.add({
-                host: this.user.username,
-                active: true,
-                lobby: true,
-                players: [
-                    this.user.username
-                ]
-            });
+        try {
+            if (this.user) {
+                this.docActiveGame = await addDoc(this.collectionGames, {
+                    owner: this.user.uid,
+                    opponent: null,
+                    pending: true,
+                    map: JSON.stringify(CONFIGS.mapList[Math.floor(Math.random() * CONFIGS.mapList.length)])
+                });
+            }
+            else {
+                throw 'Cannot create game for unauthenticated user!';
+            }
+        }
+        catch (e) {
+            throw e;
         }
     }
 }

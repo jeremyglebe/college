@@ -3,6 +3,7 @@ import { UNITS, Unit } from "../objects/Units";
 import { CloudManager } from "../utils/CloudManager";
 import { CONFIGS } from "../Configs";
 import { ScreenScale } from '../utils/ScreenScale';
+import { SignalManager } from "../utils/SignalManager";
 
 const GAME_SCALE = ScreenScale(1080).scaled;
 
@@ -14,6 +15,11 @@ export class BoardScene extends Phaser.Scene {
         this.units = [];
         this.selectedUnit = null;
         this.enemyUnit = null;
+        this.signals = SignalManager.get();
+    }
+
+    init(data) {
+        this.loadedGame = data.loaded || false;
     }
 
     preload() {
@@ -35,15 +41,21 @@ export class BoardScene extends Phaser.Scene {
     }
 
     create() {
-        // Create the actual map on the screen
-        this.createMap();
-        // Create a player unit to test
-        this.createPlayerUnit(5, 3, UNITS.Monk);
-        this.createPlayerUnit(1, 6, UNITS.Monk);
-        this.createPlayerUnit(3, 2, UNITS.Monk);
-        this.createOtherUnit(9, 9, 'bot-1', UNITS.Slime);
-        this.createOtherUnit(2, 11, 'bot-1', UNITS.Slime);
-        this.createOtherUnit(5, 10, 'bot-1', UNITS.Slime);
+        if (!this.loadedGame) {
+            // Create the actual map on the screen
+            this.createMap();
+            // Create a player unit to test
+            const keys = Object.keys(UNITS);
+            const runit = () => UNITS[keys[Math.floor(Math.random() * keys.length)]];
+            const rrow = () => Math.floor(Math.random() * CONFIGS.mapConfig.height);
+            const rcol = () => Math.floor(Math.random() * CONFIGS.mapConfig.width);
+            this.createPlayerUnit(rrow(), rcol(), runit());
+            this.createPlayerUnit(rrow(), rcol(), runit());
+            this.createPlayerUnit(rrow(), rcol(), runit());
+            this.createOtherUnit(rrow(), rcol(), 'bot-1', runit());
+            this.createOtherUnit(rrow(), rcol(), 'bot-1', runit());
+            this.createOtherUnit(rrow(), rcol(), 'bot-1', runit());
+        }
 
         //create blackground music
         this.background = this.sound.add('level1_background');
@@ -59,12 +71,27 @@ export class BoardScene extends Phaser.Scene {
         // Play background music
         this.background.play(musicConfig);
 
-        this.createscore();
+        // this.createscore();
 
         // Create controls to pan the camera across the map
         this.createPanControls();
         // Make sure hexagons are interactive and add highlighting listeners
         this.prepareHexagons();
+
+        this.scene.launch('HUD');
+
+        this.signals.on('turn-ended', ()=>{
+            this.endTurn();
+        });
+    }
+
+    endTurn(){
+        // Clear units for use again
+        for(let unit of this.units){
+            unit.movedList = [];
+            unit.moved = 0;
+            unit.attacked = false;
+        }
     }
 
     createscore() {
@@ -92,7 +119,7 @@ export class BoardScene extends Phaser.Scene {
 
     createOtherUnit(row, column, owner, unitConfig) {
         let unit = new Unit(this, row, column, owner, unitConfig);
-        unit.setInteractive();
+        unit.facePosition({ x: -1000, y: -1000 });
         unit.on('pointerdown', () => {
             if (this.selectedUnit) {
                 this.selectedUnit.attack(unit);
@@ -138,7 +165,6 @@ export class BoardScene extends Phaser.Scene {
 
     createPlayerUnit(row, column, unitConfig) {
         let unit = new Unit(this, row, column, this.cloud.user.id, unitConfig);
-        unit.setInteractive();
         unit.on('pointerdown', () => {
             this.onSelectUnit(unit);
         });
@@ -179,28 +205,17 @@ export class BoardScene extends Phaser.Scene {
 
 }
 
-export class BoardScene1 extends Phaser.Scene {
-    constructor() {
-        super("BoardScene1");
-
+export class HUDScene extends Phaser.Scene {
+    constructor(){
+        super("HUD");
+        this.signals = SignalManager.get();
     }
-
-    create() {
-        this.createTextPrompts();
-        this.scoreLabel = this.add.bitmapText(0, 20, "pixelFont", "SCORE", 16);
-
-    }
-
-    createTextPrompts() {
-        this.add.text(0, 20, '<<A)     dkahdhkashdkjahdjkahkjdhajkdhakjhjkdhjkahdjkhjdasdas     (D>>', {
-            font: '48px Arial',
-            strokeThickness: 12,
-            stroke: 'black'
+    create(){
+        this.add.dom(GAME_SCALE.width-150, GAME_SCALE.height-50, 'button', {
+            width: "300px",
+            height: "100px"
+        }, "End Turn").addListener('click').on('click', ()=>{
+            this.signals.emit("turn-ended");
         });
-        this.add.text(GAME_SCALE.width - 30, 0, 'Use  arrow  keys  to  pan  camera\nSave  map  w/  L  key\nW/S  to  zoom  camera', {
-            font: '36px Arial',
-            strokeThickness: 8,
-            stroke: 'black'
-        }).setOrigin(1, 0).setLineSpacing(0);
     }
 }

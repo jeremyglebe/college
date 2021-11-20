@@ -2,7 +2,8 @@ import { tweenColor } from "../utils/Color";
 import { HexMap } from "./HexMap";
 
 export const UNIT_DEPTH = 10;
-export const UNIT_SCALE = 10;
+export const UNIT_SCALE = 8;
+export const UNIT_SCALE_STACK_MULTIPLIER = .25;
 export const UNIT_ORIGIN_Y = .9;
 export const UNIT_HPBAR_OFFSET = 45;
 export const UNIT_STD_ANIM_DURATION = 2000;
@@ -26,6 +27,7 @@ export const DEFEND_DIE_CHANCE = 0.33;
  * @property {number} attack - Attack stat of the unit
  * @property {number} health - Health stat of the unit
  * @property {number} defense - Defense stat of the unit
+ * @property {number} speed - Speed stat of the unit
  */
 
 export const UNITS = {
@@ -39,7 +41,8 @@ export const UNITS = {
         },
         health: 10,
         attack: 2,
-        defense: 4
+        defense: 4,
+        speed: 5
     },
     Slime: {
         key: 'Slime',
@@ -50,7 +53,8 @@ export const UNITS = {
         },
         health: 3,
         attack: 1,
-        defense: 2
+        defense: 2,
+        speed: 2
     }
 }
 
@@ -72,6 +76,12 @@ export class Unit extends Phaser.GameObjects.Sprite {
         this.owner = owner;
         // Queue of grid locations to move to
         this.moveQueue = [];
+        // List of moves made this turn
+        this.movedList = [];
+        // Distance in tiles and stack moved this turn
+        this.moved = 0;
+        // Flag whether the unit has attacked this turn yet
+        this.attacked = false;
         // Flag whether the unit has been selected
         this.selected = false;
         /** @type {HexMap} Additional, easier reference to map */
@@ -83,22 +93,25 @@ export class Unit extends Phaser.GameObjects.Sprite {
         /** @type {Phaser.GameObjects.Rectangle} The Unit's health bar border */
         this.healthbarborder = this.scene.add.rectangle(this.x, this.y + UNIT_HPBAR_OFFSET, 145, 30, 0x000000).setDepth(UNIT_DEPTH);
         /** @type {Phaser.GameObjects.Rectangle} The Unit's health bar */
-        this.healthbar = this.scene.add.rectangle(this.x, this.y + UNIT_HPBAR_OFFSET, 140, 25, 0x00FF00).setDepth(UNIT_DEPTH+1);
+        this.healthbar = this.scene.add.rectangle(this.x, this.y + UNIT_HPBAR_OFFSET, 140, 25, 0x00FF00).setDepth(UNIT_DEPTH + 1);
         // Show the sprite over the tiles
         this.setDepth(UNIT_DEPTH);
         // Scale the characters b/c they are VERY small
-        this.setScale(UNIT_SCALE);
+        this.setScale(UNIT_SCALE + UNIT_SCALE_STACK_MULTIPLIER * this.hex.stack_height);
         // Set the unit origin point for movement
         this.setOrigin(0.5, UNIT_ORIGIN_Y);
         // Create animations for the character
         this.createAnimations(unit);
+        // Set interactive
+        this.setInteractive(this.scene.input.makePixelPerfect());
         // Add this character to the scene once they are constructed
         this.scene.add.existing(this);
         // Stats of the unit
         this.stats = {
             attack: unit.attack,
             defense: unit.defense,
-            health: unit.health
+            health: unit.health,
+            speed: unit.speed
         }
         // Remaining health of the unit
         this.health = this.stats.health;
@@ -132,16 +145,19 @@ export class Unit extends Phaser.GameObjects.Sprite {
      * @param {Unit} target The target who should take damage when attacking
      */
     attack(target) {
-        this.deselect();
-        this.anims.play('attack');
-        this.on('animationcomplete-attack', () => {
-            this.anims.play('idle');
-            this.off('animationcomplete-attack');
-        });
-        // Make the unit face towards its target
-        this.facePosition(target);
-        // Lower the targets health
-        target.harm(Unit.calcDamage(this.stats.attack, target.stats.defense));
+        if (!this.attacked) {
+            this.deselect();
+            this.anims.play('attack');
+            this.on('animationcomplete-attack', () => {
+                this.anims.play('idle');
+                this.off('animationcomplete-attack');
+            });
+            // Make the unit face towards its target
+            this.facePosition(target);
+            // Lower the targets health
+            target.harm(Unit.calcDamage(this.stats.attack, target.stats.defense));
+            this.attacked = true;
+        }
     }
 
     static calcDamage(attack, targetDefense) {
@@ -248,6 +264,8 @@ export class Unit extends Phaser.GameObjects.Sprite {
         else if (coordinate.x < this.x) {
             this.setFlipX(true);
         }
+        // Set interactive
+        this.setInteractive(this.scene.input.makePixelPerfect());
     }
 
     harm(damage) {
@@ -269,23 +287,7 @@ export class Unit extends Phaser.GameObjects.Sprite {
         // Flag: Is the damage critical?
         let critical = damage >= this.stats.health / 2;
         // Create some hit text to show damage
-        let text = this.scene.add.text(this.x, this.y - 50, `${damage}`, {
-            color: critical ? 'red' : 'white',
-            fontSize: critical ? '100px' : '70px',
-            stroke: 'black',
-            strokeThickness: 15
-        }).setDepth(UNIT_DEPTH+2);
-        // Animate and destroy the text
-        this.scene.tweens.add({
-            targets: text,
-            x: this.x + 100,
-            y: this.y - 130,
-            alpha: 0,
-            duration: UNIT_STD_ANIM_DURATION,
-            onComplete: () => {
-                text.destroy();
-            }
-        });
+        this.splashText(`${damage}`, critical);
     }
 
     /**
@@ -300,8 +302,10 @@ export class Unit extends Phaser.GameObjects.Sprite {
         let toHex = this.map.at(this.moveQueue[0].row, this.moveQueue[0].column);
         // Set the direction of the unit when moving
         this.facePosition(toHex);
-        // Verify that the hex is not occupied
-        if (!toHex.object) {
+        // Verify that the hex is not occupied and the unit have movement left
+        const movementLeft = this.stats.speed - this.moved;
+        const distanceToMove = toHex.stack_height - this.hex.stack_height + 1;
+        if (!toHex.object && movementLeft >= distanceToMove) {
             // Set the internal position of this unit
             this.setHexPosition(toHex.row, toHex.column);
             // Animate the movement to that position
@@ -309,10 +313,15 @@ export class Unit extends Phaser.GameObjects.Sprite {
                 targets: [this],
                 x: toHex.x,
                 y: toHex.y,
+                scaleX: UNIT_SCALE + UNIT_SCALE_STACK_MULTIPLIER * toHex.stack_height,
+                scaleY: UNIT_SCALE + UNIT_SCALE_STACK_MULTIPLIER * toHex.stack_height,
                 duration: UNIT_STD_ANIM_DURATION / 6,
                 onComplete: () => {
                     // Remove first item from queue
                     this.moveQueue.shift();
+                    // Add this move to the list of moves completed this turn
+                    this.movedList.push(toHex.row, toHex.column);
+                    this.moved += distanceToMove;
                     // Move again if there are more movements in the queue
                     if (this.moveQueue.length > 0) {
                         this.emit('unit-path-moved');
@@ -332,6 +341,8 @@ export class Unit extends Phaser.GameObjects.Sprite {
             this.emit('unit-path-cancelled');
             // Stop animation of movement
             this.anims.play('idle');
+            // Splash text
+            this.splashText(movementLeft < distanceToMove ? "Out of movement!" : "Movement failed!", true);
         }
     }
 
@@ -369,7 +380,7 @@ export class Unit extends Phaser.GameObjects.Sprite {
         // Get the hex tile to move to
         let toHex = this.map.at(row, column);
         // Fail if the hex in question is occupied
-        if(toHex.object){
+        if (toHex.object) {
             throw 'Unit Error: setHexPosition() called on occupied hex';
         }
         // Update the object of the hexes being moved from/to
@@ -378,6 +389,7 @@ export class Unit extends Phaser.GameObjects.Sprite {
         // Update the row/column number of the unit
         this.row = toHex.row;
         this.column = toHex.column;
+        this.hex = toHex;
     }
 
     /**
@@ -439,5 +451,26 @@ export class Unit extends Phaser.GameObjects.Sprite {
                 this.moveQueue.push(hex);
             }
         }
+    }
+
+    splashText(message, critical) {
+        // Create some hit text to show damage
+        let text = this.scene.add.text(this.x, this.y - 50, message, {
+            color: critical ? 'red' : 'white',
+            fontSize: critical ? '100px' : '70px',
+            stroke: 'black',
+            strokeThickness: 15
+        }).setDepth(UNIT_DEPTH + 2);
+        // Animate and destroy the text
+        this.scene.tweens.add({
+            targets: text,
+            x: this.x + 100,
+            y: this.y - 130,
+            alpha: 0,
+            duration: UNIT_STD_ANIM_DURATION,
+            onComplete: () => {
+                text.destroy();
+            }
+        });
     }
 }
