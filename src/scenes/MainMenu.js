@@ -37,10 +37,11 @@ export class MainMenuScene extends Phaser.Scene {
         //Add click sound
         this.clickSound = this.sound.add('click');
         // Hide the buttons
-        this.menuEle.querySelector('#create-button').style.display = 'none';
+        // this.menuEle.querySelector('#create-button').style.display = 'none';
         this.menuEle.querySelector('#load-button').style.display = 'none';
         this.menuEle.querySelector('#army-button').style.display = 'none';
         this.menuEle.querySelector('#join-button').style.display = 'none';
+        this.menuEle.querySelector('#login-button').style.display = 'none';
         // Create game button callback
         this.menuEle.querySelector('#create-button').onclick = () => {
             this.cloud.createGame();
