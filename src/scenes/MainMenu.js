@@ -42,6 +42,7 @@ export class MainMenuScene extends Phaser.Scene {
         this.menuEle.querySelector('#join-button').style.display = 'none';
         // Create game button callback
         this.menuEle.querySelector('#create-button').onclick = () => {
+            this.cloud.createGame();
             this.scene.start('Board');
             this.clickSound.play();
         }
