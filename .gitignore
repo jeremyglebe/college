@@ -105,3 +105,8 @@ dist
 
 # MacOS
 .DS_STORE
+
+
+/ios/
+/android/
+/builds/

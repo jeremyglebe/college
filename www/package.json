@@ -1,0 +1,10 @@
+{
+    "app_name": "hex-army",
+    "main": "index.html",
+    "name": "hex-army",
+    "webkit": {},
+    "window": {
+        "id": "hex-army",
+        "title": "hex-army"
+    }
+}
