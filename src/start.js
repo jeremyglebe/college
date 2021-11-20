@@ -1,5 +1,5 @@
 import * as Phaser from 'phaser';
-import { BoardScene, HUDScene } from './scenes/Board';
+import { BoardScene, GameOverScene, HUDScene } from './scenes/Board';
 import { LevelEditorHUDScene, LevelEditorScene } from './scenes/LevelEditor';
 import { MainMenuScene } from './scenes/MainMenu';
 import { ScreenScale } from './utils/ScreenScale';
@@ -22,7 +22,8 @@ const config = {
         BoardScene,
         LevelEditorHUDScene,
         LevelChooseScene,
-        HUDScene
+        HUDScene,
+        GameOverScene
     ],
     backgroundColor: 0x000000,
     render: {

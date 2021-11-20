@@ -119,8 +119,10 @@ export class Unit extends Phaser.GameObjects.Sprite {
 
     destroy() {
         // Destroy the health bar
-        this.healthbar.destroy();
-        this.healthbarborder.destroy();
+        if (this.healthbar.active)
+            this.healthbar.destroy();
+        if (this.healthbarborder.active)
+            this.healthbarborder.destroy();
         // Destroy this unit
         super.destroy();
         // Remove reference to this unit from its hex space
@@ -145,18 +147,29 @@ export class Unit extends Phaser.GameObjects.Sprite {
      * @param {Unit} target The target who should take damage when attacking
      */
     attack(target) {
-        if (!this.attacked) {
+        if (!this.attacked && Phaser.Math.Distance.BetweenPoints(this, target) < 300) {
             this.deselect();
             this.anims.play('attack');
             this.on('animationcomplete-attack', () => {
                 this.anims.play('idle');
                 this.off('animationcomplete-attack');
+                this.emit("unit-attacked-done");
             });
             // Make the unit face towards its target
             this.facePosition(target);
-            // Lower the targets health
-            target.harm(Unit.calcDamage(this.stats.attack, target.stats.defense));
+            // Lower the targets health (add height advantages)
+            if (this.hex.stack_height > target.hex.stack_height) {
+                target.harm(Unit.calcDamage(this.stats.attack + 1, target.stats.defense));
+            }
+            else if (this.hex.stack_height < target.hex.stack_height) {
+                target.harm(Unit.calcDamage(this.stats.attack, target.stats.defense + 1));
+            }
+            else {
+                target.harm(Unit.calcDamage(this.stats.attack, target.stats.defense));
+            }
             this.attacked = true;
+        } else {
+            this.emit("unit-attacked-done");
         }
     }
 
@@ -322,6 +335,16 @@ export class Unit extends Phaser.GameObjects.Sprite {
                     // Add this move to the list of moves completed this turn
                     this.movedList.push(toHex.row, toHex.column);
                     this.moved += distanceToMove;
+                    // Special effects based on tile
+                    if (toHex.id == 8) {
+                        // stop on water
+                        this.moved = this.stats.speed;
+                    }
+                    else if (toHex.id == 3) {
+                        // die on lava
+                        this.health = 0;
+                        this.die();
+                    }
                     // Move again if there are more movements in the queue
                     if (this.moveQueue.length > 0) {
                         this.emit('unit-path-moved');

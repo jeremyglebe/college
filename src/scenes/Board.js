@@ -80,17 +80,81 @@ export class BoardScene extends Phaser.Scene {
 
         this.scene.launch('HUD');
 
-        this.signals.on('turn-ended', ()=>{
+        this.signals.on('turn-ended', () => {
             this.endTurn();
         });
     }
 
-    endTurn(){
-        // Clear units for use again
-        for(let unit of this.units){
-            unit.movedList = [];
-            unit.moved = 0;
-            unit.attacked = false;
+    endTurn() {
+        // Clear dead units
+        let dead = [];
+        for (let unit of this.units) {
+            /** @type {Unit} */
+            let u = unit;
+            if (!u.active) {
+                dead.push(u);
+            }
+        }
+        this.units = this.units.filter(unit => !dead.includes(unit));
+
+        this.friendly = this.units.filter(unit => unit.owner == 'player');
+        this.badguys = this.units.filter(unit => unit.owner != 'player');
+        if (this.friendly.length < 1) {
+            this.signals.emit("its all over");
+            console.log("OH NO players");
+            for(let unit of this.units) unit.destroy();
+            this.background.stop();
+            this.scene.start("GameOver", { winner: false });
+        }
+        else if (this.badguys.length < 1) {
+            this.signals.emit("its all over");
+            console.log("OH NO baddies");
+            for(let unit of this.units) unit.destroy();
+            this.background.stop();
+            this.scene.start("GameOver", { winner: true });
+        }
+        else {
+
+            console.log(this.units);
+            // Make enemy units do things
+            for (let enemy of this.units.filter(unit => unit.owner == 'bot-1')) {
+                let targets = this.units.filter(unit => unit.owner != 'bot-1');
+                let target = targets[Math.floor(Math.random() * targets.length)];
+                enemy.setPathNaive(target.row, target.column);
+                enemy.moveThroughQueue();
+                // after moving, attack
+                enemy.on('unit-path-complete', () => {
+                    if (target && target.health > 0)
+                        enemy.attack(target);
+                    // Clear units for use again
+                    for (let unit of this.units) {
+                        unit.movedList = [];
+                        unit.moved = 0;
+                        unit.attacked = false;
+                    }
+                });
+                enemy.on('unit-path-cancelled', () => {
+                    if (target && target.health > 0) {
+                        enemy.attack(target);
+                        enemy.on("unit-attacked-done", () => {
+                            // Clear units for use again
+                            for (let unit of this.units) {
+                                unit.movedList = [];
+                                unit.moved = 0;
+                                unit.attacked = false;
+                            }
+                        });
+                    } else {
+                        // Clear units for use again
+                        for (let unit of this.units) {
+                            unit.movedList = [];
+                            unit.moved = 0;
+                            unit.attacked = false;
+                        }
+                    }
+
+                });
+            }
         }
     }
 
@@ -114,7 +178,7 @@ export class BoardScene extends Phaser.Scene {
         // Configure and create the hex map
         this.map = new HexMap(this, hexes, CONFIGS.mapConfig);
         // Zoom the camera out a bit because it looks nicer
-        this.cameras.main.setZoom(0.5);
+        this.cameras.main.setZoom(0.35);
     }
 
     createOtherUnit(row, column, owner, unitConfig) {
@@ -164,7 +228,7 @@ export class BoardScene extends Phaser.Scene {
     }
 
     createPlayerUnit(row, column, unitConfig) {
-        let unit = new Unit(this, row, column, this.cloud.user.id, unitConfig);
+        let unit = new Unit(this, row, column, this.cloud.user.uid, unitConfig);
         unit.on('pointerdown', () => {
             this.onSelectUnit(unit);
         });
@@ -206,16 +270,43 @@ export class BoardScene extends Phaser.Scene {
 }
 
 export class HUDScene extends Phaser.Scene {
-    constructor(){
+    constructor() {
         super("HUD");
         this.signals = SignalManager.get();
     }
-    create(){
-        this.add.dom(GAME_SCALE.width-150, GAME_SCALE.height-50, 'button', {
+    create() {
+        //Add click sound
+        this.clickSound = this.sound.add('click');
+        this.add.dom(GAME_SCALE.width - 150, GAME_SCALE.height - 50, 'button', {
             width: "300px",
-            height: "100px"
-        }, "End Turn").addListener('click').on('click', ()=>{
+            height: "100px",
+            fontSize: "32px",
+            backgroundColor: "#ffc299",
+            borderRadius: "16px",
+            border: "2px solid #ff8533",
+        }, "End Turn").addListener('click').on('click', () => {
+            this.clickSound.play();
             this.signals.emit("turn-ended");
+        });
+        this.signals.on("its all over", () => {
+            this.scene.stop();
+        });
+    }
+}
+
+export class GameOverScene extends Phaser.Scene {
+    constructor() {
+        super("GameOver");
+    }
+    init(data) {
+        this.winner = data.winner || false;
+    }
+    create() {
+        this.add.text(GAME_SCALE.center.x, GAME_SCALE.center.y, this.winner ? "YOU WIN" : "YOU LOSE", {
+            fontSize: '100px'
+        }).setOrigin(0.5);
+        this.input.on('pointerdown', () => {
+            this.scene.start("MainMenu");
         });
     }
 }

@@ -35,7 +35,7 @@ export class CloudManager extends Phaser.Events.EventEmitter {
         /** Function which kills the listener for pending games (defined later with the listener itself) */
         this.stopPendingGamesListener = null;
         /** @type {User|null} object of the currently logged in user */
-        this.user = null;
+        this.user = {uid: "player"};
         /** @type {null} */
         this.docActiveGame = null;
     }
