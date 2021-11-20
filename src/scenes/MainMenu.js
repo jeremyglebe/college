@@ -38,6 +38,7 @@ export class MainMenuScene extends Phaser.Scene {
         this.clickSound = this.sound.add('click');
         // Hide the buttons
         this.menuEle.querySelector('#create-button').style.display = 'none';
+        this.menuEle.querySelector('#load-button').style.display = 'none';
         this.menuEle.querySelector('#army-button').style.display = 'none';
         this.menuEle.querySelector('#join-button').style.display = 'none';
         // Create game button callback
@@ -56,8 +57,9 @@ export class MainMenuScene extends Phaser.Scene {
             this.clickSound.play();
             await this.cloud.login();
             this.menuEle.querySelector('#create-button').style.display = 'inline';
-            this.menuEle.querySelector('#army-button').style.display = 'inline';
-            this.menuEle.querySelector('#join-button').style.display = 'inline';
+            this.menuEle.querySelector('#load-button').style.display = 'inline';
+            // this.menuEle.querySelector('#army-button').style.display = 'inline';
+            // this.menuEle.querySelector('#join-button').style.display = 'inline';
             this.menuEle.querySelector('#login-button').style.display = 'none';
         }
     }
