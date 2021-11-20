@@ -35,6 +35,10 @@ export class BoardScene extends Phaser.Scene {
             frameWidth: 32,
             frameHeight: 25
         });
+        this.load.spritesheet('Ogre', './assets/images/rvros/Ogre.png', {
+            frameWidth: 58,
+            frameHeight: 45
+        });
         this.load.audio('level1_background', './assets/sounds/level1_background.mp3');
         this.load.bitmapFont("pixelFont", "assets/font/font.png", "assets/font/font.xml")
 
@@ -232,6 +236,7 @@ export class BoardScene extends Phaser.Scene {
         unit.on('pointerdown', () => {
             this.onSelectUnit(unit);
         });
+        unit.facePosition({ x: 1000000000000, y: 1000 });
         this.units.push(unit);
     }
 

@@ -28,6 +28,7 @@ export const DEFEND_DIE_CHANCE = 0.33;
  * @property {number} health - Health stat of the unit
  * @property {number} defense - Defense stat of the unit
  * @property {number} speed - Speed stat of the unit
+ * @property {boolean} flipped - Should the image for this unit be flipped?
  */
 
 export const UNITS = {
@@ -39,11 +40,13 @@ export const UNITS = {
             move: [58, 63],
             attack: [2, 13],
         },
-        health: 10,
-        attack: 2,
-        defense: 4,
-        speed: 5
+        health: 8,
+        attack: 6,
+        defense: 3,
+        speed: 7,
+        flipped: false
     },
+    /** @type {IUnitConfig} */
     Slime: {
         key: 'Slime',
         animations: {
@@ -51,11 +54,26 @@ export const UNITS = {
             move: [0, 3],
             attack: [12, 15]
         },
-        health: 3,
-        attack: 1,
+        health: 5,
+        attack: 3,
+        defense: 4,
+        speed: 4,
+        flipped: false
+    },
+    /** @type {IUnitConfig} */
+    Ogre: {
+        key: 'Ogre',
+        animations: {
+            idle: [0, 3],
+            move: [4, 9],
+            attack: [13, 16]
+        },
+        health: 20,
+        attack: 6,
         defense: 2,
-        speed: 2
-    }
+        speed: 3,
+        flipped: true
+    },
 }
 
 export class Unit extends Phaser.GameObjects.Sprite {
@@ -102,10 +120,12 @@ export class Unit extends Phaser.GameObjects.Sprite {
         this.setOrigin(0.5, UNIT_ORIGIN_Y);
         // Create animations for the character
         this.createAnimations(unit);
-        // Set interactive
-        this.setInteractive(this.scene.input.makePixelPerfect());
         // Add this character to the scene once they are constructed
         this.scene.add.existing(this);
+        // Set interactive
+        // let area = new Phaser.Geom.Circle(this.displayWidth * this.originX - 85, this.displayHeight * this.originY - 70, 12.5);
+        this.setInteractive(this.scene.input.makePixelPerfect());
+        // this.scene.input.enableDebug(this);
         // Stats of the unit
         this.stats = {
             attack: unit.attack,
@@ -115,6 +135,8 @@ export class Unit extends Phaser.GameObjects.Sprite {
         }
         // Remaining health of the unit
         this.health = this.stats.health;
+        // Does the units image need to be flipped
+        this.flipped = unit.flipped;
     }
 
     destroy() {
@@ -276,6 +298,10 @@ export class Unit extends Phaser.GameObjects.Sprite {
         }
         else if (coordinate.x < this.x) {
             this.setFlipX(true);
+        }
+        // If the unit is flipped
+        if (this.flipped) {
+            this.setFlipX(!this.flipX);
         }
         // Set interactive
         this.setInteractive(this.scene.input.makePixelPerfect());
