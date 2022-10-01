@@ -5,5 +5,5 @@ This repository contains the code and projects I wrote for my Computer Graphics 
 
 | Directory | Description |
 | --- | --- |
-| [`Program 1`](/Program%201) | Draw colored dots with WebGL |
-| [`Program 2`](/Program%202) | Demonstrating a basic version of the chaos game with WebGL |
+| [`Program 1`](https://jeremyglebe.com/Coursework-5220-Computer-Graphics/Program%201) | Draw colored dots with WebGL |
+| [`Program 2`](https://jeremyglebe.com/Coursework-5220-Computer-Graphics/Program%202) | Demonstrating a basic version of the chaos game with WebGL |
