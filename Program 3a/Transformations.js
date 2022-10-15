@@ -180,9 +180,9 @@ let triangle = {
         -0.125, -0.21650635094,
 
 
-        1, 1,
-        -1, 1,
-        1, -1,
+        // 1, 1,
+        // -1, 1,
+        // 1, -1,
     ],
     // Matrix definining the current transformation applied to the shape
     // (Defaults to identity matrix)
