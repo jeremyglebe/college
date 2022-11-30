@@ -1,0 +1,51 @@
+<!--
+    Author: Jeremy Glebe
+    Date: 2022-10-07
+    Description: A project which transforms a triangle using WebGL shaders.
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Meta data for web page -->
+    <meta charset="utf-8" />
+    <title>Transforming Shapes</title>
+    <!-- Basic styling for the controls -->
+    <style>
+        body {
+            text-align: center;
+        }
+    </style>
+    <!-- Libraries to load for WebGL -->
+    <script src="../lib/webgl-utils.js"></script>
+    <script src="../lib/webgl-debug.js"></script>
+    <script src="../lib/cuon-utils.js"></script>
+    <script src="../lib/cuon-matrix.js"></script>
+    <!-- Main script for triangle transformations -->
+    <script src="./Transformations.js"></script>
+</head>
+
+<body onload="main()">
+    <canvas id="webgl" width="400" height="400">
+        Please use a browser that supports "canvas"
+    </canvas>
+
+    <!-- Inputs to handle matrix solutions -->
+    <p>
+        <button id="reset-button" disabled onclick="do_reset()">Default</button>
+        <button id="key-solution-button" onclick="do_key_solution()">Key's Solution</button>
+        <button id="my-solution-button" onclick="do_my_solution()">My Solution</button>
+        <br>
+        <button id="center-scale-button" onclick="do_center_scale()">Center Scale</button>
+    <p>
+        <label>Matrix</label><br>
+        <code id="matrix-text"></code>
+    </p>
+    </p>
+
+
+
+</body>
+
+</html>
