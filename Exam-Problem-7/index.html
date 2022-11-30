@@ -27,9 +27,18 @@
 </head>
 
 <body onload="main()">
-    <canvas id="webgl" width="400" height="400">
+    <!-- Create a webgl canvas for rendering the shape and shaders -->
+    <canvas id="webgl" width="400" height="400" style="position: absolute; top: 10px; left: 0; right: 0; margin: auto;">
         Please use a browser that supports "canvas"
     </canvas>
+    <!-- Create a canvas that overlays the webgl one and display a grid (I could do this in webGL but this is honestly faster and the
+        grid isn't really the point of this program) -->
+    <canvas id="overlay" width="400" height="400"
+        style="position: absolute; top: 10px; left: 0; right: 0; margin: auto;">
+        Please use a browser that supports "canvas"
+    </canvas>
+    <!-- Create a div to push the remaining content down so that it doesn't display under canvases -->
+    <div style="height: 420px;"></div>
 
     <!-- Inputs to handle matrix solutions -->
     <p>

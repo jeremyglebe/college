@@ -13,6 +13,8 @@ function main() {
     sketch.writeVertices(triangle);
     // Draw the shape once
     sketch.draw(triangle);
+    // Draw the grid
+    draw_grid();
 }
 
 /**
@@ -38,7 +40,6 @@ let sketch = {
         vertex: `#version 300 es
         in vec4 a_Position;
         uniform mat4 u_ModelMatrix;
-        out vec4 v_Position;
 
         // function to remap a value from one range to another
         float remap(float value, float low1, float high1, float low2, float high2) {
@@ -50,25 +51,17 @@ let sketch = {
             gl_Position = u_ModelMatrix * a_Position;
             // remap the vertex position from the range [-20, 20] to [-1, 1]
             gl_Position = vec4(remap(gl_Position.x, -20.0, 20.0, -1.0, 1.0), remap(gl_Position.y, -20.0, 20.0, -1.0, 1.0), 0.0, 1.0);
-            // Pass the vertex position to the fragment shader
-            v_Position = gl_Position;
         }`,
         // Fragment shader program
         fragment: `#version 300 es
         #ifdef GL_ES
              precision mediump float;
         #endif
-        in vec4 v_Position;
         out vec4 fragColor;
 
         void main() 
         {
-            // transition color from red to blue based on the z coordinate
-            vec3 red = vec3(1.0, 0.0, 0.0);
-            vec3 blue = vec3(0.0, 0.0, 1.0);
-            vec3 color = mix(red, blue, v_Position.z / 10.0);
-
-            fragColor = vec4(color, 1.0);
+            fragColor = vec4(0.0, 1.0, 0.0, 1.0);
         }`
     },
     /**
@@ -114,7 +107,6 @@ let sketch = {
     writeVertices: function (shape) {
         // Define the vertices of the shape (triangle) in x,y coordinates
         let vertices = new Float32Array(shape.vertices);
-        console.log(vertices);
         // Bind the buffer object to target
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.vertexBuffer);
         // Write date into the buffer object
@@ -274,7 +266,55 @@ function do_center_scale() {
     sketch.draw(triangle);
 }
 
-function do_column_translation(){
+function do_column_translation() {
     triangle.column_translation();
     sketch.draw(triangle);
+}
+
+function draw_grid() {
+    let canvas = document.getElementById("overlay");
+    let ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Draw the axes
+    ctx.beginPath();
+    ctx.strokeStyle = "white";
+    ctx.lineWidth = 2;
+    ctx.moveTo(0, canvas.height / 2);
+    ctx.lineTo(canvas.width, canvas.height / 2);
+    ctx.moveTo(canvas.width / 2, 0);
+    ctx.lineTo(canvas.width / 2, canvas.height);
+    ctx.stroke();
+
+    // Draw lines covering range [-20, 20]
+    ctx.beginPath();
+    ctx.strokeStyle = "gray";
+    ctx.lineWidth = 1;
+    for (let i = 0; i < 40; i++) {
+        ctx.moveTo(0, canvas.height / 2 - i * 10);
+        ctx.lineTo(canvas.width, canvas.height / 2 - i * 10);
+        ctx.moveTo(0, canvas.height / 2 + i * 10);
+        ctx.lineTo(canvas.width, canvas.height / 2 + i * 10);
+        ctx.moveTo(canvas.width / 2 - i * 10, 0);
+        ctx.lineTo(canvas.width / 2 - i * 10, canvas.height);
+        ctx.moveTo(canvas.width / 2 + i * 10, 0);
+        ctx.lineTo(canvas.width / 2 + i * 10, canvas.height);
+    }
+    ctx.stroke();
+
+    // Draw tick marks every 5 units
+    ctx.beginPath();
+    ctx.strokeStyle = "white";
+    ctx.lineWidth = 2;
+    for (let i = 0; i < 40; i+=5) {
+        ctx.moveTo(canvas.width / 2 - i * 10, canvas.height / 2 - 5);
+        ctx.lineTo(canvas.width / 2 - i * 10, canvas.height / 2 + 5);
+        ctx.moveTo(canvas.width / 2 + i * 10, canvas.height / 2 - 5);
+        ctx.lineTo(canvas.width / 2 + i * 10, canvas.height / 2 + 5);
+        ctx.moveTo(canvas.width / 2 - 5, canvas.height / 2 - i * 10);
+        ctx.lineTo(canvas.width / 2 + 5, canvas.height / 2 - i * 10);
+        ctx.moveTo(canvas.width / 2 - 5, canvas.height / 2 + i * 10);
+        ctx.lineTo(canvas.width / 2 + 5, canvas.height / 2 + i * 10);
+    }
+    ctx.stroke();
 }
