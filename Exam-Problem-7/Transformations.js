@@ -39,9 +39,18 @@ let sketch = {
         in vec4 a_Position;
         uniform mat4 u_ModelMatrix;
         out vec4 v_Position;
+
+        // function to remap a value from one range to another
+        float remap(float value, float low1, float high1, float low2, float high2) {
+            return low2 + (value - low1) * (high2 - low2) / (high1 - low1);
+        }
+
         void main() 
         {
             gl_Position = u_ModelMatrix * a_Position;
+            // remap the vertex position from the range [-20, 20] to [-1, 1]
+            gl_Position = vec4(remap(gl_Position.x, -20.0, 20.0, -1.0, 1.0), remap(gl_Position.y, -20.0, 20.0, -1.0, 1.0), 0.0, 1.0);
+            // Pass the vertex position to the fragment shader
             v_Position = gl_Position;
         }`,
         // Fragment shader program
@@ -51,12 +60,14 @@ let sketch = {
         #endif
         in vec4 v_Position;
         out vec4 fragColor;
+
         void main() 
         {
+            // transition color from red to blue based on the z coordinate
             vec3 red = vec3(1.0, 0.0, 0.0);
             vec3 blue = vec3(0.0, 0.0, 1.0);
-            // transition color from red to blue based on the z coordinate
             vec3 color = mix(red, blue, v_Position.z / 10.0);
+
             fragColor = vec4(color, 1.0);
         }`
     },
@@ -103,6 +114,7 @@ let sketch = {
     writeVertices: function (shape) {
         // Define the vertices of the shape (triangle) in x,y coordinates
         let vertices = new Float32Array(shape.vertices);
+        console.log(vertices);
         // Bind the buffer object to target
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.vertexBuffer);
         // Write date into the buffer object
@@ -129,7 +141,11 @@ let sketch = {
 // Object to encapsulate shape properties
 let triangle = {
     // Array of vertices in form [x1, y1, x2, y2, ...]
-    vertices: [0, 0.075, -0.075, -0.075, 0.075, -0.075],
+    vertices: [
+        -1.0, 3.0, // bottom left
+        0.0, 5.0, // top
+        1.0, 3.0 // bottom right
+    ],
     // Matrix definining the current transformation applied to the shape
     // (Defaults to identity matrix)
     transform: new Matrix4(),
@@ -146,14 +162,16 @@ let triangle = {
         document.getElementById("my-solution-button").disabled = false;
         // enable center scale button
         document.querySelector("#center-scale-button").disabled = false;
+        // enable the column translation button
+        document.querySelector("#column-translation-button").disabled = false;
     },
 
     key_solution: function () {
         this.transform.elements = new Float32Array([
             2, 0, 0, 0,
-            0, 3, 0, 8,
-            0, 0, 5, 4,
-            0, 0, 0, 1
+            0, 3, 0, 0,
+            0, 0, 5, 0,
+            0, 8, 4, 1
         ]);
         // enable the reset button
         document.querySelector("#reset-button").disabled = false;
@@ -163,14 +181,16 @@ let triangle = {
         document.querySelector("#key-solution-button").disabled = true;
         // enable center scale button
         document.querySelector("#center-scale-button").disabled = false;
+        // enable the column translation button
+        document.querySelector("#column-translation-button").disabled = false;
     },
 
     my_solution: function () {
         this.transform.elements = new Float32Array([
             2, 0, 0, 0,
-            0, 3, 0, -8,
-            0, 0, 5, -4,
-            0, 0, 0, 1
+            0, 3, 0, 0,
+            0, 0, 5, 0,
+            0, -8, -4, 1
         ]);
         // enable the reset button
         document.querySelector("#reset-button").disabled = false;
@@ -180,6 +200,8 @@ let triangle = {
         document.querySelector("#my-solution-button").disabled = true;
         // enable center scale button
         document.querySelector("#center-scale-button").disabled = false;
+        // enable the column translation button
+        document.querySelector("#column-translation-button").disabled = false;
     },
 
     center_scale: function () {
@@ -197,6 +219,27 @@ let triangle = {
         document.querySelector("#my-solution-button").disabled = false;
         // disable the center scale button
         document.querySelector("#center-scale-button").disabled = true;
+        // enable the column translation button
+        document.querySelector("#column-translation-button").disabled = false;
+    },
+
+    column_translation: function () {
+        this.transform.elements = new Float32Array([
+            2, 0, 0, 0,
+            0, 3, 0, 8,
+            0, 0, 5, 4,
+            0, 0, 0, 1
+        ]);
+        // enable the reset button
+        document.querySelector("#reset-button").disabled = false;
+        // enable the key solution button
+        document.querySelector("#key-solution-button").disabled = false;
+        // enable the my solution button
+        document.querySelector("#my-solution-button").disabled = false;
+        // enable center scale button
+        document.querySelector("#center-scale-button").disabled = false;
+        // disable the column translation button
+        document.querySelector("#column-translation-button").disabled = true;
     },
 
     update_matrix_text: function () {
@@ -211,22 +254,27 @@ let triangle = {
     }
 }
 
-function do_key_solution(){
+function do_key_solution() {
     triangle.key_solution();
     sketch.draw(triangle);
 }
 
-function do_my_solution(){
+function do_my_solution() {
     triangle.my_solution();
     sketch.draw(triangle);
 }
 
-function do_reset(){
+function do_reset() {
     triangle.reset();
     sketch.draw(triangle);
 }
 
-function do_center_scale(){
+function do_center_scale() {
     triangle.center_scale();
+    sketch.draw(triangle);
+}
+
+function do_column_translation(){
+    triangle.column_translation();
     sketch.draw(triangle);
 }
