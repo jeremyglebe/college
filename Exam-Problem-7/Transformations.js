@@ -134,9 +134,9 @@ let sketch = {
 let triangle = {
     // Array of vertices in form [x1, y1, x2, y2, ...]
     vertices: [
-        -1.0, 3.0, // bottom left
-        0.0, 5.0, // top
-        1.0, 3.0 // bottom right
+        -2.0, 3, // bottom left
+        0.0, 6.4641, // top
+        2.0, 3 // bottom right
     ],
     // Matrix definining the current transformation applied to the shape
     // (Defaults to identity matrix)
@@ -306,7 +306,7 @@ function draw_grid() {
     ctx.beginPath();
     ctx.strokeStyle = "white";
     ctx.lineWidth = 2;
-    for (let i = 0; i < 40; i+=5) {
+    for (let i = 0; i < 40; i += 5) {
         ctx.moveTo(canvas.width / 2 - i * 10, canvas.height / 2 - 5);
         ctx.lineTo(canvas.width / 2 - i * 10, canvas.height / 2 + 5);
         ctx.moveTo(canvas.width / 2 + i * 10, canvas.height / 2 - 5);
@@ -317,4 +317,10 @@ function draw_grid() {
         ctx.lineTo(canvas.width / 2 + 5, canvas.height / 2 + i * 10);
     }
     ctx.stroke();
+
+    // Draw a red dot at x=0,y=4 (where we want to scale relative to) with a radius of 3
+    ctx.beginPath();
+    ctx.fillStyle = "red";
+    ctx.arc(canvas.width / 2, canvas.height / 2 - 40, 3, 0, 2 * Math.PI);
+    ctx.fill();
 }
