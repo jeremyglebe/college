@@ -210,7 +210,7 @@ function initVertexBuffers(gl) {
             // Now two triangles must be formed of the vertices
             indices.push(i, i + 1, i + 2, i, i + 2, i + 3);
             // Add the colors to the array
-            colors.push(v0.c.r, v0.c.g, v0.c.b, v1.c.r, v1.c.g, v1.c.b, v2.c.r, v2.c.g, v2.c.b, v3.c.r, v3.c.g, v3.c.b)
+            colors.push(v0.c.r, v0.c.g, v0.c.b, v1.c.r, v1.c.g, v1.c.b, v2.c.r, v2.c.g, v2.c.b, v3.c.r, v3.c.g, v3.c.b);
         }
     }
     // Create the normals array by averaging the normals of each vertex
@@ -311,12 +311,20 @@ function normal(x1, y1, z1, x2, y2, z2, x3, y3, z3) {
     n.x /= length;
     n.y /= length;
     n.z /= length;
-    console.log(n);
     return n;
 }
 
 // Lerps between two colors
 function color_lerp(c1, c2, t) {
     return { r: c1.r + (c2.r - c1.r) * t, g: c1.g + (c2.g - c1.g) * t, b: c1.b + (c2.b - c1.b) * t };
+}
+
+// Scale the canvas (while keeping square ratio) to the smallest screen dimension
+if (window.innerWidth < window.innerHeight) {
+    document.querySelector("#webgl").width = window.innerWidth;
+    document.querySelector("#webgl").height = window.innerWidth;
+} else {
+    document.querySelector("#webgl").width = window.innerHeight;
+    document.querySelector("#webgl").height = window.innerHeight;
 }
 /*** MODIFIED CODE ENDS HERE *************************************************************************************/

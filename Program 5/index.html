@@ -3,10 +3,24 @@
   <head>
     <meta charset="utf-8" />
     <title>Bivariate Function Graphing</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: black;
+      }
+      #webgl {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+    </style>
   </head>
 
   <body onload="main()">
-    <canvas id="webgl" width="400" height="400">
+    <canvas id="webgl">
     Please use a browser that supports "canvas"
     </canvas>
 
@@ -14,6 +28,6 @@
     <script src="../lib/webgl-debug.js"></script>
     <script src="../lib/cuon-utils.js"></script>
     <script src="../lib/cuon-matrix.js"></script>
-    <script src="LightedCube_animation.js"></script>
+    <script src="bivariate_graph.js"></script>
   </body>
 </html>
