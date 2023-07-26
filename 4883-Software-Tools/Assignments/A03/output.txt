@@ -1,0 +1,179 @@
+Name: Jeremy Glebe
+Assignment: A03 - Nfl Stats
+Date: 2/17/2019
+
+==================================================================================
+Find the player(s) that played for the most teams.
+
+***List of players who played on the most teams***
+
+Player: S.Graham
+Number of Teams: 8
+Teams: {'CIN', 'NYG', 'NE', 'HOU', 'MIA', 'NO', 'BAL', 'ATL'}
+
+Player: B.Marshall
+Number of Teams: 8
+Teams: {'NYG', 'MIA', 'RIC', 'SEA', 'AFC', 'DEN', 'NYJ', 'CHI'}
+
+==================================================================================
+Find the player(s) that played for multiple teams in one year.
+
+***List of players who played on multiple teams***
+
+Player: S.Graham
+Number of Teams: 8
+Teams: {'CIN', 'NYG', 'NE', 'HOU', 'MIA', 'NO', 'BAL', 'ATL'}
+
+Player: B.Marshall
+Number of Teams: 8
+Teams: {'NYG', 'MIA', 'RIC', 'SEA', 'AFC', 'DEN', 'NYJ', 'CHI'}
+
+Player: B.Grimes
+Number of Teams: 7
+Teams: {'NFC', 'SAN', 'MIA', 'RIC', 'TB', 'ATL', 'IRV'}
+
+Player: J.Forsett
+Number of Teams: 7
+Teams: {'CRT', 'DET', 'HOU', 'SEA', 'DEN', 'BAL', 'JAC'}
+
+Player: A.Cromartie
+Number of Teams: 7
+Teams: {'ARI', 'CRT', 'IND', 'SD', 'RIC', 'AFC', 'NYJ'}
+
+Player: M.Spurlock
+Number of Teams: 7
+Teams: {'SD', 'DET', 'SF', 'DAL', 'TB', 'CHI', 'JAC'}
+
+Player: J.Babin
+Number of Teams: 7
+Teams: {'PHI', 'NFC', 'TEN', 'AFC', 'BAL', 'JAC', 'NYJ'}
+
+Player: M.Wallace
+Number of Teams: 6
+Teams: {'PHI', 'MIA', 'AFC', 'BAL', 'MIN', 'PIT'}
+
+Player: J.Charles
+Number of Teams: 6
+Teams: {'CRT', 'SAN', 'KC', 'JAX', 'AFC', 'DEN'}
+
+Player: E.Dumervil
+Number of Teams: 6
+Teams: {'SF', 'RIC', 'AFC', 'DEN', 'BAL', 'IRV'}
+
+...
+
+==================================================================================
+Find the player(s) that had the most yards rushed for a loss.
+
+***List of players who has the most yards rushed for a loss***
+
+Player: P.Manning
+Rushes for a loss: 51
+Yards lost: -112
+
+==================================================================================
+Find the player(s) that had the most rushes for a loss.
+
+***List of players who had the most rushes for a loss***
+
+Player: P.Manning
+Rushes for a loss: 51
+Yards lost: -112
+
+Player: D.Brees
+Rushes for a loss: 51
+Yards lost: -102
+
+==================================================================================
+Find the player(s) with the most number of passes for a loss.
+
+***List of players who had the most passes for a loss***
+
+Player: K.Collins
+Passes for a loss: 1
+Yards lost: -7
+
+Player: T.Edwards
+Passes for a loss: 1
+Yards lost: -1
+
+Player: A.Boldin
+Passes for a loss: 1
+Yards lost: -6
+
+Player: B.Croyle
+Passes for a loss: 1
+Yards lost: -2
+
+Player: T.Tebow
+Passes for a loss: 1
+Yards lost: -1
+
+Player: S.Schillinger
+Passes for a loss: 1
+Yards lost: -8
+
+Player: B.Weeden
+Passes for a loss: 1
+Yards lost: -2
+
+Player: J.Campbell
+Passes for a loss: 1
+Yards lost: -3
+
+Player: S.Koch
+Passes for a loss: 1
+Yards lost: -3
+
+Player: J.Ryan
+Passes for a loss: 1
+Yards lost: -4
+
+...
+
+==================================================================================
+Find the team with the most penalties.
+
+***List of teams with the most penalties***
+
+Team: NE
+Penalties: 1024
+
+==================================================================================
+Find the team with the most yards in penalties.
+
+***List of teams with the most yards in penalties***
+
+Team: NE
+Yards: 31502
+
+==================================================================================
+Find the correlation between most penalized teams and games won / lost.
+
+Average Win/Loss Ratio for teams with highest number of penalties: 1.2158647594278282
+Teams that get penalized a lot also win often.
+
+==================================================================================
+Average number of plays in a game.
+
+Answer: 176.8507462686567
+
+==================================================================================
+Longest field goal.
+
+Answer: 64
+
+==================================================================================
+Most field goals.
+
+Most field goals in a single game: 9
+
+==================================================================================
+Most missed field goals.
+
+Most missed field goals in a single game: 5
+
+==================================================================================
+Most dropped passes (Search for "pass" and "dropped" in play description, and stat-id 115).
+
+Most dropped passes in a single game: 2
