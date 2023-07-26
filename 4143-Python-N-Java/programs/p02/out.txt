@@ -1,0 +1,5 @@
+[Enter any integer > -1 to see it's binary representation]
+[Enter -1 to terminate the program]
+47 = 101111
+265 = 100001001
+872 = 1101101000
