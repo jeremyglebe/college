@@ -1,0 +1,11 @@
+Created the game level choose page
+Add the player score
+Add the player healthbar
+Completed the enemy move & attack
+Created function of player attack,calculated the damage of every collison
+Creat different background sound
+
+Feedback received during the code inspection session:
+Our pair member suggested that we should declare variable name clearly, such as nw=northwest, this could make sense.
+We declare the variable name:
+nw = northwest, n = north, ne = northeast, w = west, e = east, sw = southwest , s = south ,se = southeast. 

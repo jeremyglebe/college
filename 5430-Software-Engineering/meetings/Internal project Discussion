@@ -1,0 +1,10 @@
+Initial Implementation for Hex army game:
+        - creating the menu using HTML.
+        - Create 20*20 hexagonal grid tiles.
+        - create a hero character and move the character.
+        - Introduction music, Game play music and sound effect for click a button.
+        - create a button control or touch control.
+        - write a short path algorithm.
+        - create Health bar for hero and enemy.
+Feedback 
+        - creating a option in menu whether the player need button or touch control (it is all demand on user comfort).
