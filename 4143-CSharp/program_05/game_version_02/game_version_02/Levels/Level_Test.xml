@@ -1,0 +1,31 @@
+﻿<Level>
+
+  <Name>The Great Test Level</Name>
+
+  <Description>In this level, you must complete a test. A test that will determine if the test maker has made a good test. Not every test is made equal. This test will be a challenging sort of test.</Description>
+
+  <!--
+  General:
+    Every line of the grid must end with a '\', this character will not show
+    in the actual game. 
+    Whitespace is ignored, use '`' to denote a blank space in the grid.
+  -->
+  <Grid>
+    ```\
+    ```\
+    ```
+  </Grid>
+
+  <Dialogues>
+
+    <D0>
+      <Line0>theBigCheese> This is your tutorial.</Line0>
+    </D0>
+
+    <D1>
+      <Line0>not_a_secret_agent4242> This is just some random banter.</Line0>
+    </D1>
+
+  </Dialogues>
+
+</Level>

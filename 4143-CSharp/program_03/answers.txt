@@ -1,0 +1,5 @@
+* Answers to questions:
+ * 1) When you attempt to use a <5 digit number, it displays the numbers with
+ *     '0's in front.
+ * 2) When you attempt to use a >5 digit number, it displays only the last 5
+ *     digits.
