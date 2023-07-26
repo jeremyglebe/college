@@ -1,0 +1,66 @@
+<!--
+    Author: Jeremy Glebe
+    Date: 2022-10-07
+    Description: A project which transforms a triangle using WebGL shaders.
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Meta data for web page -->
+    <meta charset="utf-8" />
+    <title>Transforming Shapes</title>
+    <!-- Basic styling for the controls -->
+    <style>
+        body {
+            text-align: center;
+        }
+    </style>
+    <!-- Libraries to load for WebGL -->
+    <script src="../lib/webgl-utils.js"></script>
+    <script src="../lib/webgl-debug.js"></script>
+    <script src="../lib/cuon-utils.js"></script>
+    <script src="../lib/cuon-matrix.js"></script>
+    <!-- Main script for triangle transformations -->
+    <script src="./Transformations.js"></script>
+</head>
+
+<body onload="main()">
+    <canvas id="webgl" width="400" height="400">
+        Please use a browser that supports "canvas"
+    </canvas>
+
+    <!-- Inputs to handle translation -->
+    <p>Translate (in direction triangle is pointing)</p>
+    <p>
+        <input id="translate" placeholder="0.25" />
+        <button onclick="clickHandler.translate()">↗ (Transform)</button>
+        <button onclick="clickHandler.translate(true)">↙ (Inverse)</button>
+    </p>
+
+    <!-- Inputs to handle scaling -->
+    <p>Scale (Relative to current location)</p>
+    <p>
+        <input id="scale" placeholder="1.01" />
+        <button onclick="clickHandler.scale()">▲ (Transform)</button>
+        <button onclick="clickHandler.scale(true)">▼ (Inverse)</button>
+    </p>
+
+    <!-- Inputs to handle rotations -->
+    <p>Rotate (measured in degrees)</p>
+    <p>
+        <input id="rotate" placeholder="45.0" />
+        <button onclick="clickHandler.rotate()">🔄 (Transform)</button>
+        <button onclick="clickHandler.rotate(true)">🔁 (Inverse)</button>
+    </p>
+
+    <!-- Buttons to reset and animate -->
+    <p>
+        <button id="reset" onclick="clickHandler.reset()">↺ Reset</button>
+        <button id="animate" onclick="toggleAnimate()">📼 Animate</button>
+    </p>
+    
+</body>
+
+</html>

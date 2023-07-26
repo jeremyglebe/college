@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Triangle Chaos Game</title>
+    <!-- Library scripts -->
+    <script src="../lib/webgl-utils.js"></script>
+    <script src="../lib/webgl-debug.js"></script>
+    <script src="../lib/cuon-utils.js"></script>
+    <!-- Main script -->
+    <script src="ChaosGame.js"></script>
+</head>
+
+<body onload="draw()">
+    <canvas id="webgl" width="400" height="400">
+        Please use a browser that supports "canvas"
+    </canvas>
+    <p id="status"></p>
+    <!-- Information on the project -->
+    <p>The Chaos Game implemented with WebGL and JavaScript. This is a cool fractal!</p>
+    <p>Jeremy Glebe, 2022-09-23</p>
+    <!-- Controls for some added fun with the experiment -->
+    <p>
+        <label>Iterations</label>
+        <input id="iterations" placeholder="50000" />
+    </p>
+    <p>
+        <label>Point Size</label>
+        <input id="pointSize" placeholder="1.0" />
+    </p>
+    <button onclick="handleButton()">Draw</button>
+</body>
+
+</html>

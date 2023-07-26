@@ -1,0 +1,65 @@
+<!--
+    Author: Jeremy Glebe
+    Date: 2022-10-07
+    Description: A project which transforms a triangle using WebGL shaders.
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Meta data for web page -->
+    <meta charset="utf-8" />
+    <title>Transforming Shapes</title>
+    <!-- Basic styling for the controls -->
+    <style>
+        body {
+            text-align: center;
+        }
+    </style>
+    <!-- Libraries to load for WebGL -->
+    <script src="../lib/webgl-utils.js"></script>
+    <script src="../lib/webgl-debug.js"></script>
+    <script src="../lib/cuon-utils.js"></script>
+    <script src="../lib/cuon-matrix.js"></script>
+    <!-- Main script for triangle transformations -->
+    <script src="./Transformations.js"></script>
+</head>
+
+<body onload="main()">
+    <!-- Create a webgl canvas for rendering the shape and shaders -->
+    <canvas id="webgl" width="400" height="400" style="position: absolute; top: 10px; left: 0; right: 0; margin: auto;">
+        Please use a browser that supports "canvas"
+    </canvas>
+    <!-- Create a canvas that overlays the webgl one and display a grid (I could do this in webGL but this is honestly faster and the
+        grid isn't really the point of this program) -->
+    <canvas id="overlay" width="400" height="400"
+        style="position: absolute; top: 10px; left: 0; right: 0; margin: auto;">
+        Please use a browser that supports "canvas"
+    </canvas>
+    <!-- Create a div to push the remaining content down so that it doesn't display under canvases -->
+    <div style="height: 420px;"></div>
+
+    <!-- Inputs to handle matrix solutions -->
+    <p>
+        <button id="reset-button" disabled onclick="do_reset()">Default</button>
+        <button id="key-solution-button" onclick="do_key_solution()">Key's Solution</button>
+        <button id="my-solution-button" onclick="do_my_solution()">My Solution</button>
+        <br>
+        <button id="center-scale-button" onclick="do_center_scale()">Center Scale</button>
+        <button id="column-translation-button" onclick="do_column_translation()">Column Translation</button>
+    <p>
+        <label>Matrix</label><br>
+        <code id="matrix-text"></code>
+    </p>
+    </p>
+    <p>
+        Note: Unlike on the exam, WebGL requires that translation be in the final row.<br>
+        (Rather than the final column, which simply ignores the translation and scales relative to the origin)
+    </p>
+
+
+
+</body>
+
+</html>
