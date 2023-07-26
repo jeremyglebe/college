@@ -1,0 +1,78 @@
+OUTPUT FROM SCRIPT BELOW
+
+Python 3.6.1 (default, Dec 2015, 13:05:11)
+[GCC 4.8.2] on linux
+   
+Process Name)  A
+Process Time)  7
+Process Priority)  3
+Process Name)  B
+Process Time)  8
+Process Priority)  2
+Process Name)  C
+Process Time)  3
+Process Priority)  5
+Process Name)  D
+Process Time)  5
+Process Priority)  1
+Process Name)  E
+Process Time)  4
+Process Priority)  4
+[
+Process: A
+Time => 7.0
+Priority => 3
+Turnaround => 999
+, 
+Process: B
+Time => 8.0
+Priority => 2
+Turnaround => 999
+, 
+Process: C
+Time => 3.0
+Priority => 5
+Turnaround => 999
+, 
+Process: D
+Time => 5.0
+Priority => 1
+Turnaround => 999
+, 
+Process: E
+Time => 4.0
+Priority => 4
+Turnaround => 999
+]
+
+Round Robin Results
+A25
+B27
+C13
+D22
+E19
+Mean Turnaround Time: 21.2
+
+First-com First-Served Results
+A7
+B15
+C18
+D23
+E27
+Mean Turnaround Time: 18.0
+
+Priority Scheduling Results
+C3
+E7
+A14
+B22
+D27
+Mean Turnaround Time: 14.6
+
+Shortest First Results
+C3
+E7
+D12
+A19
+B27
+Mean Turnaround Time: 13.6

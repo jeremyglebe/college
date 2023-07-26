@@ -1,0 +1,14 @@
+Display 1 Thread 0
+Display 2 Thread 1
+Display 3 Thread 2
+Display 4 Thread 3
+Display 5 Thread 4
+Display 6 Thread 5
+Display 7 Thread 0
+Display 8 Thread 1
+Display 9 Thread 2
+Counter is already 10 Thread 3
+Counter is already 10 Thread 4
+Counter is already 10 Thread 5
+Counter is already 10 Thread 0
+Counter is already 10 Thread 1
