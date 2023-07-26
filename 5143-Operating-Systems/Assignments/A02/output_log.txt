@@ -1,0 +1,21 @@
+make: Nothing to be done for 'all'.
+
+matrix size: 2048 x 2048
+
+matrix size: 1024 x 1024
+
+matrix size: 512 x 512
+
+matrix size: 256 x 256
+
+matrix size: 128 x 128
+
+matrix size: 64 x 64
+
+matrix size: 32 x 32
+
+matrix size: 8192 x 8192
+
+matrix size: 6144 x 6144
+
+matrix size: 4096 x 4096
