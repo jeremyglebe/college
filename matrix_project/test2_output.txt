@@ -1,7 +1,0 @@
-Processing time of the array multiplication was 2.84769e+006 ms 
-The array results are
-[1031][4503] is 2484.78
-[1032][4502] is 2476.47
-[1032][4503] is 2500
-[1032][4504] is 2465.84
-[1033][4503] is 2469.37
