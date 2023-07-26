@@ -1,7 +1,0 @@
-D:\School Assignments\ContemporaryC#\program_02\program_02\bin\Debug\program_02.exe.config
-D:\School Assignments\ContemporaryC#\program_02\program_02\bin\Debug\program_02.exe
-D:\School Assignments\ContemporaryC#\program_02\program_02\bin\Debug\program_02.pdb
-D:\School Assignments\ContemporaryC#\program_02\program_02\obj\Debug\program_02.csprojAssemblyReference.cache
-D:\School Assignments\ContemporaryC#\program_02\program_02\obj\Debug\program_02.csproj.CoreCompileInputs.cache
-D:\School Assignments\ContemporaryC#\program_02\program_02\obj\Debug\program_02.exe
-D:\School Assignments\ContemporaryC#\program_02\program_02\obj\Debug\program_02.pdb
